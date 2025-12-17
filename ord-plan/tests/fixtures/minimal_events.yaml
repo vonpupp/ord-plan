@@ -1,0 +1,11 @@
+events:
+  - title: "Monday Standup"
+    cron: "0 9 * * 1"
+    todo_state: "TODO"
+    description: "Weekly team standup meeting"
+    tags: ["meeting", "work"]
+  - title: "Friday Review"
+    cron: "0 16 * * 5"
+    todo_state: "DONE"
+    description: "End of week review and planning"
+    tags: ["review", "planning"]

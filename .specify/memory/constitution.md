@@ -17,6 +17,15 @@ Every feature must be accessible via command-line interface. Text-based I/O prot
 ### II. Test-Driven Development (NON-NEGOTIABLE)
 TDD mandatory: Write failing tests → Get user approval → Implement code → Refactor. Red-Green-Refactor cycle strictly enforced. All tests must pass before any commit. 100% test pass is required for all new code paths.
 
+#### Testing Patterns and Fixtures
+All test data MUST be centralized in `tests/fixtures/` directory. No inline test data or scattered test files allowed. Use dedicated helper functions in `tests/fixtures.py` for fixture access:
+- `get_fixture_path(filename)` - Get absolute path to fixture
+- `read_fixture(filename)` - Read fixture contents as string
+- `write_to_fixture(filename, content)` - Write temporary fixtures
+- `list_fixtures()` - List all available fixtures
+
+Fixture naming convention: `test_{purpose}_{scenario}.{ext}` (e.g., `test_rules_basic.yaml`, `existing_content.org`).
+
 ### III. Org-Mode Native
 Org-mode is the primary output format. All data structures MUST map cleanly to org-mode syntax (headlines, properties, tables, timestamps). When generating org-mode content, validate output against org-mode parser standards. JSON output is secondary and must serialize from the same data model.
 
@@ -55,7 +64,7 @@ All changes require pull request review with:
 
 ### Quality Gates
 - **Pre-commit**: All hooks must pass (formatting, linting, security)
-- **Tests**: pytest with coverage >= 50%, no skipping tests
+- **Tests**: pytest with coverage >= 50%, no skipping tests, all fixtures centralized
 - **Types**: mypy strict mode, no any types allowed
 - **Docs**: sphinx build successful, coverage of new features
 - **Integration**: CLI commands tested end-to-end

@@ -1,8 +1,9 @@
 """Test cases for the __main__ module."""
+
 import pytest
 from click.testing import CliRunner
 
-from ord_plan import __main__
+from ord_plan.cli import cli_group
 
 
 @pytest.fixture
@@ -13,5 +14,5 @@ def runner() -> CliRunner:
 
 def test_main_succeeds(runner: CliRunner) -> None:
     """It exits with a status code of zero."""
-    result = runner.invoke(__main__.main)
+    result = runner.invoke(cli_group, ["--help"])
     assert result.exit_code == 0

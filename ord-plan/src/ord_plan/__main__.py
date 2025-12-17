@@ -1,12 +1,13 @@
 """Command-line interface."""
+
 import click
+from .cli import cli_group
 
 
-@click.command()
-@click.version_option()
 def main() -> None:
-    """ORD Plan."""
+    """ORD Plan CLI entry point."""
+    cli_group(prog_name="ord-plan")
 
 
 if __name__ == "__main__":
-    main(prog_name="ord-plan")  # pragma: no cover
+    main()  # pragma: no cover
