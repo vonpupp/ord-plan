@@ -61,6 +61,12 @@ source = ["ord_plan", "tests"]
 show_missing = true
 fail_under = 100
 
+[tool.pytest.ini_options]
+filterwarnings = [
+    "ignore::DeprecationWarning:pytz.*:",
+    "ignore::DeprecationWarning:_pytest.*:",
+]
+
 [tool.isort]
 profile = "black"
 force_single_line = true

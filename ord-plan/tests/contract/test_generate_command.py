@@ -307,7 +307,7 @@ class TestGenerateCommandContract:
     def test_long_parameter_values(self, runner):
         """Test handling of long parameter values."""
         # Use fixture file with long content
-        yaml_file = get_fixture_path("test_events.yaml")
+        yaml_file = get_fixture_path("test_rules_long_content.yaml")
 
         result = runner.invoke(
             generate,
