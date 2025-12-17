@@ -59,13 +59,13 @@ description: "Task list for repository restructuring implementation"
 
 ### Implementation for User Story 1
 
-- [ ] T009 [US1] Create directory movement script in scripts/restructure/move_directories.py
-- [ ] T010 [P] [US1] Move src/ directory from ord-plan/ to repository root using git mv in scripts/restructure/move_directories.py
-- [ ] T011 [P] [US1] Move tests/ directory from ord-plan/ to repository root using git mv in scripts/restructure/move_directories.py
-- [ ] T012 [P] [US1] Move docs/ directory from ord-plan/ to repository root using git mv in scripts/restructure/move_directories.py
-- [ ] T013 [P] [US1] Move .github/ directory from ord-plan/ to repository root using git mv in scripts/restructure/move_directories.py
-- [ ] T014 [P] [US1] Move project metadata files (README.md, LICENSE, pyproject.toml, etc.) from ord-plan/ to repository root in scripts/restructure/move_files.py
-- [ ] T015 [US1] Create validation script to verify all files moved successfully in scripts/restructure/validate_moves.py
+- [x] T009 [US1] Create directory movement script in scripts/restructure/move_directories.py
+- [x] T010 [P] [US1] Move src/ directory from ord-plan/ to repository root using git mv in scripts/restructure/move_directories.py
+- [x] T011 [P] [US1] Move tests/ directory from ord-plan/ to repository root using git mv in scripts/restructure/move_directories.py
+- [x] T012 [P] [US1] Move docs/ directory from ord-plan/ to repository root using git mv in scripts/restructure/move_directories.py
+- [x] T013 [P] [US1] Move .github/ directory from ord-plan/ to repository root using git mv in scripts/restructure/move_directories.py
+- [x] T014 [P] [US1] Move project metadata files (README.md, LICENSE, pyproject.toml, etc.) from ord-plan/ to repository root in scripts/restructure/move_files.py
+- [x] T015 [US1] Create validation script to verify all files moved successfully in scripts/restructure/validate_moves.py
 
 **Checkpoint**: At this point, User Story 1 should be fully functional and testable independently
 
@@ -79,12 +79,12 @@ description: "Task list for repository restructuring implementation"
 
 ### Implementation for User Story 2
 
-- [ ] T016 [P] [US2] Update Python import statements to remove ord_plan prefix in scripts/restructure/update_imports.py
-- [ ] T017 [P] [US2] Update pyproject.toml path references to remove ord-plan/ prefixes in scripts/restructure/update_config.py
-- [ ] T018 [P] [US2] Update test file imports and fixture paths in scripts/restructure/update_tests.py
-- [ ] T019 [P] [US2] Update documentation cross-references in scripts/restructure/update_docs.py
-- [ ] T020 [P] [US2] Update CI/CD workflow paths in scripts/restructure/update_workflows.py
-- [ ] T021 [US2] Create comprehensive reference update validation in scripts/restructure/validate_references.py
+- [x] T016 [P] [US2] Update Python import statements to remove ord_plan prefix in scripts/restructure/update_imports.py
+- [x] T017 [P] [US2] Update pyproject.toml path references to remove ord-plan/ prefixes in scripts/restructure/update_config.py
+- [x] T018 [P] [US2] Update test file imports and fixture paths in scripts/restructure/update_tests.py
+- [x] T019 [P] [US2] Update documentation cross-references in scripts/restructure/update_docs.py
+- [x] T020 [P] [US2] Update CI/CD workflow paths in scripts/restructure/update_workflows.py
+- [x] T021 [US2] Create comprehensive reference update validation in scripts/restructure/validate_references.py
 
 **Checkpoint**: At this point, User Stories 1 AND 2 should both work independently
 
