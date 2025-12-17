@@ -33,6 +33,15 @@ Fixture naming convention: `test_{purpose}_{scenario}.{ext}` (e.g., `test_rules_
 
 No inline test data or scattered test files allowed in the codebase.
 
+### File Management Rules
+
+**NO TEST FILES IN PROJECT ROOT**: Test and debug files MUST be created only in `tests/fixtures/` directory or `tmp/` directories. Never create test files in the project root directory. Any test files outside designated locations must be immediately removed.
+
+- **Fixtures Location**: All test data belongs in `tests/fixtures/` using proper naming conventions
+- **Temporary Files**: Quick tests may use `/tmp/` or project's temporary directories
+- **Clean Up Required**: Any test/debug files created during development must be removed before commits
+- **Exception**: Files in `tests/fixtures/` are version-controlled and intended for testing
+
 ## Recent Changes
 
 - 001-generate-org: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), Poetry for dependency management

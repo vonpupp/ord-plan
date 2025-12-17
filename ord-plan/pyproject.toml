@@ -18,6 +18,10 @@ Changelog = "https://github.com/vonpupp/ord-plan/releases"
 [tool.poetry.dependencies]
 python = "^3.7"
 click = ">=8.0.1"
+orgparse = ">=0.1.0"
+python-dateutil = ">=2.8.0"
+croniter = ">=0.3.0"
+PyYAML = ">=6.0"
 
 [tool.poetry.group.dev.dependencies]
 Pygments = ">=2.10.0"

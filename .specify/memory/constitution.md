@@ -69,6 +69,15 @@ All changes require pull request review with:
 - **Docs**: sphinx build successful, coverage of new features
 - **Integration**: CLI commands tested end-to-end
 
+### File Management Rules
+
+**NO TEST FILES IN PROJECT ROOT**: Test and debug files MUST be created only in `tests/fixtures/` directory or `tmp/` directories. Never create test files in the project root directory. Any test files outside designated locations must be immediately removed.
+
+- **Fixtures Location**: All test data belongs in `tests/fixtures/` using proper naming conventions
+- **Temporary Files**: Quick tests may use `/tmp/` or project's temporary directories
+- **Clean Up Required**: Any test/debug files created during development must be removed before commits
+- **Exception**: Files in `tests/fixtures/` are version-controlled and intended for testing
+
 ### Release Process
 - Semantic versioning (MAJOR.MINOR.PATCH)
 - Changelog entries required for all changes

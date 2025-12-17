@@ -44,16 +44,12 @@ ORD Plan is a powerful CLI tool for generating structured org-mode events from c
 
 ### Method 1: uv (Recommended)
 
-[uv](https://docs.astral.sh/uv/) is the modern, fast Python package installer:
+[uv](https://docs.astral.sh/uv/) is modern, fast Python package installer:
 
 ```console
-# Install the package
-$ uv add ord-plan
-
-# Or install globally
+# Install as a system tool (recommended for most users)
 $ uv tool install ord-plan
 ```
-
 ### Method 2: Poetry
 
 If you're using [Poetry](https://python-poetry.org/) for dependency management:
@@ -85,11 +81,11 @@ For contributors who want to modify the code:
 #### Using uv
 
 ```console
-# Clone the repository
+# Clone repository
 $ git clone https://github.com/vonpupp/ord-plan.git
 $ cd ord-plan
 
-# Install in editable mode
+# Install in editable mode for development
 $ uv pip install -e .
 ```
 
