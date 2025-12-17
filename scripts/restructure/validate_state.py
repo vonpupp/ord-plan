@@ -347,12 +347,15 @@ class RepositoryStateValidator:
         # Detect current state
         current_state = self.detect_current_state()
 
-        # Validate transition
-        transition_result = self.validate_state_transition(current_state, target_state)
-        results.append(transition_result)
+        # Skip transition validation if current state matches target state
+        if current_state != target_state:
+            transition_result = self.validate_state_transition(
+                current_state, target_state
+            )
+            results.append(transition_result)
 
-        if not transition_result.success:
-            return results
+            if not transition_result.success:
+                return results
 
         # Validate file structure
         structure_result = self.validate_file_structure(target_state)
