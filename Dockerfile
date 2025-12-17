@@ -22,16 +22,17 @@ RUN python -m pipx ensurepath
 
 ENV PATH="/root/.local/bin:$PATH"
 
-# Install tools with constraints (mimic GitHub Actions)
+# Install tools with constraints (mimic GitHub Actions exactly)
 WORKDIR /workspace
 COPY .github/workflows/constraints.txt /tmp/constraints.txt
-RUN pipx install poetry==1.8.3
+RUN pipx install --pip-args=--constraint=/tmp/constraints.txt poetry
 RUN pipx install --pip-args=--constraint=/tmp/constraints.txt nox
-RUN pipx inject nox nox-poetry
+RUN pipx inject --pip-args=--constraint=/tmp/constraints.txt nox nox-poetry
 
 # Verify installations
 RUN poetry --version
-RUN poetry config warnings.export false
+RUN poetry config installer.parallel false || true
+RUN poetry self add poetry-plugin-export
 RUN nox --version
 
 # Copy project
@@ -39,5 +40,5 @@ COPY . /workspace
 
 WORKDIR /workspace
 
-# Default command: run basic validation
-CMD ["sh", "-c", "python --version && poetry --version && nox --version && echo 'Environment is working!'"]
+# Default command: run same session as GitHub Actions
+CMD ["nox", "--python=3.10", "-s", "docs-build"]
