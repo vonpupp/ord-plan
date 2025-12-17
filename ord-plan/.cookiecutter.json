@@ -1,0 +1,16 @@
+{
+  "_checkout": "2022.6.3",
+  "_output_dir": "/home/av/repos/ord-plan",
+  "_repo_dir": "/home/av/.cookiecutters/cookiecutter-hypermodern-python",
+  "_template": "gh:cjolowicz/cookiecutter-hypermodern-python",
+  "author": "vonpupp",
+  "copyright_year": "2025",
+  "development_status": "Development Status :: 3 - Alpha",
+  "email": "vonpupp@gmail.com",
+  "friendly_name": "ORD Plan",
+  "github_user": "vonpupp",
+  "license": "GPL-3.0",
+  "package_name": "ord_plan",
+  "project_name": "ord-plan",
+  "version": "0.0.1"
+}
