@@ -17,6 +17,7 @@ Thumbs.db
 *.log
 
 # Python related
+*.pyc
 .mypy_cache/
 /.coverage
 /.coverage.*
