@@ -7,8 +7,8 @@ from pathlib import Path
 import pytest
 import yaml
 
-from cli.generate import generate
-from utils.validators import validate_cron_expression
+from ord_plan.cli.generate import generate
+from ord_plan.utils.validators import validate_cron_expression
 
 
 class TestErrorHandlingIntegration:

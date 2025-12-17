@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from cli.generate import generate
+from ord_plan.cli.generate import generate
 from tests.fixtures import get_fixture_path, read_fixture
 
 

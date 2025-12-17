@@ -3,7 +3,7 @@
 import pytest
 from datetime import datetime, timedelta
 
-from services.date_service import DateService
+from ord_plan.services.date_service import DateService
 
 
 class TestDateService:

@@ -3,7 +3,7 @@
 import pytest
 from click.testing import CliRunner
 
-from cli import cli_group
+from ord_plan.cli import cli_group
 
 
 @pytest.fixture

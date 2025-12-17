@@ -3,8 +3,8 @@
 import pytest
 from datetime import datetime, timedelta
 
-from models.date_range import DateRange
-from services.date_service import DateService
+from ord_plan.models.date_range import DateRange
+from ord_plan.services.date_service import DateService
 
 
 class TestDateProtection:
