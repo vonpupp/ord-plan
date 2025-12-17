@@ -2367,6 +2367,7 @@ description = "Cross-platform lib for process and system monitoring in Python."
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,!=3.3.*,!=3.4.*,!=3.5.*,>=2.7"
 groups = ["dev"]
+markers = "python_full_version == \"3.8.*\" or platform_python_implementation == \"PyPy\""
 files = [
     {file = "psutil-6.0.0-cp27-cp27m-macosx_10_9_x86_64.whl", hash = "sha256:a021da3e881cd935e64a3d0a20983bda0bb4cf80e4f74fa9bfcb1bc5785360c6"},
     {file = "psutil-6.0.0-cp27-cp27m-manylinux2010_i686.whl", hash = "sha256:1287c2b95f1c0a364d23bc6f2ea2365a8d4d9b726a3be7294296ff7ba97c17f0"},
@@ -4552,4 +4553,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.8"
-content-hash = "296079534e17e3bf5b8ba26869fa7b728bd4b7fbcfa9e89416ca995892869f12"
+content-hash = "ee80a5e0be43fc965761d58b2d5a5abb0e4db947d47d3f4d4af8c42ef3b308b5"

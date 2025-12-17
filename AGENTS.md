@@ -49,6 +49,7 @@ No inline test data or scattered test files allowed in the codebase.
 ## Recent Changes
 
 - 001-generate-org: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), Poetry for dependency management
+- Added constitutional amendment: No performance testing - focus on functionality over performance metrics
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

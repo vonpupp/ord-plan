@@ -35,6 +35,9 @@ Core functionality is generating structured data templates. Templates must be re
 ### V. Hypermodern Python Standards
 Follow all hypermodern Python cookiecutter conventions: Poetry for dependency management, Black for formatting, mypy for type checking, pre-commit hooks, pytest for testing, comprehensive documentation, and semantic versioning.
 
+### VI. No Performance Testing
+Performance testing and optimization is explicitly out of scope. Focus on correct functionality and maintainability rather than performance benchmarks. No performance-related test files, metrics, or optimization efforts should be included in the codebase.
+
 ## Technical Standards
 
 ### Technology Stack
@@ -95,4 +98,4 @@ This constitution supersedes all other development practices and guidelines. Ame
 
 All pull requests and code reviews must verify compliance with constitution principles. Any complexity or deviation from these principles must be explicitly justified with alternatives considered and rejected.
 
-**Version**: 1.1.1 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-16
+**Version**: 1.1.2 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-17
