@@ -1,6 +1,6 @@
 # ord-plan Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2025-12-16
+Auto-generated from all feature plans. Last updated: 2025-12-17
 
 ## Active Technologies
 
@@ -10,12 +10,16 @@ Auto-generated from all feature plans. Last updated: 2025-12-16
 
 ```text
 src/
+ord_plan/
 tests/
+docs/
+.github/
 ```
 
 ## Commands
 
-cd src [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] pytest [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES][ONLY COMMANDS FOR ACTIVE TECHNOLOGIES] ruff check .
+pytest [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES]
+ruff check .
 
 ## Code Style
 
