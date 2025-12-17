@@ -5,20 +5,20 @@
 [![Python Version](https://img.shields.io/pypi/pyversions/ord-plan)][python version]
 [![License](https://img.shields.io/pypi/l/ord-plan)][license]
 
-[![Read the documentation at https://ord-plan.readthedocs.io/](https://img.shields.io/readthedocs/ord-plan/latest.svg?label=Read%20the%20Docs)][read the docs]
-[![Tests](https://github.com/vonpupp/ord-plan/workflows/Tests/badge.svg)][tests]
-[![Codecov](https://codecov.io/gh/vonpupp/ord-plan/branch/main/graph/badge.svg)][codecov]
+[![Read the documentation at https://ord-plan.readthedocs.io/](https://img.shields.io/readthedocs/latest.svg?label=Read%20the%20Docs)][read the docs]
+[![Tests](https://github.com/vonpupp/workflows/Tests/badge.svg)][tests]
+[![Codecov](https://codecov.io/gh/vonpupp/branch/main/graph/badge.svg)][codecov]
 
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)][pre-commit]
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
 
 ORD Plan is a powerful CLI tool for generating structured org-mode events from cron-based YAML rules. It helps you create automated task schedules while preserving existing content in your org files.
 
-[pypi_]: https://pypi.org/project/ord-plan/
-[status]: https://pypi.org/project/ord-plan/
+[pypi_]: https://pypi.org/project/
+[status]: https://pypi.org/project/
 [python version]: https://pypi.org/project/ord-plan
 [read the docs]: https://ord-plan.readthedocs.io/
-[tests]: https://github.com/vonpupp/ord-plan/actions?workflow=Tests
+[tests]: https://github.com/vonpupp/actions?workflow=Tests
 [codecov]: https://app.codecov.io/gh/vonpupp/ord-plan
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [black]: https://github.com/psf/black
@@ -380,12 +380,12 @@ This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter]
 
 ## 🔗 Links
 
-[license]: https://github.com/vonpupp/ord-plan/blob/main/LICENSE
-[contributor guide]: https://github.com/vonpupp/ord-plan/blob/main/CONTRIBUTING.md
+[license]: https://github.com/vonpupp/blob/main/LICENSE
+[contributor guide]: https://github.com/vonpupp/blob/main/CONTRIBUTING.md
 [command-line reference]: https://ord-plan.readthedocs.io/en/latest/usage.html
 [cjolowicz]: https://github.com/cjolowicz
 [hypermodern python cookiecutter]: https://github.com/cjolowicz/cookiecutter-hypermodern-python
-[file an issue]: https://github.com/vonpupp/ord-plan/issues
+[file an issue]: https://github.com/vonpupp/issues
 [pip]: https://pip.pypa.io/
 [poetry]: https://python-poetry.org/
 [uv]: https://docs.astral.sh/uv/

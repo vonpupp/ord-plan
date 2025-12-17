@@ -4,7 +4,7 @@ import pytest
 from click.testing import CliRunner
 from datetime import datetime, timedelta
 
-from ord_plan.cli import cli_group
+from cli import cli_group
 
 
 class TestDateRanges:

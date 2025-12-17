@@ -7,7 +7,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from ord_plan.cli.generate import generate
+from cli.generate import generate
 
 
 class TestDateProtectionIntegration:

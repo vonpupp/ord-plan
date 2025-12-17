@@ -19,5 +19,5 @@ reference
 contributing
 Code of Conduct <codeofconduct>
 License <license>
-Changelog <https://github.com/vonpupp/ord-plan/releases>
+Changelog <https://github.com/vonpupp/releases>
 ```

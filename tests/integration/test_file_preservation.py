@@ -7,7 +7,7 @@ from datetime import datetime
 import pytest
 from click.testing import CliRunner
 
-from ord_plan.cli.generate import generate
+from cli.generate import generate
 from tests.fixtures import get_fixture_path, read_fixture
 
 

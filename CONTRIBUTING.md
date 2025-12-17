@@ -14,7 +14,7 @@ Here is a list of important resources for contributors:
 [gpl 3.0 license]: https://opensource.org/licenses/GPL-3.0
 [source code]: https://github.com/vonpupp/ord-plan
 [documentation]: https://ord-plan.readthedocs.io/
-[issue tracker]: https://github.com/vonpupp/ord-plan/issues
+[issue tracker]: https://github.com/vonpupp/issues
 
 ## How to report a bug
 
@@ -108,7 +108,7 @@ $ nox --session=pre-commit -- install
 It is recommended to open an issue before starting work on anything.
 This will allow a chance to talk it over with the owners and validate your approach.
 
-[pull request]: https://github.com/vonpupp/ord-plan/pulls
+[pull request]: https://github.com/vonpupp/pulls
 
 <!-- github-only -->
 

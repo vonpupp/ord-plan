@@ -2,7 +2,7 @@
 
 import pytest
 
-from ord_plan.utils.validators import (
+from utils.validators import (
     validate_cron_expression,
     validate_date_format,
     validate_file_path,

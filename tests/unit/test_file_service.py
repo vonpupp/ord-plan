@@ -7,9 +7,9 @@ from pathlib import Path
 
 import pytest
 
-from ord_plan.models.org_date_node import OrgDateNode
-from ord_plan.models.org_event import OrgEvent
-from ord_plan.services.file_service import FileService
+from models.org_date_node import OrgDateNode
+from models.org_event import OrgEvent
+from services.file_service import FileService
 
 
 class TestFileService:

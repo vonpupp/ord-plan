@@ -8,7 +8,7 @@ from pathlib import Path
 import pytest
 import yaml
 
-from ord_plan.cli import cli_group
+from cli import cli_group
 
 
 class TestPerformance:
