@@ -105,13 +105,17 @@ class RepositoryValidator:
         errors = []
 
         try:
-            # Run pytest on current ord-plan/tests
+            # Run pytest on current ord-plan/tests with correct PYTHONPATH
+            env = os.environ.copy()
+            env["PYTHONPATH"] = str(self.repo_root / "ord-plan" / "src")
+
             result = subprocess.run(
                 ["python", "-m", "pytest", "ord-plan/tests/", "--tb=short"],
                 cwd=self.repo_root,
                 capture_output=True,
                 text=True,
                 timeout=60,
+                env=env,
             )
 
             if result.returncode != 0:
