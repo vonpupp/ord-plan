@@ -44,7 +44,7 @@ class TestGenerateCommandContract:
             unreadable_file.chmod(0o000)
         except (OSError, PermissionError):
             # Windows might not support these permissions, skip this test
-            self.skipTest("File permission test not supported on this platform")
+            pytest.skip("File permission test not supported on this platform")
             return
 
         result = runner.invoke(generate, ["--rules", str(unreadable_file)])
@@ -359,8 +359,11 @@ class TestGenerateCommandContract:
         # Should handle Unicode without errors
         assert result.exit_code == 0
         # Check that Unicode characters are preserved (platform-agnostic check)
-        assert (
+        output_has_unicode = (
             "ñáéíóú" in result.output
             or "中文" in result.output
             or "français" in result.output
+        )
+        assert output_has_unicode, (
+            f"Unicode characters not found in output: {result.output[:200]}"
         )
