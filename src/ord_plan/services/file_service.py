@@ -1,6 +1,7 @@
 """File service for handling org-mode file operations."""
 
 import os
+import sys
 from datetime import datetime
 from pathlib import Path
 from typing import Dict
@@ -17,11 +18,11 @@ class FileService:
 
     @staticmethod
     def write_org_content(
-        content: str,
-        file_path: Optional[str] = None,
-        output_stream: Optional[TextIO] = None,
+        content: str,  # Org-mode content to write
+        file_path: Optional[str],  # Target file path (None for stdout)
+        output_stream: TextIO = sys.stdout,  # Output stream
     ) -> None:
-        """Write org-mode content to file or stream.
+        """Write org-mode content to file or stdout.
 
         Args:
             content: Org-mode content to write
@@ -31,8 +32,6 @@ class FileService:
         Raises:
             PermissionError: Cannot write to target location
             OSError: File system error
-        """
-        if file_path:
         """
         if file_path:
             # Ensure directory exists
