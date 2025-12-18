@@ -145,15 +145,70 @@ class TestGenerateCommandContract:
         assert not output_file.exists()
         assert result.exit_code == 0
 
+    def test_unicode_support(self, runner: CliRunner) -> None:
+        """Test Unicode character support."""
+        # Skip this test on Windows due to console encoding differences
+        import platform
+
+        if platform.system() == "Windows":
+            pytest.skip(
+                "Unicode test skipped on Windows due to console encoding differences"
+            )
+
+        # Use fixture file with unicode content
+        yaml_file = get_fixture_path("test_events.yaml")
+
+        result = runner.invoke(
+            generate,
+            [
+                "--rules",
+                str(yaml_file),
+                "--from",
+                "2025-12-23",
+                "--to",
+                "2025-12-23",  # Tuesday for unicode test
+            ],
+        )
+
+# Should handle Unicode without errors
+        assert result.exit_code == 0
+
     def test_help_output_format(self, runner: CliRunner) -> None:
         """Test that help output includes required information."""
         result = runner.invoke(generate, ["--help"])
 
         assert result.exit_code == 0
+        # Should include usage information
+        assert "Usage:" in result.output
         assert "--rules" in result.output
         assert "--file" in result.output
         assert "--from" in result.output
         assert "--to" in result.output
+
+    def test_unicode_support(self, runner: CliRunner) -> None:
+        """Test Unicode character support."""
+        # Skip this test on Windows due to console encoding differences
+        import platform
+        if platform.system() == "Windows":
+            pytest.skip("Unicode test skipped on Windows due to console encoding differences")
+        
+        # Use fixture file with unicode content
+        yaml_file = get_fixture_path("test_events.yaml")
+
+        result = runner.invoke(
+            generate,
+            [
+                "--rules",
+                str(yaml_file),
+                "--from",
+                "2025-12-23",
+                "--to",
+                "2025-12-23",  # Tuesday for unicode test
+            ],
+        )
+
+        # Should handle Unicode without errors
+        assert result.exit_code == 0
         assert "--force" in result.output
         assert "Examples:" in result.output
         assert "Date Formats:" in result.output
@@ -316,7 +371,9 @@ class TestGenerateCommandContract:
 
         for order in orders:
             result = runner.invoke(generate, order)
-            assert result.exit_code == 0
+assert result.exit_code == 0
+
+    def test_help_output_format(self, runner: CliRunner) -> None:
 
     def test_long_parameter_values(self, runner: CliRunner) -> None:
         """Test handling of long parameter values."""
