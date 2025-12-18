@@ -111,6 +111,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: tests
     if: always()
+
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
@@ -142,7 +143,7 @@ jobs:
         with:
           name: coverage-data
           path: coverage-data/
-          continue-on-error: true
+          merge-multiple: true
 
       - name: Combine coverage data and display human readable report
         run: |
@@ -152,5 +153,12 @@ jobs:
         run: |
           nox --session=coverage -- xml
 
-      - name: Upload coverage report
+      - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v3.1.0
+
+      - name: Upload coverage data
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage-data
+          path: .coverage*
