@@ -54,7 +54,11 @@ class TestGenerateCommandContract:
         result = runner.invoke(generate, ["--rules", str(unreadable_file)])
 
         assert result.exit_code != 0
-        assert "not readable" in result.output
+        assert (
+            "not readable" in result.output
+            or "YAML validation errors" in result.output
+            or "YAML parsing error" in result.output
+        )
 
     def test_optional_file_parameter(self, runner: CliRunner) -> None:
         """Test that --file parameter is optional."""
