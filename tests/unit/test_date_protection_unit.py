@@ -28,7 +28,8 @@ class TestDateProtection:
 
         assert date_range.has_past_dates()
         assert len(date_range.warnings) > 0
-        # Should contain some mention of past dates (could be "past dates" or "more than 1 week in the past")
+        # Should contain some mention of past dates (could be "past dates"
+        # or "more than 1 week in the past")
         warnings_text = " ".join(date_range.warnings).lower()
         assert any(
             phrase in warnings_text
@@ -105,7 +106,8 @@ class TestDateProtection:
         assert any("future" in warning for warning in date_range.warnings)
 
     def test_one_year_future_no_warning(self) -> None:
-        """Test that dates exactly 1 year in future don't trigger distant future warning."""
+        """Test that dates exactly 1 year in future don't
+        trigger distant future warning."""
         now = datetime.now()
 
         # Exactly 1 year in future

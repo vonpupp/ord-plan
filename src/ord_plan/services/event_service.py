@@ -146,8 +146,8 @@ class EventService:
             )
         elif generation_time > 30:  # More than 30 seconds
             print(
-                f"⚠️  Event generation took {generation_time:.2f}s for {event_count} even\nts - "
-                f"this may indicate performance issues"
+                f"⚠️  Event generation took {generation_time:.2f}s for "
+                f"{event_count} events - this may indicate performance issues"
             )
 
         # Organize new events by date with optimization

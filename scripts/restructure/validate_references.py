@@ -1,5 +1,4 @@
-"""
-Comprehensive validation script for reference updates.
+"""Comprehensive validation script for reference updates.
 
 This script validates that all reference updates were successful
 and repository is in a consistent state after User Story 2.
@@ -10,7 +9,9 @@ from pathlib import Path
 
 
 # Add current directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent))
+current_dir = Path(__file__).parent
+if str(current_dir) not in sys.path:
+    sys.path.insert(0, str(current_dir))
 
 from update_imports import ImportUpdater
 from validate_state import RepositoryState
@@ -218,9 +219,10 @@ def main():
     print(f"Documentation: {'✅ PASS' if docs_ok else '❌ FAIL'}")
 
     overall_success = all([imports_ok, state_ok, func_ok, config_ok, docs_ok])
-    print(
-        f"\nOverall Status: {'🎉 ALL VALIDATIONS PASSED' if overall_success else '⚠️  SOME VALIDATIONS FAILED'}"
+    status_msg = (
+        "🎉 ALL VALIDATIONS PASSED" if overall_success else "⚠️  SOME VALIDATIONS FAILED"
     )
+    print(f"\nOverall Status: {status_msg}")
 
     if overall_success:
         print("\n✅ User Story 2 (Reference Updates) completed successfully!")

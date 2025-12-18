@@ -1,5 +1,4 @@
-"""
-Import statement parsing and update utilities for Python code.
+"""Import statement parsing and update utilities for Python code.
 
 This module provides specialized tools for analyzing and updating Python
 import statements during repository restructuring.
@@ -47,8 +46,7 @@ class ImportParser:
         self.target_prefix = target_prefix
 
     def parse_file_imports(self, file_path: Path) -> List[ImportInfo]:
-        """
-        Parse all import statements from a Python file.
+        """Parse all import statements from a Python file.
 
         Args:
             file_path: Path to Python file
@@ -97,8 +95,7 @@ class ImportParser:
         return imports
 
     def find_target_imports(self, imports: List[ImportInfo]) -> List[ImportInfo]:
-        """
-        Find imports that need updating (those with target prefix).
+        """Find imports that need updating (those with target prefix).
 
         Args:
             imports: List of ImportInfo objects
@@ -110,7 +107,8 @@ class ImportParser:
 
         for imp in imports:
             if imp.import_type == "import":
-                # Check for 'import ord_plan.module' or 'import ord_plan.module as alias'
+                # Check for 'import ord_plan.module' or
+                # 'import ord_plan.module as alias'
                 if imp.module_name.startswith(f"{self.target_prefix}."):
                     target_imports.append(imp)
 
@@ -124,8 +122,7 @@ class ImportParser:
         return target_imports
 
     def generate_updated_import(self, imp: ImportInfo) -> str:
-        """
-        Generate the updated import statement without target prefix.
+        """Generate the updated import statement without target prefix.
 
         Args:
             imp: ImportInfo object
@@ -163,8 +160,7 @@ class ImportUpdater:
         self.updates = []
 
     def find_python_files(self) -> List[Path]:
-        """
-        Find all Python files in the repository.
+        """Find all Python files in the repository.
 
         Returns:
             List of Python file paths
@@ -189,8 +185,7 @@ class ImportUpdater:
         return python_files
 
     def analyze_file(self, file_path: Path) -> List[ImportUpdate]:
-        """
-        Analyze a Python file and determine what imports need updating.
+        """Analyze a Python file and determine what imports need updating.
 
         Args:
             file_path: Path to Python file
@@ -250,8 +245,7 @@ class ImportUpdater:
         return ""
 
     def update_file(self, file_path: Path, updates: List[ImportUpdate]) -> bool:
-        """
-        Apply import updates to a file.
+        """Apply import updates to a file.
 
         Args:
             file_path: Path to file to update
@@ -280,8 +274,7 @@ class ImportUpdater:
             return False
 
     def update_all_files(self) -> Tuple[int, List[str]]:
-        """
-        Update all Python files in the repository.
+        """Update all Python files in the repository.
 
         Returns:
             Tuple of (number_of_files_updated, list_of_errors)
@@ -303,7 +296,8 @@ class ImportUpdater:
                 print(f"  🔄 Found {len(updates)} imports to update:")
                 for update in updates:
                     print(
-                        f"    Line {update.lineno}: {update.original_import} → {update.updated_import}"
+                        f"    Line {update.lineno}: {update.original_import} → "
+                        f"{update.updated_import}"
                     )
 
                 # Apply updates
@@ -338,8 +332,7 @@ class ImportUpdater:
         return summary
 
     def verify_updates(self) -> Tuple[int, List[str]]:
-        """
-        Verify that all imports were correctly updated.
+        """Verify that all imports were correctly updated.
 
         Returns:
             Tuple of (number_of_remaining_issues, list_of_issue_files)
@@ -355,7 +348,8 @@ class ImportUpdater:
                 relative_path = file_path.relative_to(self.repo_root)
                 remaining_issues.append(str(relative_path))
                 print(
-                    f"⚠️  {relative_path} still has {len(target_imports)} ord_plan imports"
+                    f"⚠️  {relative_path} still has {len(target_imports)} "
+                    f"ord_plan imports"
                 )
 
         return len(remaining_issues), remaining_issues

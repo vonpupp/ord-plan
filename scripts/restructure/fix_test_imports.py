@@ -1,7 +1,5 @@
 #!/usr/bin/env python3
-"""
-Fix test imports to use proper ord_plan package structure.
-"""
+"""Fix test imports to use proper ord_plan package structure."""
 
 import re
 from pathlib import Path

@@ -1,5 +1,4 @@
-"""
-File movement utilities for repository restructuring.
+"""File movement utilities for repository restructuring.
 
 This module provides utilities to safely move files and directories
 using git mv operations to preserve history.
@@ -23,8 +22,7 @@ class FileMover:
         self.moved_items = []
 
     def _run_git_mv(self, source: Path, target: Path) -> Tuple[bool, str]:
-        """
-        Run git mv command with proper error handling.
+        """Run git mv command with proper error handling.
 
         Args:
             source: Source path to move
@@ -41,7 +39,7 @@ class FileMover:
                 return True, ""
 
             subprocess.run(
-                ["/usr/bin/git"] + ["/usr/bin/git"] + cmd[1:],
+                ["/usr/bin/git"] + cmd[1:],
                 cwd=self.repo_root,
                 capture_output=True,
                 text=True,
@@ -58,8 +56,7 @@ class FileMover:
             return False, error_msg
 
     def move_directory(self, dir_name: str) -> Tuple[bool, str]:
-        """
-        Move a directory from ord-plan/ to repository root.
+        """Move a directory from ord-plan/ to repository root.
 
         Args:
             dir_name: Name of directory to move (e.g., 'src', 'tests')
@@ -83,8 +80,7 @@ class FileMover:
         return self._run_git_mv(source_path, target_path)
 
     def move_file(self, file_name: str) -> Tuple[bool, str]:
-        """
-        Move a file from ord-plan/ to repository root.
+        """Move a file from ord-plan/ to repository root.
 
         Args:
             file_name: Name of file to move (e.g., 'README.md', 'pyproject.toml')
@@ -107,30 +103,20 @@ class FileMover:
 
         return self._run_git_mv(source_path, target_path)
 
-    def move_github_directory(self) -> Tuple[bool, str]:
-        """
-        Move .github directory contents to repository root .github/.
-
-        Returns:
-            Tuple of (success, error_message)
-        """
-        source_path = self.repo_root / "ord-plan" / ".github"
-        target_path = self.repo_root / ".github"
-
-        if not source_path.exists():
-            error_msg = f"Source .github directory {source_path} does not exist"
-            print(f"❌ {error_msg}")
-            return False, error_msg
-
-        # Create target .github if it doesn't exist
+    def _ensure_target_directory(self, target_path: Path) -> Tuple[bool, str]:
+        """Ensure target directory exists."""
         if not target_path.exists():
             if self.dry_run:
                 print(f"DRY RUN: Would create directory {target_path}")
             else:
                 target_path.mkdir(exist_ok=True)
                 print(f"📁 Created directory {target_path}")
+        return True, ""
 
-        # Move contents, not the directory itself
+    def _move_github_contents(
+        self, source_path: Path, target_path: Path
+    ) -> Tuple[bool, str]:
+        """Move contents from source to target directory."""
         try:
             for item in source_path.iterdir():
                 target_item = target_path / item.name
@@ -152,6 +138,28 @@ class FileMover:
             error_msg = f"Failed to move .github contents: {e}"
             print(f"❌ {error_msg}")
             return False, error_msg
+
+    def move_github_directory(self) -> Tuple[bool, str]:
+        """Move .github directory contents to repository root .github/.
+
+        Returns:
+            Tuple of (success, error_message)
+        """
+        source_path = self.repo_root / "ord-plan" / ".github"
+        target_path = self.repo_root / ".github"
+
+        if not source_path.exists():
+            error_msg = f"Source .github directory {source_path} does not exist"
+            print(f"❌ {error_msg}")
+            return False, error_msg
+
+        # Ensure target directory exists
+        success, error = self._ensure_target_directory(target_path)
+        if not success:
+            return False, error
+
+        # Move contents
+        return self._move_github_contents(source_path, target_path)
 
     def _move_directory_recursive(self, source: Path, target: Path) -> Tuple[bool, str]:
         """Recursively move directory contents."""
@@ -180,8 +188,7 @@ class FileMover:
         return self.moved_items.copy()
 
     def undo_moves(self) -> Tuple[bool, str]:
-        """
-        Undo all moves by moving items back to ord-plan/.
+        """Undo all moves by moving items back to ord-plan/.
 
         Returns:
             Tuple of (success, error_message)
@@ -268,7 +275,8 @@ def main():
         print("💡 DRY RUN completed - no actual changes made")
     else:
         print(
-            "✅ File movements completed. Review with 'git status' and commit when ready."
+            "✅ File movements completed. Review with 'git status' "
+            "and commit when ready."
         )
 
 

@@ -103,7 +103,8 @@ class TestFileService:
             result = FileService.merge_with_existing_content(new_nodes, existing_file)
 
             assert len(result) == 1
-            # Should have at least 1 existing event (the date might be counted as an event too)
+            # Should have at least 1 existing event
+            # (the date might be counted as an event too)
             assert len(result[0].existing_events) >= 1
             assert len(result[0].new_events) == 1  # New event added
 

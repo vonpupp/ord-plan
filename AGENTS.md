@@ -1,6 +1,6 @@
 # ord-plan Development Guidelines
 
-Auto-generated from all feature plans. Last updated: 2025-12-17
+Auto-generated from all feature plans. Last updated: 2025-12-18
 
 ## Active Technologies
 
@@ -22,8 +22,11 @@ invoke [SINGLE AUTHORIZED TESTING COMMAND]
 ruff check .
 
 ### Common Invoke Commands:
+
 - `invoke pytest` - Run all tests with coverage
-- `invoke lint` - Run all linting checks
+- `invoke lint` - Run all linting checks (black, isort, flake8, mypy, darglint)
+- `invoke pre-commit-install` - Install pre-commit hooks
+- `invoke pre-commit` - Run all pre-commit hooks on all files
 - `invoke help` - Show detailed usage examples
 - `invoke --list` - List all available tasks
 
@@ -105,6 +108,58 @@ No inline test data or scattered test files allowed in the codebase.
 - **Temporary Files**: Quick tests may use `/tmp/` or project's temporary directories
 - **Clean Up Required**: Any test/debug files created during development must be removed before commits
 - **Exception**: Files in `tests/fixtures/` are version-controlled and intended for testing
+
+## Pre-commit Hooks
+
+Pre-commit hooks provide automated code quality checks before commits. They ensure consistent code style and catch common issues early.
+
+### Installation
+
+Install pre-commit hooks using invoke:
+
+```bash
+invoke pre-commit-install
+```
+
+### Manual Usage
+
+Run all pre-commit hooks manually on all files:
+
+```bash
+invoke pre-commit
+```
+
+Or run directly with poetry:
+
+```bash
+poetry run pre-commit run --all-files
+```
+
+### Individual Hook Commands
+
+You can also run individual checks manually:
+
+- `invoke black` - Black formatting check
+- `invoke isort` - Import sorting check
+- `invoke flake8` - Flake8 linting
+- `invoke mypy` - Type checking
+- `invoke darglint` - Docstring linting (manual stage only)
+
+### Hook Configuration
+
+Pre-commit hooks are configured in `.pre-commit-config.yaml` and use poetry to ensure all tools run in the correct virtual environment. The hooks include:
+
+- **Formatting**: Black, isort
+- **Linting**: Flake8, darglint, mypy
+- **File checks**: End-of-file-fixer, trailing-whitespace, check-added-large-files
+- **Config validation**: check-toml, check-yaml
+- **Code modernization**: pyupgrade
+
+### Pre-commit vs Invoke
+
+- **Pre-commit hooks**: Run automatically before commits, focus on file-level changes
+- **Invoke tasks**: Run manually, provide comprehensive project-wide checks and testing
+- **Both methods** use the same underlying tools and configuration for consistency
 
 ## Recent Changes
 

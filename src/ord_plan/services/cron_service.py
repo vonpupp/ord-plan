@@ -45,7 +45,7 @@ class CronService:
             # Only include events that fall within the date range
             if current_date >= date_range.start_date:
                 # Store the datetime in the event title for now (temporary solution)
-                # In a proper implementation, we'd extend OrgEvent to have a datetime fie\nld
+                # In a proper implementation, we'd extend OrgEvent to have a datetime field
                 event_title = f"{rule.title}@@{current_date.isoformat()}"
                 event = OrgEvent(
                     title=event_title,

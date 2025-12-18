@@ -1,5 +1,4 @@
-"""
-Path mapping system for reference updates using regex patterns.
+"""Path mapping system for reference updates using regex patterns.
 
 This module provides utilities to update file references, import statements,
 and path references during repository restructuring.
@@ -101,8 +100,7 @@ class PathMapper:
         ]
 
     def find_files_to_update(self, file_types: List[str]) -> List[Path]:
-        """
-        Find all files of specified types to update.
+        """Find all files of specified types to update.
 
         Args:
             file_types: List of file extensions to include
@@ -155,8 +153,7 @@ class PathMapper:
     def update_file(
         self, file_path: Path, mappings: List[PathMapping]
     ) -> Tuple[bool, str]:
-        """
-        Update a single file using provided mappings.
+        """Update a single file using provided mappings.
 
         Args:
             file_path: Path to file to update
@@ -199,8 +196,7 @@ class PathMapper:
             return False, error_msg
 
     def update_by_scope(self, scope: str) -> Tuple[bool, str]:
-        """
-        Update all files for a specific scope.
+        """Update all files for a specific scope.
 
         Args:
             scope: Scope to update (e.g., 'python_imports', 'config_files')
@@ -258,8 +254,7 @@ class PathMapper:
         return self.updated_files.copy()
 
     def preview_changes(self) -> Dict[str, List[str]]:
-        """
-        Preview what changes would be made without applying them.
+        """Preview what changes would be made without applying them.
 
         Returns:
             Dictionary mapping scopes to lists of files that would be updated

@@ -25,7 +25,7 @@ class TestCronValidation:
 
         for expr in valid_expressions:
             errors = validate_cron_expression(expr, "test rule")
-            assert errors == [], f"Valid expression '{expr}' should have no errors"
+            assert errors == [], f"Valid expression {expr!r} should have no errors"
 
     def test_invalid_cron_expressions(self) -> None:
         """Test that invalid cron expressions are caught."""
@@ -65,7 +65,7 @@ class TestFileValidation:
 
         for path in valid_paths:
             errors = validate_file_path(path)
-            assert errors == [], f"Valid path '{path}' should have no errors"
+            assert errors == [], f"Valid path {path!r} should have no errors"
 
     def test_invalid_file_paths(self) -> None:
         """Test that invalid file paths are caught."""
@@ -105,7 +105,7 @@ class TestDateFormatValidation:
 
         for date_str in valid_dates:
             errors = validate_date_format(date_str, "test date")
-            assert errors == [], f"Valid date '{date_str}' should have no errors"
+            assert errors == [], f"Valid date {date_str!r} should have no errors"
 
     def test_invalid_date_formats(self) -> None:
         """Test that invalid date formats are caught."""

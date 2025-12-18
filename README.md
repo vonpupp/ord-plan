@@ -341,13 +341,70 @@ This project uses several tools to maintain code quality:
 - **pytest**: Testing with coverage
 - **pre-commit**: Git hooks for automated checks
 
+### Pre-commit Hooks
+
+Pre-commit hooks provide automated code quality checks before commits. They ensure consistent code style and catch common issues early.
+
+#### Installation
+
+Install pre-commit hooks using invoke:
+
+```bash
+invoke pre-commit-install
+```
+
+#### Manual Usage
+
+Run all pre-commit hooks manually on all files:
+
+```bash
+invoke pre-commit
+```
+
+Or run directly with poetry:
+
+```bash
+poetry run pre-commit run --all-files
+```
+
+#### Individual Hook Commands
+
+You can also run individual checks manually:
+
+```bash
+invoke black          # Black formatting check
+invoke isort          # Import sorting check
+invoke flake8         # Flake8 linting
+invoke mypy           # Type checking
+invoke darglint       # Docstring linting (manual stage only)
+```
+
+#### Hook Configuration
+
+Pre-commit hooks are configured in `.pre-commit-config.yaml` and use poetry to ensure all tools run in the correct virtual environment. The hooks include:
+
+- **Formatting**: Black, isort
+- **Linting**: Flake8, darglint, mypy
+- **File checks**: End-of-file-fixer, trailing-whitespace, check-added-large-files
+- **Config validation**: check-toml, check-yaml
+- **Code modernization**: pyupgrade
+
+#### Pre-commit vs Invoke
+
+- **Pre-commit hooks**: Run automatically before commits, focus on file-level changes
+- **Invoke tasks**: Run manually, provide comprehensive project-wide checks and testing
+- **Both methods** use the same underlying tools and configuration for consistency
+
 ### Development Tasks (Invoke)
 
 The project uses [Invoke](https://www.pyinvoke.org/) for task automation. Use `invoke --list` to see all available tasks, or `invoke help` for detailed usage examples.
 
 **Common development tasks:**
+
 - `invoke pytest` - Run all tests with coverage
 - `invoke lint` - Run all linting checks (black, isort, flake8, mypy, darglint)
+- `invoke pre-commit-install` - Install pre-commit hooks
+- `invoke pre-commit` - Run all pre-commit hooks on all files
 - `invoke test-unit` - Run only unit tests
 - `invoke test-integration` - Run only integration tests
 - `invoke black` - Run Black formatting check only

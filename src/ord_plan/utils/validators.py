@@ -297,7 +297,8 @@ def validate_date_format(date_str: str, field_name: str = "date") -> List[str]:
         if day_name not in valid_days:
             errors.append(
                 f"Invalid {field_name} format: {date_str!r}. "
-                "Use YYYY-MM-DD format or basic relative dates like 'today', 'next monday\n'"
+                "Use YYYY-MM-DD format or basic relative dates like 'today', "
+                "'next monday'"
             )
     elif lower_date.startswith("+") and "day" in lower_date:
         # Basic validation for "+N days" format
@@ -307,7 +308,8 @@ def validate_date_format(date_str: str, field_name: str = "date") -> List[str]:
         except (ValueError, IndexError):
             errors.append(
                 f"Invalid {field_name} format: {date_str!r}. "
-                "Use YYYY-MM-DD format or basic relative dates like 'today', 'next monday\n'"
+                "Use YYYY-MM-DD format or basic relative dates like 'today', "
+                "'next monday'"
             )
     else:
         errors.append(

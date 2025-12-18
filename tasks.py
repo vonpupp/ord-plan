@@ -1,17 +1,16 @@
 #!/usr/bin/env python3
-"""
-Fabric tasks for ord-plan project.
+"""Fabric tasks for ord-plan project.
 
 This module provides Fabric tasks for running tests, linting, and other
 development operations with proper task structure and individual entry points.
 """
 
-import os
 import subprocess
 import sys
 from pathlib import Path
 
 from invoke import task
+
 
 # Project paths
 PROJECT_ROOT = Path(__file__).parent.parent
@@ -44,7 +43,10 @@ def pytest(c):
     setup_python_path()
     return run_command(
         c,
-        "pytest tests/ -v --cov=ord_plan --cov-report=term-missing -W ignore::DeprecationWarning",
+        (
+            "poetry run pytest tests/ -v --cov=ord_plan --cov-report=term-missing "
+            "-W ignore::DeprecationWarning"
+        ),
         "Running pytest tests",
     )
 
@@ -53,21 +55,25 @@ def pytest(c):
 def test_unit(c):
     """Run unit tests only."""
     setup_python_path()
-    return run_command(c, "pytest tests/unit/ -v", "Running unit tests")
+    return run_command(c, "poetry run pytest tests/unit/ -v", "Running unit tests")
 
 
 @task
 def test_integration(c):
     """Run integration tests only."""
     setup_python_path()
-    return run_command(c, "pytest tests/integration/ -v", "Running integration tests")
+    return run_command(
+        c, "poetry run pytest tests/integration/ -v", "Running integration tests"
+    )
 
 
 @task
 def test_contract(c):
     """Run contract tests only."""
     setup_python_path()
-    return run_command(c, "pytest tests/contract/ -v", "Running contract tests")
+    return run_command(
+        c, "poetry run pytest tests/contract/ -v", "Running contract tests"
+    )
 
 
 @task
@@ -105,24 +111,46 @@ def style(c):
 
 
 @task
+def pre_commit(c):
+    """Run pre-commit hooks on all files."""
+    setup_python_path()
+    return run_command(
+        c, "poetry run pre-commit run --all-files", "Running pre-commit hooks"
+    )
+
+
+@task
+def pre_commit_install(c):
+    """Install pre-commit hooks."""
+    setup_python_path()
+    return run_command(
+        c, "poetry run pre-commit install", "Installing pre-commit hooks"
+    )
+
+
+@task
 def security(c):
     """Run security checks."""
     setup_python_path()
-    return run_command(c, "safety check", "Running security checks")
+    return run_command(c, "poetry run safety check", "Running security checks")
 
 
 @task
 def mypy(c):
     """Run type checking."""
     setup_python_path()
-    return run_command(c, "mypy src/ --ignore-missing-imports", "Running type checking")
+    return run_command(
+        c, "poetry run mypy src/ --ignore-missing-imports", "Running type checking"
+    )
 
 
 @task
 def black(c):
     """Run Black formatting check."""
     setup_python_path()
-    return run_command(c, "black --check src/ tests/", "Running Black formatting check")
+    return run_command(
+        c, "poetry run black --check src/ tests/", "Running Black formatting check"
+    )
 
 
 @task
@@ -130,7 +158,7 @@ def isort(c):
     """Run import sorting check."""
     setup_python_path()
     return run_command(
-        c, "isort --check-only src/ tests/", "Running import sorting check"
+        c, "poetry run isort --check-only src/ tests/", "Running import sorting check"
     )
 
 
@@ -140,7 +168,7 @@ def flake8(c):
     setup_python_path()
     return run_command(
         c,
-        "flake8 src/ tests/ --max-line-length=88 --extend-ignore=E203,E501",
+        "poetry run flake8 src/ tests/",
         "Running Flake8 linting",
     )
 
@@ -149,7 +177,7 @@ def flake8(c):
 def darglint(c):
     """Run docstring linting."""
     setup_python_path()
-    return run_command(c, "darglint src/", "Running docstring linting")
+    return run_command(c, "poetry run darglint src/", "Running docstring linting")
 
 
 @task
@@ -186,7 +214,7 @@ def clean(c):
     ]
 
     for cmd in commands:
-        subprocess.run(cmd, shell=True)
+        subprocess.run(cmd, shell=True, check=False)
 
     print("✅ Clean completed!")
 
@@ -226,6 +254,8 @@ def help(c):
     print("  invoke mypy           # Just type checking")
     print("  invoke darglint       # Just docstring linting")
     print("  invoke security       # Just security checks")
+    print("  invoke pre-commit     # Run all pre-commit hooks")
+    print("  invoke pre-commit-install # Install pre-commit hooks")
     print()
 
     print("🧪 SPECIFIC TEST TYPES:")
@@ -236,19 +266,20 @@ def help(c):
     print()
 
     print("📦 COMPOSITE CHECKS:")
-    print(
-        "  invoke lint           # All linting checks (black, isort, flake8, mypy, darglint)"
-    )
-    print(
-        "  invoke style          # All style checks (black, isort, flake8, mypy, darglint)"
-    )
+    print("  invoke lint           # All linting checks")
+    print("                        # (black, isort, flake8, mypy, darglint)")
+    print("  invoke style          # All style checks")
+    print("                        # (black, isort, flake8, mypy, darglint)")
+    print("  invoke pre-commit     # All pre-commit hooks (alternative to lint/style)")
     print("  invoke all            # All checks (tests, linting, security)")
     print("  invoke all --verbose  # All checks with detailed error output")
+    print("  invoke all --use-pre-commit  # All checks using pre-commit hooks")
     print()
 
     print("🛠️  UTILITIES:")
     print("  invoke clean          # Clean build artifacts and cache")
     print("  invoke install-deps   # Install development dependencies")
+    print("  invoke pre-commit-install # Install pre-commit hooks")
     print("  invoke docs           # Build documentation")
     print("  invoke docs-serve     # Serve documentation locally")
     print()
@@ -258,17 +289,19 @@ def help(c):
     print("  invoke --list         # List all available tasks")
     print("  invoke black && invoke flake8  # Run specific checks in sequence")
     print("  invoke lint            # Run all linting checks")
+    print("  invoke pre-commit      # Run pre-commit hooks (alternative)")
     print("  invoke test-unit       # Run only unit tests")
     print("  invoke all             # Run everything")
     print("  invoke all --verbose    # Run everything with detailed output")
 
 
 @task
-def all(c, verbose=False):
+def all(c, verbose=False, use_pre_commit=False):
     """Run all checks: tests, linting, security, and docs.
 
     Options:
         verbose (bool): Show detailed output for each section (default: False)
+        use_pre_commit (bool): Use pre-commit hooks instead of individual linting tasks (default: False)
     """
     setup_python_path()
 
@@ -287,7 +320,8 @@ def all(c, verbose=False):
         if success:
             print("✅ PASSED")
         else:
-            print(f"❌ {title.split(':')[1].strip()} FAILED")
+            section_name = title.split(":")[1].strip()
+            print(f"❌ {section_name} FAILED")
             if verbose:
                 print("Run with --verbose for detailed error output")
             return False
@@ -297,14 +331,21 @@ def all(c, verbose=False):
     print("🚀 COMPREHENSIVE TESTING SUITE")
     print("=" * 80)
 
-    # Run each test/check section separately with clear separation
-    sections = [
-        ("🧪 SECTION: TEST SUITE", pytest, "Running pytest with coverage"),
-        ("🔍 SECTION: LINTING CHECKS", lint, "Running all linting checks"),
-        ("🎨 SECTION: STYLE VALIDATION", style, "Running all style checks"),
-        ("🔒 SECTION: SECURITY SCAN", security, "Running security scan"),
-        ("📝 SECTION: TYPE CHECKING", mypy, "Running type checking"),
-    ]
+    # Choose linting approach based on use_pre_commit flag
+    if use_pre_commit:
+        sections = [
+            ("🧪 SECTION: TEST SUITE", pytest, "Running pytest with coverage"),
+            ("🔧 SECTION: PRE-COMMIT HOOKS", pre_commit, "Running pre-commit hooks"),
+            ("🔒 SECTION: SECURITY SCAN", security, "Running security scan"),
+        ]
+    else:
+        sections = [
+            ("🧪 SECTION: TEST SUITE", pytest, "Running pytest with coverage"),
+            ("🔍 SECTION: LINTING CHECKS", lint, "Running all linting checks"),
+            ("🎨 SECTION: STYLE VALIDATION", style, "Running all style checks"),
+            ("🔒 SECTION: SECURITY SCAN", security, "Running security scan"),
+            ("📝 SECTION: TYPE CHECKING", mypy, "Running type checking"),
+        ]
 
     for title, check_func, desc in sections:
         if verbose:
@@ -316,7 +357,7 @@ def all(c, verbose=False):
             print(f"\n{'=' * 80}")
             print("🚨 TESTING SUITE FAILED")
             print("=" * 80)
-            print(f"Run with: invoke all --verbose for detailed error output")
+            print("Run with: invoke all --verbose for detailed error output")
             return False
 
     # Final success message

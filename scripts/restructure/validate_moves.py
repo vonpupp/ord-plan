@@ -1,5 +1,10 @@
+"""Validation script to verify file movements were successful.
+
+This script validates that all expected files and directories
+have been moved from ord-plan/ to repository root.
 """
-Validation script to verify file movements were successful.
+
+"""Validation script to verify file movements were successful.
 
 This script validates that all expected files and directories
 have been moved from ord-plan/ to repository root.
@@ -10,7 +15,9 @@ from pathlib import Path
 
 
 # Add current directory to path for imports
-sys.path.insert(0, str(Path(__file__).parent))
+current_dir = Path(__file__).parent
+if str(current_dir) not in sys.path:
+    sys.path.insert(0, str(current_dir))
 
 from validate_state import RepositoryState
 from validate_state import RepositoryStateValidator
@@ -171,9 +178,10 @@ def main():
     print(f"Basic Functionality: {'✅ PASS' if func_ok else '❌ FAIL'}")
 
     overall_success = files_ok and state_ok and func_ok
-    print(
-        f"\nOverall Status: {'🎉 ALL VALIDATIONS PASSED' if overall_success else '⚠️  SOME VALIDATIONS FAILED'}"
+    status_msg = (
+        "🎉 ALL VALIDATIONS PASSED" if overall_success else "⚠️  SOME VALIDATIONS FAILED"
     )
+    print(f"\nOverall Status: {status_msg}")
 
     if overall_success:
         print("\n✅ User Story 1 (File Movements) completed successfully!")

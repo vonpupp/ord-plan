@@ -1,5 +1,4 @@
-"""
-Repository restructuring validation utilities.
+"""Repository restructuring validation utilities.
 
 This module provides validation tools to ensure the repository
 is in a clean state before restructuring operations begin.
@@ -69,8 +68,7 @@ class RepositoryValidator:
             return []
 
     def validate_repository_state(self) -> tuple[bool, List[str]]:
-        """
-        Validate repository is ready for restructuring.
+        """Validate repository is ready for restructuring.
 
         Returns:
             Tuple of (is_valid, error_messages)
@@ -97,8 +95,7 @@ class RepositoryValidator:
         return len(errors) == 0, errors
 
     def run_basic_tests(self) -> tuple[bool, List[str]]:
-        """
-        Run basic tests to ensure current state is functional.
+        """Run basic tests to ensure current state is functional.
 
         Returns:
             Tuple of (tests_pass, error_messages)

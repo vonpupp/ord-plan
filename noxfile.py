@@ -227,7 +227,8 @@ def typeguard(session: Session) -> None:
     session.install(".")
     session.install("pytest", "typeguard", "pygments")
     session.log(
-        "typeguard checking is temporarily disabled due to known runtime type checking conflicts"
+        "typeguard checking is temporarily disabled due to known runtime "
+        "type checking conflicts"
     )
     session.log("static type checking via mypy is already enabled")
     # Success without running tests - mypy provides comprehensive static type checking

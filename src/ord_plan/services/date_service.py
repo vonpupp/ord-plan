@@ -314,7 +314,8 @@ class DateService:
             years_future = date_range.end_date.year - datetime.now().year
             if years_future > 1:
                 violations.append(
-                    f"Generating events {years_future} years in the future (beyond 1 year\n)"
+                    f"Generating events {years_future} years in the future "
+                    f"(beyond 1 year limit)"
                 )
 
         return violations

@@ -1,8 +1,7 @@
-"""
-Repository state validation framework for restructuring operations.
+"""Repository state validation framework for restructuring operations.
 
 This module provides comprehensive validation for repository state transitions
-during the restructuring process.
+during restructuring process.
 """
 
 import os
@@ -49,8 +48,7 @@ class RepositoryStateValidator:
         self.validation_history = []
 
     def detect_current_state(self) -> RepositoryState:
-        """
-        Detect the current repository state.
+        """Detect the current repository state.
 
         Returns:
             Current RepositoryState
@@ -88,8 +86,7 @@ class RepositoryStateValidator:
     def validate_state_transition(
         self, from_state: RepositoryState, to_state: RepositoryState
     ) -> ValidationResult:
-        """
-        Validate that a state transition is valid.
+        """Validate that a state transition is valid.
 
         Args:
             from_state: Current state
@@ -119,7 +116,9 @@ class RepositoryStateValidator:
         if to_state not in valid_transitions.get(from_state, []):
             return ValidationResult(
                 success=False,
-                message=f"Invalid transition from {from_state.value} to {to_state.value}",
+                message=(
+                    f"Invalid transition from {from_state.value} to {to_state.value}"
+                ),
                 details={
                     "from_state": from_state.value,
                     "to_state": to_state.value,
@@ -135,8 +134,7 @@ class RepositoryStateValidator:
         )
 
     def validate_file_structure(self, state: RepositoryState) -> ValidationResult:
-        """
-        Validate file structure for a given state.
+        """Validate file structure for a given state.
 
         Args:
             state: State to validate
@@ -208,8 +206,7 @@ class RepositoryStateValidator:
         )
 
     def validate_python_imports(self, state: RepositoryState) -> ValidationResult:
-        """
-        Validate Python import statements for a given state.
+        """Validate Python import statements for a given state.
 
         Args:
             state: State to validate
@@ -251,7 +248,8 @@ class RepositoryStateValidator:
                         f.strip() for f in result.stdout.strip().split("\n")
                     ]
                     issues.append(
-                        f"Files still contain ord_plan imports: {', '.join(files_with_old_imports)}"
+                        "Files still contain ord_plan imports: "
+                        f"{', '.join(files_with_old_imports)}"
                     )
 
             except Exception as e:
@@ -268,8 +266,7 @@ class RepositoryStateValidator:
         )
 
     def validate_functionality(self, state: RepositoryState) -> ValidationResult:
-        """
-        Validate that functionality works for a given state.
+        """Validate that functionality works for a given state.
 
         Args:
             state: State to validate
@@ -339,8 +336,7 @@ class RepositoryStateValidator:
     def validate_complete_state(
         self, target_state: RepositoryState
     ) -> List[ValidationResult]:
-        """
-        Perform comprehensive validation for a target state.
+        """Perform comprehensive validation for a target state.
 
         Args:
             target_state: State to validate
@@ -398,8 +394,7 @@ class RepositoryStateValidator:
         return results
 
     def generate_validation_report(self, results: List[ValidationResult]) -> str:
-        """
-        Generate a human-readable validation report.
+        """Generate a human-readable validation report.
 
         Args:
             results: List of ValidationResult objects

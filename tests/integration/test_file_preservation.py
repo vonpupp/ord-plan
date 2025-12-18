@@ -194,5 +194,6 @@ class TestFilePreservation:
                 ],
             )
 
-            # Should handle error gracefully (either succeed with proper dirs or fail gracefully)
+            # Should handle error gracefully (either succeed with proper dirs
+            # or fail gracefully)
             assert result.exit_code != 0 or "Events written to" in result.output

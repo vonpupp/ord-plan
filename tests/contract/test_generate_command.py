@@ -195,7 +195,10 @@ class TestGenerateCommandContract:
         yaml_content = {
             "events": [
                 {
-                    "title": "This is a very long description that contains many chars to test.",
+                    "title": (
+                        "This is a very long description that contains many "
+                        "chars to test."
+                    ),
                     "cron": "0 9 * * 1",
                 }
             ]
@@ -227,7 +230,10 @@ class TestGenerateCommandContract:
         yaml_content = {
             "events": [
                 {
-                    "title": "This is a very long description that contains many chars to test.",
+                    "title": (
+                        "This is a very long description that contains many "
+                        "chars to test."
+                    ),
                     "cron": "0 9 * * 1",
                 }
             ]
