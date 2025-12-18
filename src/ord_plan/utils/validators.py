@@ -5,6 +5,14 @@ from typing import List, Optional, Callable, Any
 
 from croniter import croniter
 
+try:
+    from dateutil.parser import parse as dateutil_parse
+
+    HAS_DATEUTIL = True
+except ImportError:
+    dateutil_parse = None  # type: ignore[assignment]
+    HAS_DATEUTIL = False
+
 
 def validate_file_readable(file_path: str) -> List[str]:
     """Validate that a file exists and is readable."""
@@ -242,15 +250,6 @@ def validate_date_format(date_str: str, field_name: str = "date") -> List[str]:
         return errors
 
     from datetime import datetime
-
-    # Use dateutil if available, otherwise basic validation only
-    try:
-        from dateutil.parser import parse as dateutil_parse
-
-        HAS_DATEUTIL = True
-    except ImportError:
-        dateutil_parse = None  # type: ignore
-        HAS_DATEUTIL = False
 
     # Try YYYY-MM-DD format first (preferred)
     if len(date_str) == 10 and date_str[4] == "-" and date_str[7] == "-":
