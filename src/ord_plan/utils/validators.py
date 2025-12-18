@@ -67,14 +67,14 @@ def validate_cron_expression(
     errors = []
 
     if not cron_expr or not cron_expr.strip():
-        errors.append(f"Rule '{rule_title}': Cron expression cannot be empty")
+        errors.append(f"Rule {rule_title!r}: Cron expression cannot be empty")
         return errors
 
     # Basic format validation first
     fields = cron_expr.strip().split()
     if len(fields) != 5:
         errors.append(
-            f"Rule '{rule_title}': Invalid cron expression '{cron_expr}'. "
+            f"Rule {rule_title!r}: Invalid cron expression {cron_expr!r}. "
             "Expected format: 'minute hour day month weekday' (5 fields required)"
         )
         return errors
@@ -92,38 +92,38 @@ def validate_cron_expression(
 
         if "invalid" in error_msg and "cron expression" in error_msg:
             errors.append(
-                f"Rule '{rule_title}': Invalid cron expression '{cron_expr}'. "
+                f"Rule {rule_title!r}: Invalid cron expression {cron_expr!r}. "
                 "Expected format: 'minute hour day month weekday' (0-6 for weekdays)"
             )
         elif "field" in error_msg:
             errors.append(
-                f"Rule '{rule_title}': Invalid field in cron expression '{cron_expr}'. "
+                f"Rule {rule_title!r}: Invalid field in cron expression {cron_expr!r}. "
                 "Check that all fields are within valid ranges: minute (0-59), hour (0-23), "
                 "day (1-31), month (1-12), weekday (0-6)"
             )
         elif "range" in error_msg:
             errors.append(
-                f"Rule '{rule_title}': Invalid range in cron expression '{cron_expr}'. "
+                f"Rule {rule_title!r}: Invalid range in cron expression {cron_expr!r}. "
                 "Ranges should be in format 'start-end' with valid values"
             )
         elif "step" in error_msg or "increment" in error_msg:
             errors.append(
-                f"Rule '{rule_title}': Invalid step value in cron expression '{cron_expr}'. "
+                f"Rule {rule_title!r}: Invalid step value in cron expression {cron_expr!r}. "
                 "Step values should be positive integers in format 'field/step'"
             )
         elif "weekday" in error_msg or "day of week" in error_msg:
             errors.append(
-                f"Rule '{rule_title}': Invalid weekday in cron expression '{cron_expr}'. "
+                f"Rule {rule_title!r}: Invalid weekday in cron expression {cron_expr!r}. "
                 "Weekday should be 0-6 (Sunday=0) or use standard cron abbreviations"
             )
         else:
             errors.append(
-                f"Rule '{rule_title}': Invalid cron expression '{cron_expr}': {e}. "
+                f"Rule {rule_title!r}: Invalid cron expression {cron_expr!r}: {e}. "
                 "Please check your cron syntax"
             )
     except Exception as e:
         errors.append(
-            f"Rule '{rule_title}': Unexpected error validating cron expression '{cron_expr}': {e}"
+            f"Rule {rule_title!r}: Unexpected error validating cron expression {cron_expr!r}: {e}"
         )
 
     # Additional validation for common mistakes
@@ -133,27 +133,27 @@ def validate_cron_expression(
         # Check for obviously invalid values
         if minute.isdigit() and (int(minute) < 0 or int(minute) > 59):
             errors.append(
-                f"Rule '{rule_title}': Invalid minute value '{minute}' (must be 0-59)"
+                f"Rule {rule_title!r}: Invalid minute value {minute!r} (must be 0-59)"
             )
 
         if hour.isdigit() and (int(hour) < 0 or int(hour) > 23):
             errors.append(
-                f"Rule '{rule_title}': Invalid hour value '{hour}' (must be 0-23)"
+                f"Rule {rule_title!r}: Invalid hour value {hour!r} (must be 0-23)"
             )
 
         if day.isdigit() and (int(day) < 1 or int(day) > 31):
             errors.append(
-                f"Rule '{rule_title}': Invalid day value '{day}' (must be 1-31)"
+                f"Rule {rule_title!r}: Invalid day value {day!r} (must be 1-31)"
             )
 
         if month.isdigit() and (int(month) < 1 or int(month) > 12):
             errors.append(
-                f"Rule '{rule_title}': Invalid month value '{month}' (must be 1-12)"
+                f"Rule {rule_title!r}: Invalid month value {month!r} (must be 1-12)"
             )
 
         if weekday.isdigit() and (int(weekday) < 0 or int(weekday) > 6):
             errors.append(
-                f"Rule '{rule_title}': Invalid weekday value '{weekday}' (must be 0-6, Sunday=0)"
+                f"Rule {rule_title!r}: Invalid weekday value {weekday!r} (must be 0-6, Sunday=0)"
             )
 
     return errors
@@ -176,11 +176,11 @@ def validate_file_path(file_path: str) -> List[str]:
 
     # Check for potentially dangerous paths
     if ".." in file_path:
-        errors.append(f"File path '{file_path}' contains parent directory references")
+        errors.append(f"File path {file_path!r} contains parent directory references")
 
     # Check for null bytes
     if "\x00" in file_path:
-        errors.append(f"File path '{file_path}' contains invalid characters")
+        errors.append(f"File path {file_path!r} contains invalid characters")
 
     # Check path length (reasonable limits)
     if len(file_path) > 4096:  # Typical MAX_PATH limit
@@ -290,7 +290,7 @@ def validate_date_format(date_str: str, field_name: str = "date") -> List[str]:
         ]
         if day_name not in valid_days:
             errors.append(
-                f"Invalid {field_name} format: '{date_str}'. "
+                f"Invalid {field_name} format: {date_str!r}. "
                 "Use YYYY-MM-DD format or basic relative dates like 'today', 'next monday'"
             )
     elif lower_date.startswith("+") and "day" in lower_date:
@@ -300,12 +300,12 @@ def validate_date_format(date_str: str, field_name: str = "date") -> List[str]:
             int(days_part[1:])  # Should be parseable as int
         except (ValueError, IndexError):
             errors.append(
-                f"Invalid {field_name} format: '{date_str}'. "
+                f"Invalid {field_name} format: {date_str!r}. "
                 "Use YYYY-MM-DD format or basic relative dates like 'today', 'next monday'"
             )
     else:
         errors.append(
-            f"Invalid {field_name} format: '{date_str}'. "
+            f"Invalid {field_name} format: {date_str!r}. "
             "Use YYYY-MM-DD format or basic relative dates like 'today', 'next monday'"
         )
 

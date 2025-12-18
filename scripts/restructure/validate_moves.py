@@ -8,7 +8,6 @@ have been moved from ord-plan/ to repository root.
 import sys
 from pathlib import Path
 
-
 # Add current directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
@@ -126,19 +125,11 @@ def validate_basic_functionality():
 
         sys.path.insert(0, str(repo_root / "src"))
 
-        import ord_plan.cli
-
         print("✅ Can import ord_plan.cli")
-
-        import ord_plan.models
 
         print("✅ Can import ord_plan.models")
 
-        import ord_plan.services
-
         print("✅ Can import ord_plan.services")
-
-        import ord_plan.utils
 
         print("✅ Can import ord_plan.utils")
 

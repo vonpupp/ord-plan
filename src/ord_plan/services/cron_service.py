@@ -26,6 +26,9 @@ class CronService:
 
         Returns:
             List of OrgEvent objects
+
+        Raises:
+            ValueError: If cron expression is invalid
         """
         events = []
 
@@ -33,7 +36,7 @@ class CronService:
         try:
             cron = croniter(rule.cron, date_range.start_date)
         except ValueError as e:
-            raise ValueError(f"Invalid cron expression '{rule.cron}': {e}")
+            raise ValueError(f"Invalid cron expression {rule.cron!r}: {e}") from e
 
         # Generate all occurrences within the date range
         current_date = cron.get_next(datetime)
@@ -77,6 +80,9 @@ class CronService:
 
         Returns:
             List of all OrgEvent objects
+
+        Raises:
+            ValueError: If any rule has invalid cron expression
         """
         all_events = []
 

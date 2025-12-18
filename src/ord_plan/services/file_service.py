@@ -31,7 +31,6 @@ class FileService:
 
         Raises:
             PermissionError: Cannot write to target location
-            OSError: File system error
         """
         if file_path:
             # Ensure directory exists
@@ -130,8 +129,10 @@ class FileService:
         if not path.parent.exists():
             try:
                 path.parent.mkdir(parents=True, exist_ok=True)
-            except (PermissionError, OSError) as e:
-                raise PermissionError(f"Cannot create directory {path.parent}: {e}")
+            except OSError as e:
+                raise PermissionError(
+                    f"Cannot create directory {path.parent}: {e}"
+                ) from e
 
         if path.exists():
             if not os.access(file_path, os.W_OK):

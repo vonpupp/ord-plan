@@ -44,7 +44,7 @@ class TestGenerateCommandContract:
         # Try to make file unreadable - this might not work on all systems
         try:
             unreadable_file.chmod(0o000)
-        except (OSError, PermissionError):
+        except OSError:
             pytest.skip("File permission test not supported on this platform")
             return
 

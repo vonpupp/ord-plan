@@ -172,7 +172,7 @@ class TestFilePreservation:
 
     def test_file_permission_error_handling(self) -> None:
         """Test handling of file permission errors."""
-        with tempfile.TemporaryDirectory() as temp_dir:
+        with tempfile.TemporaryDirectory():
             rules_file = get_fixture_path("test_rules_basic.yaml")
 
             # Try to write to a non-existent location that might cause permission issues

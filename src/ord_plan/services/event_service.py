@@ -141,11 +141,13 @@ class EventService:
 
         if event_count > 1000:
             print(
-                f"⚠️  Generated {event_count} events in {generation_time:.2f}s - consider using a smaller date range for better performance"
+                f"⚠️  Generated {event_count} events in {generation_time:.2f}s - "
+                f"consider using a smaller date range for better performance"
             )
         elif generation_time > 30:  # More than 30 seconds
             print(
-                f"⚠️  Event generation took {generation_time:.2f}s for {event_count} events - this may indicate performance issues"
+                f"⚠️  Event generation took {generation_time:.2f}s for {event_count} events - "
+                f"this may indicate performance issues"
             )
 
         # Organize new events by date with optimization
@@ -155,7 +157,8 @@ class EventService:
 
         if event_count > 500:
             print(
-                f"📊 Organized {event_count} events into {len(new_nodes)} date nodes in {organization_time:.2f}s"
+                f"📊 Organized {event_count} events into {len(new_nodes)} date nodes "
+                f"in {organization_time:.2f}s"
             )
 
         # Merge with existing nodes efficiently
@@ -165,7 +168,8 @@ class EventService:
 
         if len(existing_nodes) > 100:
             print(
-                f"🔄 Merged {len(new_nodes)} new nodes with {len(existing_nodes)} existing nodes in {merge_time:.2f}s"
+                f"🔄 Merged {len(new_nodes)} new nodes with {len(existing_nodes)} "
+                f"existing nodes in {merge_time:.2f}s"
             )
 
         return merged_nodes
@@ -187,7 +191,7 @@ class EventService:
         estimated_events = 0
 
         # This is a rough estimation - actual count may vary based on cron specifics
-        for rule in rules:
+        for _rule in rules:
             # Simple estimation: assume daily events for now
             # In a real implementation, we'd parse cron patterns more intelligently
             estimated_events += total_days

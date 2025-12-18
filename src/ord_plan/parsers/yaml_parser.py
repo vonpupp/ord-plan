@@ -25,7 +25,6 @@ class YamlParser:
 
         Raises:
             FileNotFoundError: If the file doesn't exist
-            yaml.YAMLError: If the file contains invalid YAML
         """
         with open(file_path) as f:
             content: Dict[str, Any] = yaml.safe_load(f) or {}
@@ -90,7 +89,7 @@ class YamlParser:
                 )
                 event_rules.append(event_rule)
             except ValueError as e:
-                raise ValueError(f"Event at index {i}: {e}")
+                raise ValueError(f"Event at index {i}: {e}") from e
 
         return event_rules
 
@@ -125,7 +124,7 @@ class YamlParser:
         if unknown_keys:
             for key in sorted(unknown_keys):
                 errors.append(
-                    f"Warning: Unknown configuration key '{key}' will be ignored"
+                    f"Warning: Unknown configuration key {key!r} will be ignored"
                 )
 
         # Validate events section
@@ -171,9 +170,9 @@ class YamlParser:
         required_fields = ["title", "cron"]
         for field in required_fields:
             if field not in event_config:
-                errors.append(f"{event_prefix}: missing required field '{field}'")
+                errors.append(f"{event_prefix}: missing required field {field!r}")
             elif not event_config[field]:
-                errors.append(f"{event_prefix}: field '{field}' cannot be empty")
+                errors.append(f"{event_prefix}: field {field!r} cannot be empty")
 
         # Title validation
         title = event_config.get("title")
@@ -213,7 +212,7 @@ class YamlParser:
                         )
                     elif " " in tag:
                         errors.append(
-                            f"{event_prefix}: tag {j} '{tag}' cannot contain spaces"
+                            f"{event_prefix}: tag {j} {tag!r} cannot contain spaces"
                         )
 
         # TODO state validation
@@ -241,7 +240,7 @@ class YamlParser:
         unknown_fields = set(event_config.keys()) - known_fields
         for field in sorted(unknown_fields):
             errors.append(
-                f"{event_prefix}: Warning - unknown field '{field}' will be ignored"
+                f"{event_prefix}: Warning - unknown field {field!r} will be ignored"
             )
 
         return errors
@@ -258,15 +257,14 @@ class YamlParser:
 
         Raises:
             FileNotFoundError: If file doesn't exist
-            yaml.YAMLError: If YAML parsing fails
         """
         try:
             config = YamlParser.parse_rules_file(file_path)
         except yaml.YAMLError as e:
             # Enhance YAML parsing errors with context
-            raise yaml.YAMLError(f"Invalid YAML in {file_path}: {e}")
+            raise yaml.YAMLError(f"Invalid YAML in {file_path}: {e}") from e
         except Exception as e:
-            raise Exception(f"Error reading {file_path}: {e}")
+            raise Exception(f"Error reading {file_path}: {e}") from e
 
         # Validate schema
         errors = YamlParser.validate_yaml_schema(config)

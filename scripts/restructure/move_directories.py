@@ -40,7 +40,7 @@ class FileMover:
                 print(f"DRY RUN: Would run: {' '.join(cmd)}")
                 return True, ""
 
-            result = subprocess.run(
+            subprocess.run(
                 cmd, cwd=self.repo_root, capture_output=True, text=True, check=True
             )
 

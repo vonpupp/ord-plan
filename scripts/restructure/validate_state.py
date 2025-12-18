@@ -415,7 +415,7 @@ class RepositoryStateValidator:
             report.append(f"{i}. {result.message}: {status}")
 
             if not result.success and result.details:
-                for key, value in result.details.items():
+                for _, value in result.details.items():
                     if value:
                         if isinstance(value, list):
                             for item in value:

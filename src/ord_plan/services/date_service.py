@@ -67,6 +67,9 @@ class DateService:
 
         Returns:
             datetime object
+
+        Raises:
+            click.BadParameter: If date string cannot be parsed
         """
         if not date_str:
             return datetime.now()
@@ -134,17 +137,19 @@ class DateService:
                 days_str = date_str_lower.split()[1]
                 days = int(days_str)
                 return datetime.now() + timedelta(days=days)
-            except (ValueError, IndexError):
+            except (ValueError, IndexError) as e:
                 raise click.BadParameter(
                     f"Invalid days format: {date_str}. Use '+N days' where N is a number"
-                )
+                ) from e
 
         # Try to parse as absolute date or using dateutil parser
         try:
             result: datetime = date_parser.parse(date_str)
             return result
         except Exception as e:
-            raise click.BadParameter(f"Unable to parse date: {date_str}. Error: {e}")
+            raise click.BadParameter(
+                f"Unable to parse date: {date_str}. Error: {e}"
+            ) from e
 
     @staticmethod
     def validate_date_range(date_range: DateRange, force: bool = False) -> bool:
@@ -168,7 +173,8 @@ class DateService:
 
                 if days_past > 90:  # More than 3 months in past
                     click.echo(
-                        f"⚠️  Warning: You're generating events for dates {days_past} days in the past.",
+                        f"⚠️  Warning: You're generating events for dates "
+                        f"{days_past} days in the past.",
                         err=True,
                     )
                     click.echo(
@@ -179,7 +185,8 @@ class DateService:
                         return False
                 elif days_past > 30:  # More than 1 month in past
                     click.echo(
-                        f"⚠️  Warning: Generating events for dates {days_past} days in the past.",
+                        f"⚠️  Warning: Generating events for dates "
+                        f"{days_past} days in the past.",
                         err=True,
                     )
                     click.echo("   Consider if this is intentional.", err=True)
@@ -187,7 +194,8 @@ class DateService:
                         return False
                 else:
                     click.echo(
-                        f"⚠️  Warning: Generating events for past dates ({days_past} days ago).",
+                        f"⚠️  Warning: Generating events for past dates "
+                        f"({days_past} days ago).",
                         err=True,
                     )
                     if not click.confirm("   Do you want to continue?"):
@@ -199,7 +207,8 @@ class DateService:
 
                 if years_future > 1:
                     click.echo(
-                        f"⚠️  Warning: You're generating events more than {years_future} years in the future.",
+                        f"⚠️  Warning: You're generating events more than "
+                        f"{years_future} years in the future.",
                         err=True,
                     )
                     click.echo(
@@ -288,11 +297,13 @@ class DateService:
 
             if days_past > 90:
                 violations.append(
-                    f"Generating events for dates {days_past} days in the past (more than 3 months)"
+                    f"Generating events for dates {days_past} days in the past "
+                    f"(more than 3 months)"
                 )
             elif days_past > 30:
                 violations.append(
-                    f"Generating events for dates {days_past} days in the past (more than 1 month)"
+                    f"Generating events for dates {days_past} days in the past "
+                    f"(more than 1 month)"
                 )
 
         if date_range.has_distant_future_dates():

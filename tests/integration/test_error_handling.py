@@ -228,9 +228,7 @@ class TestErrorHandlingIntegration:
 
         # Test dangerous path (if implemented)
         dangerous_path = "../../../etc/passwd"
-        result = runner.invoke(
-            generate, ["--rules", str(yaml_file), "--file", dangerous_path]
-        )
+        runner.invoke(generate, ["--rules", str(yaml_file), "--file", dangerous_path])
 
         # Should either be blocked or succeed depending on implementation
         # The important thing is that it's handled safely

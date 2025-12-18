@@ -23,8 +23,9 @@ Examples:
   # Basic usage with default date range (current week)
   ord-plan generate --rules my-events.yaml --file tasks.org
 
-  # Custom date range for specific month
-  ord-plan generate --rules events.yaml --from 2025-01-01 --to 2025-01-31 --file january.org
+   # Custom date range for specific month
+   ord-plan generate --rules events.yaml --from 2025-01-01 --to 2025-01-31 \
+         --file january.org
 
   # Generate for next 30 days with relative dates
   ord-plan generate --rules events.yaml --from today --to "+30 days"
@@ -73,8 +74,9 @@ For detailed help with examples, visit: https://github.com/vonpupp/ord-plan
     type=str,
     help="""Start date for event generation.
 
-    Formats: YYYY-MM-DD, today, tomorrow, yesterday, next [day], next week/month/year, +N days
-    Default: Monday of current week""",
+     Formats: YYYY-MM-DD, today, tomorrow, yesterday, next [day], next \
+week/month/year, +N days
+     Default: Monday of current week""",
 )
 @click.option(
     "--to",
@@ -82,8 +84,9 @@ For detailed help with examples, visit: https://github.com/vonpupp/ord-plan
     type=str,
     help="""End date for event generation.
 
-    Formats: YYYY-MM-DD, today, tomorrow, yesterday, next [day], next week/month/year, +N days
-    Default: Sunday of current week""",
+     Formats: YYYY-MM-DD, today, tomorrow, yesterday, next [day], next \
+week/month/year, +N days
+     Default: Sunday of current week""",
 )
 @click.option(
     "--force",
@@ -117,7 +120,8 @@ def generate(
     and generates a hierarchical org-mode file with scheduled events.
 
     The output preserves existing content and adds new events in a structured
-    date hierarchy: Year > Week > Date > Events."""
+    date hierarchy: Year > Week > Date > Events.
+    """
 
     # Enhanced file path validation
     path_errors = validate_file_path(rules)
@@ -185,7 +189,8 @@ def generate(
             if hasattr(e, "problem_mark") and e.problem_mark is not None:
                 mark = e.problem_mark
                 click.echo(
-                    f"YAML parsing error at line {mark.line + 1}, column {mark.column + 1}:",
+                    f"YAML parsing error at line {mark.line + 1}, "
+                    f"column {mark.column + 1}:",
                     err=True,
                 )
                 click.echo(f"  {getattr(e, 'problem', str(e))}", err=True)
@@ -196,9 +201,9 @@ def generate(
         # Parse event rules
         try:
             event_rules = YamlParser.parse_event_rules(config)
-        except ValueError as e:
-            click.echo(f"Error parsing event rules: {e}", err=True)
-            raise click.Abort()
+        except ValueError as err:
+            click.echo(f"Error parsing event rules: {err}", err=True)
+            raise click.Abort() from err
 
         # Validate cron expressions for all rules
         cron_errors = []
@@ -225,25 +230,11 @@ def generate(
                 raise click.Abort()
 
         except Exception as e:
-            click.echo(f"Error parsing configuration: {e}", err=True)
-            raise click.Abort()
+            click.echo(f"Error processing file {file}: {e}", err=True)
+            raise click.Abort() from e
 
-        # Parse and validate date range
-        try:
-            date_range = DateService.parse_date_range(from_date, to_date)
-        except click.ClickException:
-            raise
-        except ValueError as e:
-            click.echo(f"Error: {e}", err=True)
-            raise click.Abort()
-        except Exception as e:
-            click.echo(f"Unexpected error parsing dates: {e}", err=True)
-            raise click.Abort()
-
-        # Enhanced date validation with force flag support
-        if not DateService.validate_date_range(date_range, force):
-            click.echo("Aborted.", err=True)
-            raise click.Abort()
+        # Parse date range
+        date_range = DateService.parse_date_range(from_date, to_date)
 
         # Handle remaining warnings if not forced
         if not force and date_range.warnings:
@@ -264,7 +255,8 @@ def generate(
             click.echo("🔍 DRY RUN MODE - No files will be modified", err=True)
             click.echo(f"   Rules file: {rules}")
             click.echo(
-                f"   Date range: {date_range.start_date.strftime('%Y-%m-%d')} to {date_range.end_date.strftime('%Y-%m-%d')}"
+                f"   Date range: {date_range.start_date.strftime('%Y-%m-%d')} to "
+                f"{date_range.end_date.strftime('%Y-%m-%d')}"
             )
             click.echo(f"   Events to generate: ~{len(event_rules) * 7} (estimated)")
             click.echo(
@@ -311,8 +303,12 @@ def generate(
                     click.echo(f"  Existing events preserved: {stats_before['events']}")
 
             except Exception as e:
-                click.echo(f"Error processing file {file}: {e}", err=True)
-                raise click.Abort()
+                click.echo(f"Unexpected error: {e}", err=True)
+                click.echo(
+                    "This appears to be an internal error. Please report this issue.",
+                    err=True,
+                )
+                raise click.Abort() from e
         else:
             click.echo(content)
 

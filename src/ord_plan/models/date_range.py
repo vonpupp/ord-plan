@@ -38,15 +38,18 @@ class DateRange:
 
             if days_past > 365:
                 self.warnings.append(
-                    f"Generating events for dates more than 1 year in the past ({days_past} days ago)"
+                    f"Generating events for dates more than 1 year in the past "
+                    f"({days_past} days ago)"
                 )
             elif days_past > 30:
                 self.warnings.append(
-                    f"Generating events for dates more than 1 month in the past ({days_past} days ago)"
+                    f"Generating events for dates more than 1 month in the past "
+                    f"({days_past} days ago)"
                 )
             elif days_past > 7:
                 self.warnings.append(
-                    f"Generating events for dates more than 1 week in the past ({days_past} days ago)"
+                    f"Generating events for dates more than 1 week in the past "
+                    f"({days_past} days ago)"
                 )
             else:
                 self.warnings.append(
@@ -65,11 +68,13 @@ class DateRange:
 
             if years_future > 2:
                 self.warnings.append(
-                    f"Generating events more than 2 years in the future ({years_future:.1f} years from now)"
+                    f"Generating events more than 2 years in the future "
+                    f"({years_future:.1f} years from now)"
                 )
             else:
                 self.warnings.append(
-                    f"Generating events beyond 1 year in the future ({years_future:.1f} years from now)"
+                    f"Generating events beyond 1 year in the future "
+                    f"({years_future:.1f} years from now)"
                 )
 
     def has_past_dates(self) -> bool:

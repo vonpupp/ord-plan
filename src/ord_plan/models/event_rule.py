@@ -28,5 +28,5 @@ class EventRule:
         for tag in self.tags:
             if not tag or " " in tag:
                 raise ValueError(
-                    f"Invalid tag format: '{tag}'. Tags cannot contain spaces."
+                    f"Invalid tag format: {tag!r}. Tags cannot contain spaces."
                 )

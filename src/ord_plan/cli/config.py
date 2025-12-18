@@ -110,9 +110,9 @@ class Configuration:
 
                 datetime.now().strftime(format_string)
             except ValueError as e:
-                errors.append(f"{format_name} '{format_string}' is invalid: {e}")
+                errors.append(f"{format_name} {format_string!r} is invalid: {e}")
             except Exception as e:
-                errors.append(f"{format_name} '{format_string}' caused error: {e}")
+                errors.append(f"{format_name} {format_string!r} caused error: {e}")
 
         return errors
 

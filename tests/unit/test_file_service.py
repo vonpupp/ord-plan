@@ -51,10 +51,13 @@ class TestFileService:
         """Test writing content to stdout."""
         content = "* Test Content"
 
-        FileService.write_org_content(content)
+        from io import StringIO
 
-        captured = capsys.readouterr()
-        assert captured.out == content
+        # Use StringIO to capture output
+        output_stream = StringIO()
+        FileService.write_org_content(content, None, output_stream)
+
+        assert output_stream.getvalue() == content
 
     def test_merge_with_existing_content_new_file(self) -> None:
         """Test merging when target file doesn't exist."""
@@ -145,10 +148,10 @@ class TestFileService:
 
                     # Restore permissions for cleanup
                     os.chmod(temp_dir, 0o755)
-                except (OSError, PermissionError):
+                except OSError:
                     # Systems without proper permission support
                     pytest.skip("File permission test not supported on this platform")
-        except (OSError, PermissionError):
+        except OSError:
             # Skip if we can't change permissions
             pytest.skip("File permission test not supported on this platform")
 
