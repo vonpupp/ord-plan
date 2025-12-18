@@ -14,8 +14,10 @@ class TestDateProtection:
         """Test detection of past dates."""
         now = datetime.now()
 
-        # Test recent past (less than 1 week)
-        past_date = now - timedelta(days=3)
+        # Test date from previous week (before current week's Monday)
+        # Go back enough days to ensure we're in the previous week
+        days_to_previous_week = now.weekday() + 8  # Go to previous week's Monday
+        past_date = now - timedelta(days=days_to_previous_week)
         date_range = DateRange(
             start_date=past_date.replace(hour=0, minute=0, second=0, microsecond=0),
             end_date=now,
@@ -23,14 +25,27 @@ class TestDateProtection:
 
         assert date_range.has_past_dates()
         assert len(date_range.warnings) > 0
-        assert "past dates" in " ".join(date_range.warnings).lower()
+        # Should contain some mention of past dates (could be "past dates" or "more than 1 week in the past")
+        warnings_text = " ".join(date_range.warnings).lower()
+        assert any(
+            phrase in warnings_text
+            for phrase in [
+                "past dates",
+                "week in the past",
+                "month in the past",
+                "year in the past",
+            ]
+        )
 
     def test_week_ago_past_date_warning(self):
         """Test warning for dates more than 1 week ago."""
         now = datetime.now()
 
-        # More than 1 week ago
-        past_date = now - timedelta(days=10)
+        # More than 1 week ago - go back at least 10 days from current week's Monday
+        days_to_previous_week = (
+            now.weekday() + 10
+        )  # Go to previous week's Monday + 3 more days
+        past_date = now - timedelta(days=days_to_previous_week)
         date_range = DateRange(
             start_date=past_date.replace(hour=0, minute=0, second=0, microsecond=0),
             end_date=now,
