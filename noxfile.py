@@ -152,6 +152,7 @@ def safety(session: Session) -> None:
         "scan",
         "--full-report",
         f"--file={requirements}",
+        "--disable-requirement-checks",  # Skip login requirement for CI
         success_codes=[
             0,
             64,
@@ -159,11 +160,11 @@ def safety(session: Session) -> None:
         silent=True,
     )
 
-    if result.returncode == 64:
+    if result and result.returncode == 64:
         session.warn(
             "Security vulnerabilities detected - review before production deployment"
         )
-    elif result.returncode != 0:
+    elif result and result.returncode != 0:
         session.error(f"Safety scan failed with exit code: {result.returncode}")
 
 
