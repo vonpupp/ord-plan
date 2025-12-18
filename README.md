@@ -372,6 +372,8 @@ If you encounter any problems, please [file an issue][file an issue] along with 
 
 This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter] template.
 
+<!-- github-only -->
+
 ## 📚 Additional Resources
 
 - [Full Documentation](https://ord-plan.readthedocs.io/)

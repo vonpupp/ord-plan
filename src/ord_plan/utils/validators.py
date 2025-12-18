@@ -1,7 +1,7 @@
 """Validation utilities for ord-plan."""
 
 import os
-from typing import List
+from typing import List, Optional, Callable, Any
 
 from croniter import croniter
 
@@ -193,7 +193,7 @@ def validate_org_file_content(
     Returns:
         List of warning messages (not errors since this is best effort)
     """
-    warnings = []
+    warnings: List[str] = []
 
     if not file_content:
         # Empty file is fine, no warnings
@@ -243,10 +243,14 @@ def validate_date_format(date_str: str, field_name: str = "date") -> List[str]:
 
     from datetime import datetime
 
+    # Use dateutil if available, otherwise basic validation only
     try:
-        from dateutil.parser import parse as parse_date
+        from dateutil.parser import parse as dateutil_parse
+
+        HAS_DATEUTIL = True
     except ImportError:
-        parse_date = None
+        dateutil_parse = None  # type: ignore
+        HAS_DATEUTIL = False
 
     # Try YYYY-MM-DD format first (preferred)
     if len(date_str) == 10 and date_str[4] == "-" and date_str[7] == "-":
@@ -261,9 +265,9 @@ def validate_date_format(date_str: str, field_name: str = "date") -> List[str]:
             return errors
 
     # Try parsing with dateutil if available
-    if parse_date:
+    if HAS_DATEUTIL and dateutil_parse is not None:
         try:
-            parse_date(date_str)
+            dateutil_parse(date_str)
             return errors  # Valid date
         except Exception:
             pass  # Fall through to basic validation

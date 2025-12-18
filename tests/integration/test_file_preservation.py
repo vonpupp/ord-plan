@@ -14,7 +14,7 @@ from tests.fixtures import get_fixture_path, read_fixture
 class TestFilePreservation:
     """Integration tests for file preservation."""
 
-    def test_generate_into_new_file(self):
+    def test_generate_into_new_file(self) -> None:
         """Test generating events into a new file."""
         with tempfile.TemporaryDirectory() as temp_dir:
             rules_file = get_fixture_path("test_rules_basic.yaml")
@@ -45,7 +45,7 @@ class TestFilePreservation:
                 assert "Test Event" in content
                 assert "2026" in content
 
-    def test_generate_into_existing_file_preserves_content(self):
+    def test_generate_into_existing_file_preserves_content(self) -> None:
         """Test that generating into existing file preserves existing content."""
         with tempfile.TemporaryDirectory() as temp_dir:
             rules_file = get_fixture_path("test_rules_file_preservation.yaml")
@@ -86,7 +86,7 @@ class TestFilePreservation:
             # Should add new content
             assert "New Generated Event" in final_content
 
-    def test_generate_stdout_unchanged(self):
+    def test_generate_stdout_unchanged(self) -> None:
         """Test that stdout output is unchanged."""
         rules_file = get_fixture_path("test_rules_stdout.yaml")
 
@@ -101,7 +101,7 @@ class TestFilePreservation:
         assert "Stdout Event" in result.output
         assert "2026" in result.output
 
-    def test_generate_creates_directories(self):
+    def test_generate_creates_directories(self) -> None:
         """Test that file creation creates necessary directories."""
         with tempfile.TemporaryDirectory() as temp_dir:
             rules_file = get_fixture_path("test_rules_nested.yaml")
@@ -131,7 +131,7 @@ class TestFilePreservation:
                 content = f.read()
                 assert "Nested Event" in content
 
-    def test_generate_preserves_events_on_same_date(self):
+    def test_generate_preserves_events_on_same_date(self) -> None:
         """Test that existing events on the same date are preserved."""
         with tempfile.TemporaryDirectory() as temp_dir:
             rules_file = get_fixture_path("test_rules_same_date.yaml")
@@ -171,7 +171,7 @@ class TestFilePreservation:
             # Should add new event on same date
             assert "Afternoon Planning" in final_content
 
-    def test_file_permission_error_handling(self):
+    def test_file_permission_error_handling(self) -> None:
         """Test handling of file permission errors."""
         with tempfile.TemporaryDirectory() as temp_dir:
             rules_file = get_fixture_path("test_rules_basic.yaml")

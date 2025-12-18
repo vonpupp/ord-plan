@@ -3,7 +3,7 @@
 import time
 from collections import defaultdict
 from datetime import datetime
-from typing import Dict, List
+from typing import Dict, List, Optional
 
 from ..models.date_range import DateRange
 from ..models.event_rule import EventRule
@@ -111,7 +111,7 @@ class EventService:
     def generate_complete_event_set(
         rules: List[EventRule],
         date_range: DateRange,
-        existing_nodes: List[OrgDateNode] = None,
+        existing_nodes: Optional[List[OrgDateNode]] = None,
         default_todo_state: str = "TODO",
     ) -> List[OrgDateNode]:
         """Generate complete set of events organized by date.

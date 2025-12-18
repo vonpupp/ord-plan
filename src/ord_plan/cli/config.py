@@ -2,7 +2,7 @@
 
 import os
 from dataclasses import dataclass
-from typing import Optional
+from typing import Optional, Dict, Union
 
 
 @dataclass
@@ -23,32 +23,42 @@ class Configuration:
     backup_existing_files: bool = False
 
     @classmethod
-    def from_dict(cls, config_dict: Optional[dict] = None) -> "Configuration":
+    def from_dict(
+        cls, config_dict: Optional[Dict[str, Union[str, int, bool]]] = None
+    ) -> "Configuration":
         """Create configuration from dictionary."""
         if config_dict is None:
             config_dict = {}
 
         return cls(
-            reverse_datetree_year_format=config_dict.get(
-                "REVERSE_DATETREE_YEAR_FORMAT", "%Y"
+            reverse_datetree_year_format=str(
+                config_dict.get("REVERSE_DATETREE_YEAR_FORMAT", "%Y")
             ),
-            reverse_datetree_week_format=config_dict.get(
-                "REVERSE_DATETREE_WEEK_FORMAT", "%Y-W%V"
+            reverse_datetree_week_format=str(
+                config_dict.get("REVERSE_DATETREE_WEEK_FORMAT", "%Y-W%V")
             ),
-            reverse_datetree_date_format=config_dict.get(
-                "REVERSE_DATETREE_DATE_FORMAT", "%Y-%m-%d %a"
+            reverse_datetree_date_format=str(
+                config_dict.get("REVERSE_DATETREE_DATE_FORMAT", "%Y-%m-%d %a")
             ),
-            default_todo_state=config_dict.get("default_todo_state", "TODO"),
-            max_events_per_file=config_dict.get("max_events_per_file", 10000),
-            processing_timeout_seconds=config_dict.get(
-                "processing_timeout_seconds", 120
+            default_todo_state=str(config_dict.get("default_todo_state", "TODO")),
+            max_events_per_file=int(config_dict.get("max_events_per_file", 10000)),
+            processing_timeout_seconds=int(
+                config_dict.get("processing_timeout_seconds", 120)
             ),
-            preserve_timestamps=config_dict.get("preserve_timestamps", True),
-            backup_existing_files=config_dict.get("backup_existing_files", False),
+            preserve_timestamps=str(
+                config_dict.get("preserve_timestamps", "true")
+            ).lower()
+            == "true",
+            backup_existing_files=str(
+                config_dict.get("backup_existing_files", "false")
+            ).lower()
+            == "true",
         )
 
     @classmethod
-    def from_env_and_dict(cls, config_dict: Optional[dict] = None) -> "Configuration":
+    def from_env_and_dict(
+        cls, config_dict: Optional[Dict[str, Union[str, int, bool]]] = None
+    ) -> "Configuration":
         """Create configuration from environment variables and dictionary."""
         if config_dict is None:
             config_dict = {}
@@ -104,7 +114,7 @@ class Configuration:
 
         return errors
 
-    def get_performance_limits(self) -> dict:
+    def get_performance_limits(self) -> Dict[str, int]:
         """Get performance limit settings.
 
         Returns:

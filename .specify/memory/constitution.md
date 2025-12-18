@@ -72,6 +72,26 @@ All changes require pull request review with:
 - **Docs**: sphinx build successful, coverage of new features
 - **Integration**: CLI commands tested end-to-end
 
+### Comprehensive Testing Requirements
+All testing and code quality checks MUST be run through the single entry point: `bin/test.sh`. This script is the ONLY authorized way to run tests for the project. No individual test commands should be run independently for development workflow compliance.
+
+**Required Test Components (all run by bin/test.sh):**
+- **Syntax Checks**: Python compilation validation for all source files
+- **Type Checking**: mypy strict mode with all error codes enabled
+- **Code Style**: ruff or flake8 linting with automatic fixing where possible
+- **Unit Tests**: pytest on tests/unit/ directory
+- **Integration Tests**: pytest on tests/integration/ directory
+- **Contract Tests**: pytest on tests/contract/ directory
+- **Security Scanning**: bandit vulnerability analysis
+- **Coverage Analysis**: pytest-cov with minimum 50% coverage requirement
+
+**Usage Requirements:**
+- ALL development must use `./bin/test.sh` for validation
+- Custom test execution is only allowed for debugging individual failures
+- Pre-commit hooks must call `./bin/test.sh syntax mypy style`
+- Pull request validation requires `./bin/test.sh all` to pass
+- Documentation must reference `bin/test.sh` as the sole testing interface
+
 ### File Management Rules
 
 **NO TEST FILES IN PROJECT ROOT**: Test and debug files MUST be created only in `tests/fixtures/` directory or `tmp/` directories. Never create test files in the project root directory. Any test files outside designated locations must be immediately removed.
@@ -98,4 +118,4 @@ This constitution supersedes all other development practices and guidelines. Ame
 
 All pull requests and code reviews must verify compliance with constitution principles. Any complexity or deviation from these principles must be explicitly justified with alternatives considered and rejected.
 
-**Version**: 1.1.2 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-17
+**Version**: 1.2.0 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-17

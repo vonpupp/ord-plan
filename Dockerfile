@@ -41,4 +41,4 @@ COPY . /workspace
 WORKDIR /workspace
 
 # Default command: run same session as GitHub Actions
-CMD ["nox", "--python=3.10", "-s", "docs-build"]
+CMD ["nox", "--python=3.10", "-s", "tests"]

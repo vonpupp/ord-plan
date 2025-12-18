@@ -7,6 +7,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from click.testing import CliRunner
 
 from ord_plan.cli.generate import generate
 from tests.fixtures import get_fixture_path, read_fixture
@@ -15,14 +16,14 @@ from tests.fixtures import get_fixture_path, read_fixture
 class TestGenerateCommandContract:
     """Test CLI interface compliance and parameter validation."""
 
-    def test_required_rules_parameter(self, runner):
+    def test_required_rules_parameter(self, runner: CliRunner) -> None:
         """Test that --rules parameter is required."""
         result = runner.invoke(generate, [])
 
         assert result.exit_code != 0
         assert "Missing option" in result.output or "--rules" in result.output
 
-    def test_rules_file_must_exist(self, runner):
+    def test_rules_file_must_exist(self, runner: CliRunner) -> None:
         """Test that rules file must exist."""
         result = runner.invoke(generate, ["--rules", "/nonexistent/file.yaml"])
 
@@ -31,7 +32,9 @@ class TestGenerateCommandContract:
             "does not exist" in result.output or "File does not exist" in result.output
         )
 
-    def test_rules_file_must_be_readable(self, runner, tmp_path):
+    def test_rules_file_must_be_readable(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test that rules file must be readable."""
         unreadable_file = tmp_path / "unreadable.yaml"
         unreadable_file.write_text("test")
@@ -42,7 +45,7 @@ class TestGenerateCommandContract:
         assert result.exit_code != 0
         assert "not readable" in result.output
 
-    def test_optional_file_parameter(self, runner):
+    def test_optional_file_parameter(self, runner: CliRunner) -> None:
         """Test that --file parameter is optional."""
         # Use fixture file
         yaml_file = get_fixture_path("minimal_events.yaml")
@@ -57,7 +60,9 @@ class TestGenerateCommandContract:
         # Should have some output to stdout
         assert result.output.strip() != ""
 
-    def test_from_to_parameter_validation(self, runner, tmp_path):
+    def test_from_to_parameter_validation(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test --from and --to parameter validation."""
         yaml_content = {
             "events": [
@@ -79,7 +84,7 @@ class TestGenerateCommandContract:
         assert result.exit_code != 0
         assert "Invalid" in result.output and "format" in result.output
 
-    def test_force_flag_parameter(self, runner, tmp_path):
+    def test_force_flag_parameter(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test --force flag parameter."""
         yaml_content = {
             "events": [
@@ -108,7 +113,7 @@ class TestGenerateCommandContract:
         # Should succeed due to --force flag
         assert result.exit_code == 0
 
-    def test_dry_run_flag_parameter(self, runner, tmp_path):
+    def test_dry_run_flag_parameter(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test --dry-run flag parameter."""
         yaml_content = {
             "events": [
@@ -133,7 +138,7 @@ class TestGenerateCommandContract:
         assert not output_file.exists()
         assert result.exit_code == 0
 
-    def test_help_output_format(self, runner):
+    def test_help_output_format(self, runner: CliRunner) -> None:
         """Test that help output includes required information."""
         result = runner.invoke(generate, ["--help"])
 
@@ -146,7 +151,7 @@ class TestGenerateCommandContract:
         assert "Examples:" in result.output
         assert "Date Formats:" in result.output
 
-    def test_exit_codes(self, runner):
+    def test_exit_codes(self, runner: CliRunner) -> None:
         """Test various exit code scenarios."""
         # Use fixture file
         yaml_file = get_fixture_path("minimal_events.yaml")
@@ -162,7 +167,7 @@ class TestGenerateCommandContract:
         result = runner.invoke(generate, ["--rules", "nonexistent.yaml"])
         assert result.exit_code == 2
 
-    def test_parameter_combinations(self, runner, tmp_path):
+    def test_parameter_combinations(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test various parameter combinations."""
         # Use fixture file
         yaml_file = get_fixture_path("minimal_events.yaml")
@@ -198,7 +203,7 @@ class TestGenerateCommandContract:
         )
         assert result.exit_code == 0
 
-    def test_output_format_consistency(self, runner, tmp_path):
+    def test_output_format_consistency(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test that output format is consistent org-mode."""
         yaml_content = {
             "events": [
@@ -237,7 +242,7 @@ class TestGenerateCommandContract:
         assert any("TODO" in line for line in output_lines)
         assert any(":test:" in line for line in output_lines)
 
-    def test_error_message_quality(self, runner, tmp_path):
+    def test_error_message_quality(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test that error messages are helpful and specific."""
         # Test YAML syntax error
         invalid_yaml = tmp_path / "invalid.yaml"
@@ -251,7 +256,9 @@ class TestGenerateCommandContract:
         # Should provide specific error information
         assert len(result.output) > 20  # Detailed error message
 
-    def test_parameter_order_independence(self, runner, tmp_path):
+    def test_parameter_order_independence(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test that parameter order doesn't matter."""
         yaml_content = {
             "events": [
@@ -304,7 +311,7 @@ class TestGenerateCommandContract:
             result = runner.invoke(generate, order)
             assert result.exit_code == 0
 
-    def test_long_parameter_values(self, runner):
+    def test_long_parameter_values(self, runner: CliRunner) -> None:
         """Test handling of long parameter values."""
         # Use fixture file with long content
         yaml_file = get_fixture_path("test_rules_long_content.yaml")
@@ -325,7 +332,7 @@ class TestGenerateCommandContract:
         assert result.exit_code == 0
         assert len(result.output) > 500  # Should contain long content
 
-    def test_unicode_support(self, runner):
+    def test_unicode_support(self, runner: CliRunner) -> None:
         """Test Unicode character support."""
         # Use fixture file with unicode content
         yaml_file = get_fixture_path("test_events.yaml")

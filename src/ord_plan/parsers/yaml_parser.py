@@ -25,10 +25,7 @@ class YamlParser:
             yaml.YAMLError: If the file contains invalid YAML
         """
         with open(file_path, "r") as f:
-            content = yaml.safe_load(f)
-
-        if content is None:
-            content = {}
+            content: Dict[str, Any] = yaml.safe_load(f) or {}
 
         return content
 

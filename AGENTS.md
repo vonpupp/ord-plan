@@ -18,7 +18,7 @@ docs/
 
 ## Commands
 
-pytest [ONLY COMMANDS FOR ACTIVE TECHNOLOGIES]
+./bin/test.sh [SINGLE AUTHORIZED TESTING COMMAND]
 ruff check .
 
 ## Code Style

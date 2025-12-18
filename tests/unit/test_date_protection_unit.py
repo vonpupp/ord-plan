@@ -1,6 +1,8 @@
 """Tests for date protection functionality."""
 
+from pathlib import Path
 import pytest
+from click.testing import CliRunner
 from datetime import datetime, timedelta
 
 from ord_plan.models.date_range import DateRange
@@ -10,7 +12,7 @@ from ord_plan.services.date_service import DateService
 class TestDateProtection:
     """Test date protection and warning functionality."""
 
-    def test_past_date_detection(self):
+    def test_past_date_detection(self) -> None:
         """Test detection of past dates."""
         now = datetime.now()
 
@@ -37,7 +39,7 @@ class TestDateProtection:
             ]
         )
 
-    def test_week_ago_past_date_warning(self):
+    def test_week_ago_past_date_warning(self) -> None:
         """Test warning for dates more than 1 week ago."""
         now = datetime.now()
 
@@ -56,7 +58,7 @@ class TestDateProtection:
             "more than 1 week in the past" in warning for warning in date_range.warnings
         )
 
-    def test_month_ago_past_date_warning(self):
+    def test_month_ago_past_date_warning(self) -> None:
         """Test warning for dates more than 1 month ago."""
         now = datetime.now()
 
@@ -73,7 +75,7 @@ class TestDateProtection:
             for warning in date_range.warnings
         )
 
-    def test_year_ago_past_date_warning(self):
+    def test_year_ago_past_date_warning(self) -> None:
         """Test warning for dates more than 1 year ago."""
         now = datetime.now()
 
@@ -89,7 +91,7 @@ class TestDateProtection:
             "more than 1 year in the past" in warning for warning in date_range.warnings
         )
 
-    def test_future_date_detection(self):
+    def test_future_date_detection(self) -> None:
         """Test detection of distant future dates."""
         now = datetime.now()
 
@@ -101,7 +103,7 @@ class TestDateProtection:
         assert len(date_range.warnings) > 0
         assert any("future" in warning for warning in date_range.warnings)
 
-    def test_one_year_future_no_warning(self):
+    def test_one_year_future_no_warning(self) -> None:
         """Test that dates exactly 1 year in future don't trigger distant future warning."""
         now = datetime.now()
 
@@ -111,7 +113,7 @@ class TestDateProtection:
 
         assert not date_range.has_distant_future_dates()
 
-    def test_two_years_future_warning(self):
+    def test_two_years_future_warning(self) -> None:
         """Test warning for dates more than 2 years in future."""
         now = datetime.now()
 
@@ -125,7 +127,7 @@ class TestDateProtection:
             for warning in date_range.warnings
         )
 
-    def test_date_protection_violations(self):
+    def test_date_protection_violations(self) -> None:
         """Test detection of date protection violations."""
         now = datetime.now()
 
@@ -144,7 +146,7 @@ class TestDateProtection:
         assert any("more than 1 month" in v and "past" in v for v in violations)
         assert any("years in the future" in v for v in violations)
 
-    def test_no_date_protection_violations(self):
+    def test_no_date_protection_violations(self) -> None:
         """Test that normal date ranges have no violations."""
         now = datetime.now()
 
@@ -165,7 +167,9 @@ class TestDateProtection:
         assert not date_range.has_past_dates()
         assert not date_range.has_distant_future_dates()
 
-    def test_date_range_summary_confirmation(self, runner, tmp_path):
+    def test_date_range_summary_confirmation(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test date range summary for user confirmation."""
         from unittest.mock import patch
 
@@ -185,7 +189,7 @@ class TestDateProtection:
             call_args = mock_confirm.call_args
             assert len(call_args[0]) > 0  # Some message was passed to confirm
 
-    def test_user_confirmation_prompt(self, runner):
+    def test_user_confirmation_prompt(self, runner: CliRunner) -> None:
         """Test enhanced user confirmation prompt."""
         from unittest.mock import patch
 
@@ -195,7 +199,7 @@ class TestDateProtection:
             assert result is False
             mock_confirm.assert_called_once_with("Test message", default=True)
 
-    def test_edge_case_dates(self):
+    def test_edge_case_dates(self) -> None:
         """Test edge cases for date protection."""
         now = datetime.now()
 
@@ -208,7 +212,7 @@ class TestDateProtection:
         if date_range.start_date.date() == now.date():
             assert len(past_warnings) == 0
 
-    def test_warning_accumulation(self):
+    def test_warning_accumulation(self) -> None:
         """Test that multiple warnings are accumulated correctly."""
         now = datetime.now()
 

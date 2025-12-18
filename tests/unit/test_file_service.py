@@ -15,7 +15,7 @@ from ord_plan.services.file_service import FileService
 class TestFileService:
     """Test cases for FileService."""
 
-    def test_write_org_content_to_file(self):
+    def test_write_org_content_to_file(self) -> None:
         """Test writing content to a file."""
         content = "* 2025\n** 2025-W01\n*** 2025-01-01 Tue\n**** TODO Test Event"
 
@@ -32,7 +32,7 @@ class TestFileService:
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
 
-    def test_write_org_content_creates_directories(self):
+    def test_write_org_content_creates_directories(self) -> None:
         """Test that writing content creates parent directories."""
         content = "* Test Content"
 
@@ -46,7 +46,9 @@ class TestFileService:
             with open(nested_path, "r") as f:
                 assert f.read() == content
 
-    def test_write_org_content_to_stdout(self, capsys):
+    def test_write_org_content_to_stdout(
+        self, capsys: pytest.CaptureFixture[str]
+    ) -> None:
         """Test writing content to stdout."""
         content = "* Test Content"
 
@@ -55,7 +57,7 @@ class TestFileService:
         captured = capsys.readouterr()
         assert captured.out == content
 
-    def test_merge_with_existing_content_new_file(self):
+    def test_merge_with_existing_content_new_file(self) -> None:
         """Test merging when target file doesn't exist."""
         with tempfile.TemporaryDirectory() as temp_dir:
             new_file = os.path.join(temp_dir, "new.org")
@@ -73,7 +75,7 @@ class TestFileService:
             assert len(result) == 1
             assert len(result[0].new_events) == 1
 
-    def test_merge_with_existing_content_existing_file(self):
+    def test_merge_with_existing_content_existing_file(self) -> None:
         """Test merging with existing file content."""
         with tempfile.TemporaryDirectory() as temp_dir:
             existing_file = os.path.join(temp_dir, "existing.org")
@@ -103,7 +105,7 @@ class TestFileService:
             assert len(result[0].existing_events) >= 1
             assert len(result[0].new_events) == 1  # New event added
 
-    def test_ensure_file_writable_new_file(self):
+    def test_ensure_file_writable_new_file(self) -> None:
         """Test checking writability for new file."""
         with tempfile.TemporaryDirectory() as temp_dir:
             new_file = os.path.join(temp_dir, "new.org")
@@ -111,7 +113,7 @@ class TestFileService:
             # Should return True for writable directory
             assert FileService.ensure_file_writable(new_file) is True
 
-    def test_ensure_file_writable_existing_file(self):
+    def test_ensure_file_writable_existing_file(self) -> None:
         """Test checking writability for existing file."""
         with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
             temp_path = f.name
@@ -123,7 +125,7 @@ class TestFileService:
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
 
-    def test_ensure_file_writable_permission_denied(self):
+    def test_ensure_file_writable_permission_denied(self) -> None:
         """Test permission denied scenario."""
         # This test might not work on all systems, so we'll skip it
         # if we can't create the scenario
@@ -142,7 +144,7 @@ class TestFileService:
             # Skip if we can't change permissions
             pytest.skip("Cannot change file permissions for testing")
 
-    def test_backup_existing_file(self):
+    def test_backup_existing_file(self) -> None:
         """Test creating backup of existing file."""
         original_content = "* Original Content"
 
@@ -167,7 +169,7 @@ class TestFileService:
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
 
-    def test_backup_existing_file_no_file(self):
+    def test_backup_existing_file_no_file(self) -> None:
         """Test backup when file doesn't exist."""
         with tempfile.TemporaryDirectory() as temp_dir:
             nonexistent_file = os.path.join(temp_dir, "nonexistent.org")
@@ -176,7 +178,7 @@ class TestFileService:
             backup_path = FileService.backup_existing_file(nonexistent_file)
             assert backup_path is None
 
-    def test_get_file_content_stats_existing_file(self):
+    def test_get_file_content_stats_existing_file(self) -> None:
         """Test getting stats for existing file."""
         content = """* 2025
 ** 2025-W01
@@ -200,7 +202,7 @@ class TestFileService:
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
 
-    def test_get_file_content_stats_nonexistent_file(self):
+    def test_get_file_content_stats_nonexistent_file(self) -> None:
         """Test getting stats for non-existent file."""
         with tempfile.TemporaryDirectory() as temp_dir:
             nonexistent_file = os.path.join(temp_dir, "nonexistent.org")
@@ -212,7 +214,7 @@ class TestFileService:
             assert stats["lines"] == 0
             assert stats["events"] == 0
 
-    def test_count_lines(self):
+    def test_count_lines(self) -> None:
         """Test line counting functionality."""
         content = "Line 1\nLine 2\nLine 3"
 
@@ -227,7 +229,7 @@ class TestFileService:
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
 
-    def test_count_lines_empty_file(self):
+    def test_count_lines_empty_file(self) -> None:
         """Test line counting for empty file."""
         with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
             temp_path = f.name
@@ -240,7 +242,7 @@ class TestFileService:
             if os.path.exists(temp_path):
                 os.unlink(temp_path)
 
-    def test_count_lines_nonexistent_file(self):
+    def test_count_lines_nonexistent_file(self) -> None:
         """Test line counting for non-existent file."""
         with tempfile.TemporaryDirectory() as temp_dir:
             nonexistent_file = os.path.join(temp_dir, "nonexistent.org")

@@ -1,7 +1,7 @@
 """Date service for handling date ranges and validation."""
 
 from datetime import datetime, timedelta
-from typing import Tuple, Union
+from typing import Tuple, Union, List
 
 import click
 from dateutil import parser as date_parser
@@ -138,7 +138,8 @@ class DateService:
 
         # Try to parse as absolute date or using dateutil parser
         try:
-            return date_parser.parse(date_str)
+            result: datetime = date_parser.parse(date_str)
+            return result
         except Exception as e:
             raise click.BadParameter(f"Unable to parse date: {date_str}. Error: {e}")
 
@@ -265,7 +266,7 @@ class DateService:
         )
 
     @staticmethod
-    def check_date_protection_violations(date_range: DateRange) -> list:
+    def check_date_protection_violations(date_range: DateRange) -> List[str]:
         """Check for date protection violations without user interaction.
 
         Args:

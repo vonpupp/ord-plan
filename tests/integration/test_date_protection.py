@@ -6,6 +6,7 @@ from pathlib import Path
 
 import pytest
 import yaml
+from click.testing import CliRunner
 
 from ord_plan.cli.generate import generate
 
@@ -13,7 +14,9 @@ from ord_plan.cli.generate import generate
 class TestDateProtectionIntegration:
     """Test date protection in CLI workflow."""
 
-    def test_past_date_warning_with_force(self, runner, tmp_path):
+    def test_past_date_warning_with_force(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test past date generation with --force flag."""
         # Create rules file
         yaml_content = {
@@ -53,7 +56,9 @@ class TestDateProtectionIntegration:
         assert output_file.exists()
         assert "Note: Bypassing" in result.output or "Bypassing" in result.output
 
-    def test_past_date_warning_without_force(self, runner, tmp_path):
+    def test_past_date_warning_without_force(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test past date warning without --force flag."""
         yaml_content = {
             "events": [
@@ -79,7 +84,9 @@ class TestDateProtectionIntegration:
         assert result.exit_code != 0 or "Warning" in result.output
         assert "past" in result.output.lower()
 
-    def test_future_date_warning_with_force(self, runner, tmp_path):
+    def test_future_date_warning_with_force(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test future date generation with --force flag."""
         yaml_content = {
             "events": [
@@ -117,7 +124,9 @@ class TestDateProtectionIntegration:
         assert result.exit_code == 0
         assert output_file.exists()
 
-    def test_future_date_warning_without_force(self, runner, tmp_path):
+    def test_future_date_warning_without_force(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test future date warning without --force flag."""
         yaml_content = {
             "events": [
@@ -143,7 +152,9 @@ class TestDateProtectionIntegration:
         assert result.exit_code != 0 or "Warning" in result.output
         assert "future" in result.output.lower()
 
-    def test_normal_date_range_no_warnings(self, runner, tmp_path):
+    def test_normal_date_range_no_warnings(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test normal date range without warnings."""
         yaml_content = {
             "events": [
@@ -185,7 +196,9 @@ class TestDateProtectionIntegration:
         assert output_file.exists()
         assert "warning" not in result.output.lower()
 
-    def test_mixed_past_and_future_warnings(self, runner, tmp_path):
+    def test_mixed_past_and_future_warnings(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test date range with both past and future warnings."""
         yaml_content = {
             "events": [
@@ -211,7 +224,7 @@ class TestDateProtectionIntegration:
         # Should show both warnings
         assert "past" in result.output.lower() or "future" in result.output.lower()
 
-    def test_edge_case_today_date(self, runner, tmp_path):
+    def test_edge_case_today_date(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test that today's date doesn't trigger past date warning."""
         yaml_content = {
             "events": [
@@ -253,7 +266,9 @@ class TestDateProtectionIntegration:
             or "days ago" not in result.output.lower()
         )
 
-    def test_force_flag_overrides_all_warnings(self, runner, tmp_path):
+    def test_force_flag_overrides_all_warnings(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
         """Test that --force overrides all date protection warnings."""
         yaml_content = {
             "events": [
@@ -294,7 +309,7 @@ class TestDateProtectionIntegration:
         # Should show that warnings are being bypassed
         assert "force" in result.output.lower() or "bypass" in result.output.lower()
 
-    def test_date_range_summary_output(self, runner, tmp_path):
+    def test_date_range_summary_output(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test that date range summary is shown when there are warnings."""
         yaml_content = {
             "events": [

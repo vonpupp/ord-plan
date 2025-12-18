@@ -9,7 +9,7 @@ from ord_plan.services.date_service import DateService
 class TestDateService:
     """Test cases for DateService."""
 
-    def test_parse_default_week_range(self):
+    def test_parse_default_week_range(self) -> None:
         """Test default date range (current week)."""
         date_range = DateService.parse_date_range(None, None)
 
@@ -21,7 +21,7 @@ class TestDateService:
         assert date_range.end_date.hour == 23
         assert date_range.end_date.minute == 59
 
-    def test_parse_absolute_dates(self):
+    def test_parse_absolute_dates(self) -> None:
         """Test parsing absolute date strings."""
         date_range = DateService.parse_date_range("2025-01-01", "2025-01-03")
 
@@ -32,7 +32,7 @@ class TestDateService:
         assert date_range.end_date.month == 1
         assert date_range.end_date.day == 3
 
-    def test_parse_today(self):
+    def test_parse_today(self) -> None:
         """Test parsing 'today'."""
         date_range = DateService.parse_date_range("today", "today")
 
@@ -44,7 +44,7 @@ class TestDateService:
         assert date_range.start_date.date() == today.date()
         assert date_range.end_date.date() == end_today.date()
 
-    def test_parse_tomorrow(self):
+    def test_parse_tomorrow(self) -> None:
         """Test parsing 'tomorrow'."""
         date_range = DateService.parse_date_range("tomorrow", "tomorrow")
 

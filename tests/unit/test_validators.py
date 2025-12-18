@@ -1,5 +1,6 @@
 """Tests for validation utilities."""
 
+from pathlib import Path
 import pytest
 
 from ord_plan.utils.validators import (
@@ -15,7 +16,7 @@ from ord_plan.utils.validators import (
 class TestCronValidation:
     """Test cron expression validation."""
 
-    def test_valid_cron_expressions(self):
+    def test_valid_cron_expressions(self) -> None:
         """Test that valid cron expressions pass validation."""
         valid_expressions = [
             "0 9 * * 1-5",  # Weekdays at 9 AM
@@ -29,7 +30,7 @@ class TestCronValidation:
             errors = validate_cron_expression(expr, "test rule")
             assert errors == [], f"Valid expression '{expr}' should have no errors"
 
-    def test_invalid_cron_expressions(self):
+    def test_invalid_cron_expressions(self) -> None:
         """Test that invalid cron expressions are caught."""
         invalid_cases = [
             ("invalid", "Rule 'test rule': Invalid cron expression"),
@@ -46,7 +47,7 @@ class TestCronValidation:
             assert len(errors) > 0
             assert any(expected_error in error for error in errors)
 
-    def test_cron_validation_with_rule_title(self):
+    def test_cron_validation_with_rule_title(self) -> None:
         """Test that rule titles are included in error messages."""
         errors = validate_cron_expression("invalid", "My Custom Rule")
         assert len(errors) > 0
@@ -56,7 +57,7 @@ class TestCronValidation:
 class TestFileValidation:
     """Test file path validation."""
 
-    def test_valid_file_paths(self):
+    def test_valid_file_paths(self) -> None:
         """Test that valid file paths pass validation."""
         valid_paths = [
             "/tmp/test.yaml",
@@ -69,7 +70,7 @@ class TestFileValidation:
             errors = validate_file_path(path)
             assert errors == [], f"Valid path '{path}' should have no errors"
 
-    def test_invalid_file_paths(self):
+    def test_invalid_file_paths(self) -> None:
         """Test that invalid file paths are caught."""
         invalid_cases = [
             ("", "File path cannot be empty"),
@@ -83,7 +84,7 @@ class TestFileValidation:
             assert len(errors) > 0
             assert any(expected_error in error for error in errors)
 
-    def test_very_long_path(self):
+    def test_very_long_path(self) -> None:
         """Test path length validation."""
         long_path = "/" + "a" * 5000  # Very long path
         errors = validate_file_path(long_path)
@@ -94,7 +95,7 @@ class TestFileValidation:
 class TestDateFormatValidation:
     """Test date format validation."""
 
-    def test_valid_date_formats(self):
+    def test_valid_date_formats(self) -> None:
         """Test that valid date formats pass validation."""
         valid_dates = [
             "2025-01-01",
@@ -109,7 +110,7 @@ class TestDateFormatValidation:
             errors = validate_date_format(date_str, "test date")
             assert errors == [], f"Valid date '{date_str}' should have no errors"
 
-    def test_invalid_date_formats(self):
+    def test_invalid_date_formats(self) -> None:
         """Test that invalid date formats are caught."""
         invalid_cases = [
             ("", "cannot be empty"),
@@ -128,12 +129,12 @@ class TestDateFormatValidation:
 class TestOrgContentValidation:
     """Test org-mode content validation."""
 
-    def test_empty_content(self):
+    def test_empty_content(self) -> None:
         """Test that empty content has no warnings."""
         warnings = validate_org_file_content("", "test.org")
         assert warnings == []
 
-    def test_valid_org_content(self):
+    def test_valid_org_content(self) -> None:
         """Test that valid org content has no warnings."""
         valid_content = """* 2025
 ** 2025-W01
@@ -145,14 +146,14 @@ class TestOrgContentValidation:
         warnings = validate_org_file_content(valid_content, "test.org")
         assert warnings == []
 
-    def test_binary_content_detection(self):
+    def test_binary_content_detection(self) -> None:
         """Test detection of potentially binary content."""
         binary_content = "Normal text\n\x00\x01\x02\x03More text"
         warnings = validate_org_file_content(binary_content, "test.org")
         assert len(warnings) > 0
         assert "binary data" in warnings[0]
 
-    def test_very_long_lines(self):
+    def test_very_long_lines(self) -> None:
         """Test detection of very long lines."""
         long_line = "a" * 10001
         content = f"Normal line\n{long_line}\nAnother line"
@@ -164,19 +165,19 @@ class TestOrgContentValidation:
 class TestFileReadableValidation:
     """Test file readable validation."""
 
-    def test_nonexistent_file(self):
+    def test_nonexistent_file(self) -> None:
         """Test validation of non-existent files."""
         errors = validate_file_readable("/nonexistent/file.yaml")
         assert len(errors) > 0
         assert "does not exist" in errors[0]
 
-    def test_directory_instead_of_file(self, tmp_path):
+    def test_directory_instead_of_file(self, tmp_path: Path) -> None:
         """Test validation when path points to a directory."""
         errors = validate_file_readable(str(tmp_path))
         assert len(errors) > 0
         assert "not a file" in errors[0]
 
-    def test_unreadable_file(self, tmp_path):
+    def test_unreadable_file(self, tmp_path: Path) -> None:
         """Test validation of unreadable files."""
         test_file = tmp_path / "test.yaml"
         test_file.write_text("test content")
@@ -193,7 +194,7 @@ class TestFileReadableValidation:
 class TestFileWritableValidation:
     """Test file writable validation."""
 
-    def test_writable_file(self, tmp_path):
+    def test_writable_file(self, tmp_path: Path) -> None:
         """Test validation of writable files."""
         test_file = tmp_path / "test.org"
         test_file.write_text("test")
@@ -201,13 +202,13 @@ class TestFileWritableValidation:
         errors = validate_file_writable(str(test_file))
         assert errors == []
 
-    def test_nonexistent_file_in_writable_dir(self, tmp_path):
+    def test_nonexistent_file_in_writable_dir(self, tmp_path: Path) -> None:
         """Test validation of non-existent file in writable directory."""
         nonexistent_file = tmp_path / "nonexistent.org"
         errors = validate_file_writable(str(nonexistent_file))
         assert errors == []
 
-    def test_unwritable_directory(self, tmp_path):
+    def test_unwritable_directory(self, tmp_path: Path) -> None:
         """Test validation of files in unwritable directories."""
         # This test might not work on all systems due to permission restrictions
         unwritable_dir = tmp_path / "unwritable"

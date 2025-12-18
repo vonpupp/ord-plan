@@ -3,6 +3,7 @@
 import pytest
 from click.testing import CliRunner
 from datetime import datetime, timedelta
+from pathlib import Path
 
 from ord_plan.cli import cli_group
 
@@ -10,7 +11,7 @@ from ord_plan.cli import cli_group
 class TestDateRanges:
     """Test date range flexibility functionality."""
 
-    def test_default_date_range(self, runner: CliRunner, tmp_path):
+    def test_default_date_range(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test default date range (current week)."""
         rules_file = tmp_path / "rules.yaml"
         rules_file.write_text("""
@@ -45,7 +46,7 @@ events:
             or "*** 2025-01-03" in output
         )
 
-    def test_relative_dates(self, runner: CliRunner, tmp_path):
+    def test_relative_dates(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test relative date parsing."""
         rules_file = tmp_path / "rules.yaml"
         rules_file.write_text("""
@@ -73,7 +74,7 @@ events:
         # Should contain events
         assert "TODO Test Task" in output
 
-    def test_next_weekday(self, runner: CliRunner, tmp_path):
+    def test_next_weekday(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test 'next monday' parsing."""
         rules_file = tmp_path / "rules.yaml"
         rules_file.write_text("""

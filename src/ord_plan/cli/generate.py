@@ -192,7 +192,7 @@ def generate(
                     f"YAML parsing error at line {mark.line + 1}, column {mark.column + 1}:",
                     err=True,
                 )
-                click.echo(f"  {e.problem}", err=True)
+                click.echo(f"  {getattr(e, 'problem', str(e))}", err=True)
             else:
                 click.echo(f"YAML parsing error: {e}", err=True)
             raise click.Abort()

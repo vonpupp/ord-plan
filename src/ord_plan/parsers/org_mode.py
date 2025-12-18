@@ -1,6 +1,6 @@
 """Org-mode parser and renderer for ord-plan."""
 
-from typing import List, Optional
+from typing import List, Optional, Dict, Tuple, Any
 
 import orgparse
 from orgparse.node import OrgRootNode
@@ -54,7 +54,7 @@ class OrgModeParser:
         lines = []
 
         # Group by year and week
-        year_weeks = {}
+        year_weeks: Dict[Tuple[str, str], List[OrgDateNode]] = {}
         for node in date_nodes:
             year_week_key = (node.year, node.week)
             if year_week_key not in year_weeks:
@@ -94,7 +94,7 @@ class OrgModeParser:
         return "\n".join(lines)
 
     @staticmethod
-    def _is_date_node(node) -> bool:
+    def _is_date_node(node: Any) -> bool:
         """Check if a node represents a date."""
         # A date node typically has a heading that looks like a date
         # This is a simple implementation - could be enhanced
@@ -108,7 +108,7 @@ class OrgModeParser:
         return bool(re.match(r"\d{4}-\d{2}-\d{2}", heading))
 
     @staticmethod
-    def _parse_date_node(node) -> Optional[OrgDateNode]:
+    def _parse_date_node(node: Any) -> Optional[OrgDateNode]:
         """Parse a date node from orgparse node."""
         try:
             # Extract date from heading - this is simplified
@@ -138,7 +138,7 @@ class OrgModeParser:
             return None
 
     @staticmethod
-    def _parse_event_from_node(node) -> Optional[OrgEvent]:
+    def _parse_event_from_node(node: Any) -> Optional[OrgEvent]:
         """Parse an event from orgparse node."""
         heading = node.heading
         if not heading:

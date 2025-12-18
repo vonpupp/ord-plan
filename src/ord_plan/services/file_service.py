@@ -3,7 +3,7 @@
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional, TextIO
+from typing import List, Optional, Dict, TextIO
 
 from ..models.org_date_node import OrgDateNode
 from ..models.org_event import OrgEvent
@@ -164,7 +164,7 @@ class FileService:
         return backup_path
 
     @staticmethod
-    def get_file_content_stats(file_path: str) -> dict:
+    def get_file_content_stats(file_path: str) -> Dict[str, int]:
         """Get statistics about file content.
 
         Args:
