@@ -69,7 +69,7 @@ class DateService:
             datetime object
 
         Raises:
-            click.BadParameter: If date string cannot be parsed
+            BadParameter: If date string cannot be parsed
         """
         if not date_str:
             return datetime.now()

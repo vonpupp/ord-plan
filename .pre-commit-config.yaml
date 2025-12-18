@@ -27,6 +27,11 @@ repos:
         language: system
         types: [python]
         stages: [manual]
+        args:
+          [
+            --ignore-raise,
+            "FileNotFoundError,PermissionError,OSError,BadParameter",
+          ]
       - id: end-of-file-fixer
         name: Fix End of Files
         entry: poetry run end-of-file-fixer

@@ -15,16 +15,13 @@ class YamlParser:
 
     @staticmethod
     def parse_rules_file(file_path: str) -> Dict[str, Any]:
-        """Parse a YAML rules file and return the configuration.
+        """Parse YAML rules file.
 
         Args:
-            file_path: Path to the YAML rules file
+            file_path: Path to YAML rules file
 
         Returns:
             Dictionary containing the parsed configuration
-
-        Raises:
-            FileNotFoundError: If the file doesn't exist
         """
         with open(file_path) as f:
             content: Dict[str, Any] = yaml.safe_load(f) or {}
@@ -258,7 +255,8 @@ class YamlParser:
             Tuple of (config_dict, errors_list)
 
         Raises:
-            FileNotFoundError: If file doesn't exist
+            YAMLError: If YAML parsing fails
+            Exception: For other file reading errors
         """
         try:
             config = YamlParser.parse_rules_file(file_path)

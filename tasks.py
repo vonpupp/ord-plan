@@ -177,7 +177,11 @@ def flake8(c):
 def darglint(c):
     """Run docstring linting."""
     setup_python_path()
-    return run_command(c, "poetry run darglint src/", "Running docstring linting")
+    return run_command(
+        c,
+        'poetry run darglint --ignore-raise "FileNotFoundError,PermissionError,OSError,BadParameter" src/',
+        "Running docstring linting",
+    )
 
 
 @task

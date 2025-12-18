@@ -29,8 +29,6 @@ class FileService:
             file_path: Target file path (None for stdout)
             output_stream: Output stream (default: sys.stdout)
 
-        Raises:
-            PermissionError: Cannot write to target location
         """
         if file_path:
             # Ensure directory exists
@@ -120,8 +118,7 @@ class FileService:
             True if writable, False otherwise
 
         Raises:
-            PermissionError: No write permission
-            OSError: Invalid path
+            PermissionError: If file or directory is not writable
         """
         path = Path(file_path)
 
