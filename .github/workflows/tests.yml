@@ -8,6 +8,7 @@ jobs:
   tests:
     name: ${{ matrix.session }} ${{ matrix.python }} / ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
+
     strategy:
       fail-fast: false
       matrix:
@@ -17,22 +18,21 @@ jobs:
           - { python: "3.10", os: "ubuntu-latest", session: "tests" }
           - { python: "3.10", os: "windows-latest", session: "tests" }
           - { python: "3.10", os: "macos-latest", session: "tests" }
-
           - { python: "3.10", os: "ubuntu-latest", session: "typeguard" }
           - { python: "3.10", os: "ubuntu-latest", session: "xdoctest" }
           - { python: "3.10", os: "ubuntu-latest", session: "docs-build" }
-          #- { python: "3.10", os: "ubuntu-latest", session: "safety" }
 
     env:
       NOXSESSION: ${{ matrix.session }}
       FORCE_COLOR: "1"
       PRE_COMMIT_COLOR: "always"
+      COVERAGE_FILE: ${{ github.workspace }}/.coverage
 
     steps:
       - name: Check out the repository
         uses: actions/checkout@v4
 
-      - name: Set up Python ${{ matrix.python }}
+      - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python }}
@@ -45,10 +45,8 @@ jobs:
       - name: Upgrade pip in virtual environments
         shell: python
         run: |
-          import os
-          import pip
-
-          with open(os.environ["GITHUB_ENV"], mode="a") as io:
+          import os, pip
+          with open(os.environ["GITHUB_ENV"], "a") as io:
               print(f"VIRTUALENV_PIP={pip.__version__}", file=io)
 
       - name: Install Poetry
@@ -62,30 +60,6 @@ jobs:
           pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
           pipx inject --pip-args=--constraint=.github/workflows/constraints.txt nox nox-poetry
           nox --version
-
-      - name: Compute pre-commit cache key
-        if: matrix.session == 'pre-commit'
-        id: pre-commit-cache
-        shell: python
-        run: |
-          import hashlib
-          import sys
-
-          python = "py{}.{}".format(*sys.version_info[:2])
-          payload = sys.version.encode() + sys.executable.encode()
-          digest = hashlib.sha256(payload).hexdigest()
-          result = "${{ runner.os }}-{}-{}-pre-commit".format(python, digest[:8])
-
-          print("::set-output name=result::{}".format(result))
-
-      - name: Restore pre-commit cache
-        uses: actions/cache@v4
-        if: matrix.session == 'pre-commit'
-        with:
-          path: ~/.cache/pre-commit
-          key: ${{ steps.pre-commit-cache.outputs.result }}-${{ hashFiles('.pre-commit-config.yaml') }}
-          restore-keys: |
-            ${{ steps.pre-commit-cache.outputs.result }}-
 
       - name: Run Nox
         run: |
@@ -130,12 +104,10 @@ jobs:
         with:
           name: coverage-data
           path: coverage-data/
-          merge-multiple: true
 
       - name: Combine coverage data
         run: |
-          mkdir -p coverage-data
-          mv coverage-data/.coverage* .
+          mv coverage-data/.coverage .
           nox --session=coverage
 
       - name: Create coverage report
