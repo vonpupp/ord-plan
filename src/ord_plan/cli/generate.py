@@ -1,24 +1,20 @@
 """Generate command for ord-plan."""
 
-from datetime import datetime
-from typing import Optional, Union
+from typing import Optional
 
 import click
 
 from ..cli.config import Configuration
-from ..models.date_range import DateRange
 from ..parsers.org_mode import OrgModeParser
 from ..parsers.yaml_parser import YamlParser
 from ..services.date_service import DateService
 from ..services.event_service import EventService
 from ..services.file_service import FileService
-from ..utils.validators import (
-    validate_cron_expression,
-    validate_date_format,
-    validate_file_path,
-    validate_file_readable,
-    validate_file_writable,
-)
+from ..utils.validators import validate_cron_expression
+from ..utils.validators import validate_date_format
+from ..utils.validators import validate_file_path
+from ..utils.validators import validate_file_readable
+from ..utils.validators import validate_file_writable
 
 
 @click.command(
@@ -52,7 +48,7 @@ For detailed help with examples, visit: https://github.com/vonpupp/ord-plan
     required=True,
     type=click.Path(exists=True, readable=True),
     help="""Path to YAML rules file containing event definitions.
-    
+
     Example rules file format:
     events:
       - title: "Morning Exercise"
@@ -66,7 +62,7 @@ For detailed help with examples, visit: https://github.com/vonpupp/ord-plan
 @click.option(
     "--file",
     type=click.Path(),
-    help="""Path to target org-mode file. 
+    help="""Path to target org-mode file.
     If not specified, output goes to stdout.
     Existing files are preserved, new events are appended.
     Non-existent files are created.""",
@@ -76,7 +72,7 @@ For detailed help with examples, visit: https://github.com/vonpupp/ord-plan
     "from_date",
     type=str,
     help="""Start date for event generation.
-    
+
     Formats: YYYY-MM-DD, today, tomorrow, yesterday, next [day], next week/month/year, +N days
     Default: Monday of current week""",
 )
@@ -85,7 +81,7 @@ For detailed help with examples, visit: https://github.com/vonpupp/ord-plan
     "to_date",
     type=str,
     help="""End date for event generation.
-    
+
     Formats: YYYY-MM-DD, today, tomorrow, yesterday, next [day], next week/month/year, +N days
     Default: Sunday of current week""",
 )
@@ -93,18 +89,18 @@ For detailed help with examples, visit: https://github.com/vonpupp/ord-plan
     "--force",
     is_flag=True,
     help="""Bypass past/future date warnings.
-    
+
     Use with caution when generating events for:
     - Dates more than 1 month in the past
     - Dates more than 1 year in the future
-    
+
     This flag automatically confirms all warning prompts.""",
 )
 @click.option(
     "--dry-run",
     is_flag=True,
     help="""Show what would be generated without creating/modifying files.
-    
+
     Useful for testing and previewing output before committing changes.""",
 )
 def generate(

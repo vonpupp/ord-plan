@@ -8,9 +8,13 @@ import statements during repository restructuring.
 import ast
 import re
 import sys
-from pathlib import Path
-from typing import List, Dict, Tuple, Set, Optional, NamedTuple
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict
+from typing import List
+from typing import NamedTuple
+from typing import Optional
+from typing import Tuple
 
 
 class ImportInfo(NamedTuple):
@@ -55,7 +59,7 @@ class ImportParser:
         imports = []
 
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             # Parse AST to extract imports
@@ -237,7 +241,7 @@ class ImportUpdater:
     def _get_original_line(self, file_path: Path, lineno: int) -> str:
         """Get the original line from file at given line number."""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 lines = f.readlines()
                 if 1 <= lineno <= len(lines):
                     return lines[lineno - 1]
@@ -257,7 +261,7 @@ class ImportUpdater:
             True if successful, False otherwise
         """
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 lines = f.readlines()
 
             # Apply updates (work backwards to avoid line number issues)
@@ -315,14 +319,14 @@ class ImportUpdater:
                     else:
                         errors.append(f"Failed to update {relative_path}")
             else:
-                print(f"  ℹ️  No import updates needed")
+                print("  ℹ️  No import updates needed")
 
         return files_updated, errors
 
     def get_update_summary(self) -> Dict[str, int]:
         """Get summary of all updates performed."""
         summary = {
-            "files_updated": len(set(update.file_path for update in self.updates)),
+            "files_updated": len({update.file_path for update in self.updates}),
             "total_updates": len(self.updates),
             "import_updates": len(
                 [u for u in self.updates if "import" in u.original_import]
@@ -406,7 +410,7 @@ def main():
 
     # Show summary
     summary = updater.get_update_summary()
-    print(f"\n📊 Update Summary:")
+    print("\n📊 Update Summary:")
     print(f"  📁 Files updated: {summary['files_updated']}")
     print(f"  🔄 Total updates: {summary['total_updates']}")
     print(f"  📦 Import updates: {summary['import_updates']}")

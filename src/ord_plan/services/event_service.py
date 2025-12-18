@@ -3,7 +3,8 @@
 import time
 from collections import defaultdict
 from datetime import datetime
-from typing import Dict, List, Optional
+from typing import List
+from typing import Optional
 
 from ..models.date_range import DateRange
 from ..models.event_rule import EventRule

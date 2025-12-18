@@ -1,78 +1,78 @@
 # Feature Specification: Repository Restructure
 
-**Feature Branch**: `002-restructure-org`  
-**Created**: 2025-12-17  
-**Status**: Draft  
+**Feature Branch**: `002-restructure-org`
+**Created**: 2025-12-17
+**Status**: Draft
 **Input**: User description: "I noticed a mistake in the organization, here is the current organization:
 ❯ tree -d
 .
 ├── ord-plan
 │   ├── docs
-│   ├── __pycache__
+│   ├── **pycache**
 │   ├── src
 │   │   └── ord_plan
-│   │       ├── cli
-│   │       │   └── __pycache__
-│   │       ├── models
-│   │       │   └── __pycache__
-│   │       ├── parsers
-│   │       │   └── __pycache__
-│   │       ├── __pycache__
-│   │       ├── services
-│   │       │   └── __pycache__
-│   │       └── utils
-│   │           └── __pycache__
+│   │   ├── cli
+│   │   │   └── **pycache**
+│   │   ├── models
+│   │   │   └── **pycache**
+│   │   ├── parsers
+│   │   │   └── **pycache**
+│   │   ├── **pycache**
+│   │   ├── services
+│   │   │   └── **pycache**
+│   │   └── utils
+│   │   └── **pycache**
 │   └── tests
-│       ├── contract
-│   │   └── __pycache__
-│       ├── fixtures
-│       ├── integration
-│   │   └── __pycache__
-│       ├── __pycache__
-│       └── unit
-│           └── __pycache__
+│   ├── contract
+│   │   └── **pycache**
+│   ├── fixtures
+│   ├── integration
+│   │   └── **pycache**
+│   ├── **pycache**
+│   └── unit
+│   └── **pycache**
 └── specs
-    └── 001-generate-org
-        ├── checklists
-        └── contracts
+└── 001-generate-org
+├── checklists
+└── contracts
 
 ❯ pwd
 /home/av/repos/ord-plan
 ❯ ls -alhtr
 total 44K
 drwxr-xr-x 33 av av 4.0K Dec 16 20:52 ../
-drwxr-xr-x  5 av av 4.0K Dec 16 20:56 .specify/
-drwxr-xr-x  3 av av 4.0K Dec 17 23:40 specs/
-drwxr-xr-x  3 av av 4.0K Dec 17 07:05 .ruff_cache/
--rw-r--r--  1 av av  128 Dec 17 07:51 .gitignore
-drwxr-xr-x  4 av av 4.0K Dec 17 13:29 .opencode/
-drwxr-xr-x  3 av av 4.0K Dec 17 13:34 .pytest_cache/
-drwxr-xr-x  9 av av 4.0K Dec 17 14:45 ord-plan/
-drwxr-xr-x  9 av av 4.0K Dec 17 14:46 ./
--rw-------  1 av av 2.0K Dec 17 14:47 AGENTS.md
-drwxr-xr-x  7 av av 4.0K Dec 17 15:02 .git/
+drwxr-xr-x 5 av av 4.0K Dec 16 20:56 .specify/
+drwxr-xr-x 3 av av 4.0K Dec 17 23:40 specs/
+drwxr-xr-x 3 av av 4.0K Dec 17 07:05 .ruff_cache/
+-rw-r--r-- 1 av av 128 Dec 17 07:51 .gitignore
+drwxr-xr-x 4 av av 4.0K Dec 17 13:29 .opencode/
+drwxr-xr-x 3 av av 4.0K Dec 17 13:34 .pytest_cache/
+drwxr-xr-x 9 av av 4.0K Dec 17 14:45 ord-plan/
+drwxr-xr-x 9 av av 4.0K Dec 17 14:46 ./
+-rw------- 1 av av 2.0K Dec 17 14:47 AGENTS.md
+drwxr-xr-x 7 av av 4.0K Dec 17 15:02 .git/
 
 ❯ cd ord-plan/
 ❯ ls -alhtr
 total 136K
--rw-r--r-- 1 av av   19 Dec 16 20:54 .gitattributes
--rw-r--r-- 1 av av  122 Dec 16 20:54 .gitignore
--rw-r--r-- 1 av av  191 Dec 16 20:54 .readthedocs.yml
+-rw-r--r-- 1 av av 19 Dec 16 20:54 .gitattributes
+-rw-r--r-- 1 av av 122 Dec 16 20:54 .gitignore
+-rw-r--r-- 1 av av 191 Dec 16 20:54 .readthedocs.yml
 -rw-r--r-- 1 av av 5.4K Dec 16 20:54 CODE_OF_CONDUCT.md
--rw-r--r-- 1 av av   29 Dec 16 20:54 .darglint
--rw-r--r-- 1 av av  133 Dec 16 20:54 codecov.yml
+-rw-r--r-- 1 av av 29 Dec 16 20:54 .darglint
+-rw-r--r-- 1 av av 133 Dec 16 20:54 codecov.yml
 -rw-r--r-- 1 av av 6.8K Dec 16 20:54 noxfile.py
 -rw-r--r-- 1 av av 1.8K Dec 16 20:54 .pre-commit-config.yaml
 -rw-r--r-- 1 av av 2.8K Dec 16 20:54 CONTRIBUTING.md
--rw-r--r-- 1 av av  263 Dec 16 20:54 .flake8
+-rw-r--r-- 1 av av 263 Dec 16 20:54 .flake8
 drwxr-xr-x 3 av av 4.0K Dec 16 20:54 src/
--rw-r--r-- 1 av av  36K Dec 16 20:54 LICENSE
+-rw-r--r-- 1 av av 36K Dec 16 20:54 LICENSE
 drwxr-xr-x 2 av av 4.0K Dec 16 20:54 docs/
 drwxr-xr-x 3 av av 4.0K Dec 16 20:54 .github/
--rw-r--r-- 1 av av  518 Dec 16 20:54 .cookiecutter.json
--rw-r--r-- 1 av av  223 Dec 17 07:26 conftest.py
+-rw-r--r-- 1 av av 518 Dec 16 20:54 .cookiecutter.json
+-rw-r--r-- 1 av av 223 Dec 17 07:26 conftest.py
 drwxr-xr-x 7 dr av 4.0K Dec 17 13:12 tests/
--rw-r--r-- 1 av av  11K Dec 17 14:12 README.md
+-rw-r--r-- 1 av av 11K Dec 17 14:12 README.md
 drwxr-xr-x 5 av av 4.0K Dec 17 14:14 .venv/
 -rw-r--r-- 1 av av 2.0K Dec 17 14:24 pyproject.toml
 drwxr-xr-x 9 av av 4.0K Dec 17 14:46 ../
@@ -82,7 +82,7 @@ However, I want the ord-plan, the python package, meaning, where README, LICENSE
 
 I want you to make the changes required for that refactoring. This is NOT a new feature - it is a one-time repository refactoring operation. I want you to consider code, tests, constitution, specs documents, plan documents, everything! I want you to be thorough and double check references, links, everything and that everything works after the refactoring by running the tests. The approach should use refactoring scripts, not new CLI commands, since this is a one-time infrastructure operation. "
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Move Repository Root Files (Priority: P1)
 
@@ -136,11 +136,11 @@ As a developer, I want all development commands, tests, and workflows to functio
 The following edge cases MUST be addressed during refactoring:
 
 - **Absolute paths**: Configuration files with absolute paths must be identified and manually reviewed
-- **Relative imports**: Python relative imports must be validated after src/ directory movement  
+- **Relative imports**: Python relative imports must be validated after src/ directory movement
 - **Git history**: All git history must be preserved using git mv operations
 - **External links**: External links to repository are out of scope, but internal cross-references must be updated
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -158,7 +158,7 @@ The following edge cases MUST be addressed during refactoring:
 - **FR-012**: All existing functionality MUST be preserved - no feature changes allowed
 - **FR-013**: Edge cases MUST be handled: absolute paths in config files, relative import resolution, git history preservation, external link handling
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Repository Root**: The top-level directory containing the Python project files
 - **Package Configuration**: pyproject.toml, setup.cfg, and other build configuration files
@@ -175,7 +175,7 @@ The following edge cases MUST be addressed during refactoring:
 - Q: What is the preferred approach for preserving git history when moving files? → A: Create a single commit showing all moves
 - Q: Should temporary directories be used during file movement process? → A: Direct move to final locations to avoid confusion
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

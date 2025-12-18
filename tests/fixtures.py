@@ -1,8 +1,6 @@
 """Helper utilities for accessing test fixtures."""
 
-import os
 from pathlib import Path
-from typing import Union
 
 
 def get_fixture_path(filename: str) -> Path:

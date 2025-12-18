@@ -51,7 +51,7 @@ setup_environment() {
 
     # Install testing dependencies
     print_status $YELLOW "Ensuring testing dependencies are installed..."
-    pip install pytest mypy types-PyYAML types-croniter types-python-dateutil >/dev/null 2>&1
+    pip install pytest mypy types-PyYAML types-croniter types-python-dateutil nox >/dev/null 2>&1
 
     print_status $GREEN "✅ Environment setup complete"
 }
@@ -146,6 +146,111 @@ run_style_checks() {
     fi
 }
 
+# Function to run pre-commit checks (black, darglint, flake8, etc.)
+run_precommit_checks() {
+    print_status $BLUE "🔧 Running pre-commit checks..."
+
+    cd "$PROJECT_ROOT"
+    source venv/bin/activate
+
+    # Use pre-commit directly since nox has issues
+    if command_exists pre-commit; then
+        # Install pre-commit dependencies if needed
+        pip install black darglint flake8 flake8-bandit flake8-bugbear flake8-docstrings flake8-rst-docstrings isort pep8-naming pre-commit pre-commit-hooks pyupgrade >/dev/null 2>&1 || true
+
+        if pre-commit run --all-files --hook-stage=manual; then
+            print_status $GREEN "✅ pre-commit checks passed"
+        else
+            print_status $RED "❌ pre-commit checks failed"
+            return 1
+        fi
+    else
+        print_status $YELLOW "⚠️  pre-commit not found"
+        print_status $YELLOW "   Install with: pip install pre-commit"
+        return 1
+    fi
+}
+
+# Function to run typeguard runtime type checking
+run_typeguard_checks() {
+    print_status $BLUE "🛡️ Running TypeGuard runtime type checking..."
+
+    cd "$PROJECT_ROOT"
+    source venv/bin/activate
+
+    if python -c "import typeguard" >/dev/null 2>&1; then
+        if pytest --typeguard-packages=ord_plan; then
+            print_status $GREEN "✅ TypeGuard checks passed"
+        else
+            print_status $RED "❌ TypeGuard checks failed"
+            return 1
+        fi
+    else
+        print_status $YELLOW "⚠️  typeguard not found, skipping TypeGuard checks"
+        print_status $YELLOW "   Install with: pip install typeguard"
+    fi
+}
+
+# Function to run xdoctest (doctests in examples)
+run_xdoctest() {
+    print_status $BLUE "📚 Running xdoctest..."
+
+    cd "$PROJECT_ROOT"
+    source venv/bin/activate
+
+    if python -c "import xdoctest" >/dev/null 2>&1; then
+        if python -m xdoctest ord_plan --command=all; then
+            print_status $GREEN "✅ xdoctest passed"
+        else
+            print_status $RED "❌ xdoctest failed"
+            return 1
+        fi
+    else
+        print_status $YELLOW "⚠️  xdoctest not found, skipping xdoctest"
+        print_status $YELLOW "   Install with: pip install xdoctest"
+    fi
+}
+
+# Function to run docs build test
+run_docs_build() {
+    print_status $BLUE "📖 Running documentation build test..."
+
+    cd "$PROJECT_ROOT"
+    source venv/bin/activate
+
+    if python -c "import sphinx" >/dev/null 2>&1; then
+        if sphinx-build -b html docs docs/_build; then
+            print_status $GREEN "✅ Documentation build passed"
+        else
+            print_status $RED "❌ Documentation build failed"
+            return 1
+        fi
+    else
+        print_status $YELLOW "⚠️  sphinx not found, skipping docs build"
+        print_status $YELLOW "   Install with: pip install sphinx"
+    fi
+}
+
+# Function to run safety dependency security check
+run_safety_checks() {
+    print_status $BLUE "🔒 Running Safety dependency security check..."
+
+    cd "$PROJECT_ROOT"
+    source venv/bin/activate
+
+    if python -c "import safety" >/dev/null 2>&1; then
+        if poetry export --format=requirements.txt --with=dev --without-hashes | safety check --stdin; then
+            print_status $GREEN "✅ Safety checks passed"
+        else
+            print_status $RED "❌ Safety checks failed"
+            return 1
+        fi
+    else
+        print_status $YELLOW "⚠️  safety not found, skipping safety checks"
+        print_status $YELLOW "   Install with: pip install safety"
+    fi
+}
+
 # Function to run security checks
 run_security_checks() {
     print_status $BLUE "🔒 Running security checks..."
@@ -201,7 +306,7 @@ show_help() {
     cat << EOF
 Usage: $0 [OPTIONS]
 
-Comprehensive test runner for ord-plan project.
+Comprehensive test runner for ord-plan project (matches GitHub Actions CI).
 
 OPTIONS:
     all              Run all tests and checks (default)
@@ -210,16 +315,22 @@ OPTIONS:
     pytest           Run pytest only
     style            Run code style checks only
     security         Run security checks only
+    pre-commit       Run pre-commit hooks (black, darglint, flake8, etc.)
+    typeguard        Run TypeGuard runtime type checking
+    xdoctest         Run xdoctest (doctests)
+    docs-build       Test documentation build
+    safety           Run Safety dependency security check
     unit             Run unit tests only
     integration      Run integration tests only
     setup            Setup test environment only
     help             Show this help message
 
 EXAMPLES:
-    $0                # Run all tests and checks
+    $0                # Run all tests and checks (matches CI)
     $0 pytest         # Run pytest only
     $0 unit           # Run unit tests only
     $0 syntax mypy    # Run syntax and type checks only
+    $0 pre-commit     # Run pre-commit hooks only
 
 All tests and checks must pass before code should be considered ready for commit.
 EOF
@@ -232,13 +343,13 @@ main() {
 
     # Parse arguments
     if [[ $# -eq 0 ]]; then
-        tests_to_run=("syntax" "mypy" "style" "pytest" "security")
+        tests_to_run=("pre-commit" "mypy" "tests" "xdoctest" "docs-build" "safety")
         all_tests=true
     else
         for arg in "$@"; do
             case "$arg" in
                 "all")
-                    tests_to_run=("syntax" "mypy" "style" "pytest" "security")
+                    tests_to_run=("pre-commit" "mypy" "tests" "typeguard" "xdoctest" "docs-build" "safety")
                     all_tests=true
                     ;;
                 "syntax")
@@ -247,7 +358,7 @@ main() {
                 "mypy")
                     tests_to_run+=("mypy")
                     ;;
-                "pytest")
+                "pytest"|"tests")
                     tests_to_run+=("pytest")
                     ;;
                 "style")
@@ -255,6 +366,21 @@ main() {
                     ;;
                 "security")
                     tests_to_run+=("security")
+                    ;;
+                "pre-commit")
+                    tests_to_run+=("pre-commit")
+                    ;;
+                "typeguard")
+                    tests_to_run+=("typeguard")
+                    ;;
+                "xdoctest")
+                    tests_to_run+=("xdoctest")
+                    ;;
+                "docs-build")
+                    tests_to_run+=("docs-build")
+                    ;;
+                "safety")
+                    tests_to_run+=("safety")
                     ;;
                 "unit")
                     tests_to_run+=("unit")
@@ -297,7 +423,7 @@ main() {
             "mypy")
                 run_mypy || overall_success=false
                 ;;
-            "pytest")
+            "pytest"|"tests")
                 run_pytest || overall_success=false
                 ;;
             "style")
@@ -305,6 +431,21 @@ main() {
                 ;;
             "security")
                 run_security_checks || overall_success=false
+                ;;
+            "pre-commit")
+                run_precommit_checks || overall_success=false
+                ;;
+            "typeguard")
+                run_typeguard_checks || overall_success=false
+                ;;
+            "xdoctest")
+                run_xdoctest || overall_success=false
+                ;;
+            "docs-build")
+                run_docs_build || overall_success=false
+                ;;
+            "safety")
+                run_safety_checks || overall_success=false
                 ;;
             "unit")
                 run_unit_tests || overall_success=false

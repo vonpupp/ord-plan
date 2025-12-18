@@ -1,8 +1,5 @@
 """Contract tests for ord-plan generate command."""
 
-import os
-import tempfile
-from datetime import datetime, timedelta
 from pathlib import Path
 
 import pytest
@@ -10,7 +7,7 @@ import yaml
 from click.testing import CliRunner
 
 from ord_plan.cli.generate import generate
-from tests.fixtures import get_fixture_path, read_fixture
+from tests.fixtures import get_fixture_path
 
 
 class TestGenerateCommandContract:

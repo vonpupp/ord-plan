@@ -1,5 +1,4 @@
 ---
-
 description: "Task list for repository restructuring implementation"
 ---
 
@@ -142,7 +141,7 @@ description: "Task list for repository restructuring implementation"
 ### Within Each User Story
 
 - File movement tasks can run in parallel within US1
-- Reference update tasks can run in parallel within US2  
+- Reference update tasks can run in parallel within US2
 - Validation tasks can run in parallel within US3
 - Each story should be completed before moving to the next story
 
@@ -197,7 +196,7 @@ Due to dependencies between stories:
 
 1. Team completes Setup + Foundational together
 2. Complete User Story 1 (file movements) → Validate
-3. Complete User Story 2 (reference updates) → Validate  
+3. Complete User Story 2 (reference updates) → Validate
 4. Complete User Story 3 (workflow validation) → Validate
 5. Complete Polish phase for CLI interface and documentation
 

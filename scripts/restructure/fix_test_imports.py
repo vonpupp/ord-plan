@@ -29,7 +29,7 @@ def fix_test_imports():
 
         print(f"Fixing imports in {test_file}")
 
-        with open(file_path, "r") as f:
+        with open(file_path) as f:
             content = f.read()
 
         # Fix imports to use ord_plan package

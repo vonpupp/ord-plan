@@ -1,7 +1,7 @@
 # Specification Quality Checklist: Generate Org Events from Cron Rules
 
-**Purpose**: Validate specification completeness and quality before proceeding to planning  
-**Created**: 2025-12-16  
+**Purpose**: Validate specification completeness and quality before proceeding to planning
+**Created**: 2025-12-16
 **Feature**: [Generate Org Events from Cron Rules](spec.md)
 
 ## Content Quality

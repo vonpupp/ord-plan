@@ -1,9 +1,12 @@
 """Org-mode parser and renderer for ord-plan."""
 
-from typing import List, Optional, Dict, Tuple, Any
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import Tuple
 
 import orgparse
-from orgparse.node import OrgRootNode
 
 from ..models.org_date_node import OrgDateNode
 from ..models.org_event import OrgEvent
@@ -23,7 +26,7 @@ class OrgModeParser:
             List of OrgDateNode objects with existing events
         """
         try:
-            with open(file_path, "r") as f:
+            with open(file_path) as f:
                 root = orgparse.load(f)
         except FileNotFoundError:
             return []

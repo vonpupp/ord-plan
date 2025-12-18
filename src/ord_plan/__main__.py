@@ -1,6 +1,5 @@
 """Command-line interface."""
 
-import click
 from .cli import cli_group
 
 

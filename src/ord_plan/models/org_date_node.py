@@ -1,6 +1,7 @@
 """Org-mode date node model for ord-plan."""
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass
+from dataclasses import field
 from datetime import datetime
 from typing import List
 

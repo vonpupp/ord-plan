@@ -2,13 +2,12 @@
 
 import os
 import tempfile
-from datetime import datetime
 
-import pytest
 from click.testing import CliRunner
 
 from ord_plan.cli.generate import generate
-from tests.fixtures import get_fixture_path, read_fixture
+from tests.fixtures import get_fixture_path
+from tests.fixtures import read_fixture
 
 
 class TestFilePreservation:
@@ -40,7 +39,7 @@ class TestFilePreservation:
             assert os.path.exists(target_file)
 
             # Check content
-            with open(target_file, "r") as f:
+            with open(target_file) as f:
                 content = f.read()
                 assert "Test Event" in content
                 assert "2026" in content
@@ -75,7 +74,7 @@ class TestFilePreservation:
             assert result.exit_code == 0
 
             # Check content
-            with open(target_file, "r") as f:
+            with open(target_file) as f:
                 final_content = f.read()
 
             # Should preserve existing content
@@ -127,7 +126,7 @@ class TestFilePreservation:
             assert os.path.exists(nested_file)
 
             # Check content
-            with open(nested_file, "r") as f:
+            with open(nested_file) as f:
                 content = f.read()
                 assert "Nested Event" in content
 
@@ -161,7 +160,7 @@ class TestFilePreservation:
             assert result.exit_code == 0
 
             # Check content
-            with open(target_file, "r") as f:
+            with open(target_file) as f:
                 final_content = f.read()
 
             # Should preserve existing events on same date

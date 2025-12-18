@@ -1,6 +1,6 @@
 """Cron service for processing cron expressions."""
 
-from datetime import datetime, timedelta
+from datetime import datetime
 from typing import List
 
 from croniter import croniter

@@ -3,7 +3,6 @@
 import os
 import tempfile
 from datetime import datetime
-from pathlib import Path
 
 import pytest
 
@@ -26,7 +25,7 @@ class TestFileService:
             FileService.write_org_content(content, temp_path)
 
             # Verify content was written
-            with open(temp_path, "r") as f:
+            with open(temp_path) as f:
                 assert f.read() == content
         finally:
             if os.path.exists(temp_path):
@@ -43,7 +42,7 @@ class TestFileService:
 
             # Verify file exists and content is correct
             assert os.path.exists(nested_path)
-            with open(nested_path, "r") as f:
+            with open(nested_path) as f:
                 assert f.read() == content
 
     def test_write_org_content_to_stdout(
@@ -169,7 +168,7 @@ class TestFileService:
             assert os.path.exists(backup_path)
 
             # Backup content should match original
-            with open(backup_path, "r") as f:
+            with open(backup_path) as f:
                 assert f.read() == original_content
 
             # Clean up backup

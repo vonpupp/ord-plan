@@ -5,11 +5,12 @@ This module provides utilities to safely move files and directories
 using git mv operations to preserve history.
 """
 
-import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import List, Optional, Tuple
+from typing import List
+from typing import Optional
+from typing import Tuple
 
 
 class FileMover:
@@ -140,7 +141,7 @@ class FileMover:
                     if not success:
                         return False, error
 
-            print(f"✅ Moved .github contents to repository root .github/")
+            print("✅ Moved .github contents to repository root .github/")
             return True, ""
 
         except Exception as e:
@@ -251,7 +252,7 @@ def main():
 
     # Move .github if requested
     if args.include_github:
-        print(f"\n📁 Moving .github directory...")
+        print("\n📁 Moving .github directory...")
         success, error = mover.move_github_directory()
         if not success:
             print(f"❌ Failed: {error}")

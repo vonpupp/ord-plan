@@ -50,6 +50,7 @@ ORD Plan is a powerful CLI tool for generating structured org-mode events from c
 # Install as a system tool (recommended for most users)
 $ uv tool install ord-plan
 ```
+
 ### Method 2: Poetry
 
 If you're using [Poetry](https://python-poetry.org/) for dependency management:
@@ -191,14 +192,14 @@ Generate org-mode events from cron-based rules.
 
 #### Options
 
-| Option | Required | Description |
-|--------|----------|-------------|
-| `--rules PATH` | Yes | Path to YAML rules file containing event definitions |
-| `--file PATH` | No | Path to target org-mode file (default: stdout) |
-| `--from DATE` | No | Start date for event generation (default: Monday of current week) |
-| `--to DATE` | No | End date for event generation (default: Sunday of current week) |
-| `--force` | No | Bypass past/future date warnings (use with caution) |
-| `--dry-run` | No | Show what would be generated without creating files |
+| Option         | Required | Description                                                       |
+| -------------- | -------- | ----------------------------------------------------------------- |
+| `--rules PATH` | Yes      | Path to YAML rules file containing event definitions              |
+| `--file PATH`  | No       | Path to target org-mode file (default: stdout)                    |
+| `--from DATE`  | No       | Start date for event generation (default: Monday of current week) |
+| `--to DATE`    | No       | End date for event generation (default: Sunday of current week)   |
+| `--force`      | No       | Bypass past/future date warnings (use with caution)               |
+| `--dry-run`    | No       | Show what would be generated without creating files               |
 
 #### Date Formats
 
@@ -271,14 +272,14 @@ events:
 
 ## ⚙️ Cron Expression Examples
 
-| Schedule | Cron Expression | Description |
-|-----------|----------------|-------------|
-| Daily at 9 AM | `0 9 * * *` | Every day at 9:00 AM |
-| Weekdays at 2 PM | `0 14 * * 1-5` | Monday-Friday at 2:00 PM |
-| Monday/Wednesday/Friday | `0 0 * * 1,3,5` | Mon, Wed, Fri at midnight |
-| First of month | `0 0 1 * *` | 1st day of each month |
-| Every 2 hours | `0 */2 * * *` | Every 2 hours on the hour |
-| Work days 9-5 | `0 9-17 * * 1-5` | Hourly from 9 AM to 5 PM, weekdays |
+| Schedule                | Cron Expression  | Description                        |
+| ----------------------- | ---------------- | ---------------------------------- |
+| Daily at 9 AM           | `0 9 * * *`      | Every day at 9:00 AM               |
+| Weekdays at 2 PM        | `0 14 * * 1-5`   | Monday-Friday at 2:00 PM           |
+| Monday/Wednesday/Friday | `0 0 * * 1,3,5`  | Mon, Wed, Fri at midnight          |
+| First of month          | `0 0 1 * *`      | 1st day of each month              |
+| Every 2 hours           | `0 */2 * * *`    | Every 2 hours on the hour          |
+| Work days 9-5           | `0 9-17 * * 1-5` | Hourly from 9 AM to 5 PM, weekdays |
 
 > **Note**: Cron format is `minute hour day month weekday` where weekday is 0=Sunday, 6=Saturday.
 
@@ -287,6 +288,7 @@ events:
 ### Setting Up Development Environment
 
 1. **Clone the repository**:
+
    ```bash
    git clone https://github.com/vonpupp/ord-plan.git
    cd ord-plan
@@ -295,26 +297,31 @@ events:
 2. **Install development dependencies**:
 
    Using uv:
+
    ```bash
    uv pip install -e ".[dev]"
    ```
 
    Using Poetry:
+
    ```bash
    poetry install
    ```
 
    Using pip:
+
    ```bash
    pip install -e ".[dev]"
    ```
 
 3. **Run tests**:
+
    ```bash
    python -m pytest tests/
    ```
 
 4. **Run linting**:
+
    ```bash
    ruff check .
    mypy src/

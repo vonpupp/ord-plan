@@ -17,24 +17,24 @@
   the iteration process.
 -->
 
-**Language/Version**: Python 3.7+ (as specified in pyproject.toml)  
-**Primary Dependencies**: Click (>=8.0.1), Poetry for dependency management  
-**Storage**: Files (template generation output)  
-**Testing**: pytest with 100% coverage requirement  
+**Language/Version**: Python 3.7+ (as specified in pyproject.toml)
+**Primary Dependencies**: Click (>=8.0.1), Poetry for dependency management
+**Storage**: Files (template generation output)
+**Testing**: pytest with 100% coverage requirement
 **Target Platform**: Linux/macOS/Windows (CLI tool)
-**Project Type**: Single (CLI tool - determines source structure)  
-**Performance Goals**: <2 seconds for typical template generation (<1000 lines)  
-**Constraints**: <50MB memory usage, streaming-friendly output for large templates  
+**Project Type**: Single (CLI tool - determines source structure)
+**Performance Goals**: <2 seconds for typical template generation (<1000 lines)
+**Constraints**: <50MB memory usage, streaming-friendly output for large templates
 **Scale/Scope**: Template generation tool supporting org-mode and JSON output formats
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### Required Constitution Compliance Gates
 
 - **✅ CLI-First Design**: Feature MUST be accessible via command-line interface
-- **✅ Test-Driven Development**: TDD mandatory with 100% test coverage  
+- **✅ Test-Driven Development**: TDD mandatory with 100% test coverage
 - **✅ Org-Mode Native**: Primary output format MUST be org-mode compliant
 - **✅ Template Generation Focus**: Functionality MUST support template generation
 - **✅ Hypermodern Python Standards**: MUST follow cookiecutter conventions (Poetry, Black, mypy, etc.)
@@ -54,6 +54,7 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
+
 <!--
   ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
   for this feature. Delete unused options and expand the chosen structure with
@@ -83,7 +84,7 @@ src/ord_plan/
 
 tests/
 ├── contract/           # CLI interface tests
-├── integration/        # End-to-end template generation tests  
+├── integration/        # End-to-end template generation tests
 └── unit/              # Individual component tests
     ├── test_cli/
     ├── test_templates/
@@ -101,7 +102,7 @@ directories captured above]
 
 > **Fill ONLY if Constitution Check has violations that must be justified**
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| [e.g., 4th project] | [current need] | [why 3 projects insufficient] |
-| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient] |
+| Violation                  | Why Needed         | Simpler Alternative Rejected Because |
+| -------------------------- | ------------------ | ------------------------------------ |
+| [e.g., 4th project]        | [current need]     | [why 3 projects insufficient]        |
+| [e.g., Repository pattern] | [specific problem] | [why direct DB access insufficient]  |

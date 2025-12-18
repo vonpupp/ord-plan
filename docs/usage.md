@@ -50,14 +50,14 @@ Generate org-mode events from cron-based rules.
 
 #### Options
 
-| Option | Required | Description |
-|---------|-----------|-------------|
-| `--rules PATH` | Yes | Path to YAML rules file containing event definitions |
-| `--file PATH` | No | Path to target org-mode file (default: stdout) |
-| `--from DATE` | No | Start date for event generation (default: Monday of current week) |
-| `--to DATE` | No | End date for event generation (default: Sunday of current week) |
-| `--force` | No | Bypass past/future date warnings (use with caution) |
-| `--dry-run` | No | Show what would be generated without creating files |
+| Option         | Required | Description                                                       |
+| -------------- | -------- | ----------------------------------------------------------------- |
+| `--rules PATH` | Yes      | Path to YAML rules file containing event definitions              |
+| `--file PATH`  | No       | Path to target org-mode file (default: stdout)                    |
+| `--from DATE`  | No       | Start date for event generation (default: Monday of current week) |
+| `--to DATE`    | No       | End date for event generation (default: Sunday of current week)   |
+| `--force`      | No       | Bypass past/future date warnings (use with caution)               |
+| `--dry-run`    | No       | Show what would be generated without creating files               |
 
 #### Date Formats
 
@@ -76,6 +76,7 @@ ord-plan generate --rules my-events.yaml --file weekly-tasks.org
 ```
 
 Output structure:
+
 ```org
 * 2025
 ** 2025-W03
@@ -134,7 +135,7 @@ events:
       - [ ] Review today's goals
       - [ ] Work on priority tickets
       - [ ] Update progress tracking
-      
+
   - title: "Weekly Review"
     cron: "0 16 * * 5"
     todo_state: "TODO"
@@ -152,7 +153,7 @@ Override configuration using environment variables:
 
 ```bash
 export ORD_PLAN_YEAR_FORMAT="%Y"
-export ORD_PLAN_WEEK_FORMAT="%Y Week %W"  
+export ORD_PLAN_WEEK_FORMAT="%Y Week %W"
 export ORD_PLAN_DATE_FORMAT="%B %d, %Y"
 export ORD_PLAN_DEFAULT_TODO_STATE="TODO"
 export ORD_PLAN_MAX_EVENTS="5000"
@@ -182,20 +183,21 @@ events:
 
 Common cron patterns for event scheduling:
 
-| Schedule | Cron Expression | Description |
-|-----------|----------------|-------------|
-| Daily at 9 AM | `0 9 * * *` | Every day at 9:00 AM |
-| Weekdays at 2 PM | `0 14 * * 1-5` | Monday-Friday at 2:00 PM |
-| Monday/Wednesday/Friday | `0 0 * * 1,3,5` | Mon, Wed, Fri at midnight |
-| First of month | `0 0 1 * *` | 1st day of each month |
-| Every 2 hours | `0 */2 * * *` | Every 2 hours on the hour |
-| Work days 9-5 | `0 9-17 * * 1-5` | Hourly from 9 AM to 5 PM, weekdays |
+| Schedule                | Cron Expression  | Description                        |
+| ----------------------- | ---------------- | ---------------------------------- |
+| Daily at 9 AM           | `0 9 * * *`      | Every day at 9:00 AM               |
+| Weekdays at 2 PM        | `0 14 * * 1-5`   | Monday-Friday at 2:00 PM           |
+| Monday/Wednesday/Friday | `0 0 * * 1,3,5`  | Mon, Wed, Fri at midnight          |
+| First of month          | `0 0 1 * *`      | 1st day of each month              |
+| Every 2 hours           | `0 */2 * * *`    | Every 2 hours on the hour          |
+| Work days 9-5           | `0 9-17 * * 1-5` | Hourly from 9 AM to 5 PM, weekdays |
 
 ## Performance Considerations
 
 ### Large Date Ranges
 
 For date ranges generating more than 1000 events, consider:
+
 - Using smaller date ranges (e.g., monthly instead of yearly)
 - Using more specific cron expressions to reduce matches
 - Setting `ORD_PLAN_MAX_EVENTS` environment variable
@@ -211,16 +213,19 @@ For date ranges generating more than 1000 events, consider:
 ### Common Issues
 
 **"Invalid cron expression"**
+
 - Check format: `minute hour day month weekday` (5 fields)
 - Use numbers for weekdays: 0=Sunday, 6=Saturday
 - Example: `0 9 * * 1-5` (9 AM on weekdays)
 
 **"File cannot be read"**
+
 - Check file path and permissions
 - Use absolute paths if needed
 - Verify file exists with `ls -la path/to/file.yaml`
 
 **"No events generated"**
+
 - Verify cron expressions match your date range
 - Check that weekdays in cron align with target dates
 - Try a broader date range for testing
@@ -283,7 +288,7 @@ ord-plan generate --rules important.yaml --file critical.org
 ```yaml
 # Weekly hierarchy with custom formatting
 REVERSE_DATETREE_YEAR_FORMAT: "Year %Y"
-REVERSE_DATETREE_WEEK_FORMAT: "Week %W"  
+REVERSE_DATETREE_WEEK_FORMAT: "Week %W"
 REVERSE_DATETREE_DATE_FORMAT: "%A - %B %d"
 
 events:
@@ -292,6 +297,7 @@ events:
 ```
 
 Output:
+
 ```org
 * Year 2025
 ** Week 03

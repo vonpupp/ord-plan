@@ -3,10 +3,12 @@
 import os
 from datetime import datetime
 from pathlib import Path
-from typing import List, Optional, Dict, TextIO
+from typing import Dict
+from typing import List
+from typing import Optional
+from typing import TextIO
 
 from ..models.org_date_node import OrgDateNode
-from ..models.org_event import OrgEvent
 from ..parsers.org_mode import OrgModeParser
 
 
@@ -29,6 +31,8 @@ class FileService:
         Raises:
             PermissionError: Cannot write to target location
             OSError: File system error
+        """
+        if file_path:
         """
         if file_path:
             # Ensure directory exists
@@ -199,7 +203,7 @@ class FileService:
     def _count_lines(file_path: str) -> int:
         """Count lines in file."""
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 return sum(1 for _ in f)
         except Exception:
             return 0

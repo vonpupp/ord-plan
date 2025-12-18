@@ -8,10 +8,12 @@ have been moved from ord-plan/ to repository root.
 import sys
 from pathlib import Path
 
+
 # Add current directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from validate_state import RepositoryStateValidator, RepositoryState
+from validate_state import RepositoryState
+from validate_state import RepositoryStateValidator
 
 
 def validate_file_moves():
@@ -78,7 +80,7 @@ def validate_file_moves():
         workflow_files = list(workflows_dir.glob("*.yml"))
         print(f"✅ .github/workflows/ contains {len(workflow_files)} workflow files")
     else:
-        print(f"❌ .github/workflows/ missing")
+        print("❌ .github/workflows/ missing")
         return False
 
     return True

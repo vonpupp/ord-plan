@@ -8,11 +8,13 @@ and repository is in a consistent state after User Story 2.
 import sys
 from pathlib import Path
 
+
 # Add current directory to path for imports
 sys.path.insert(0, str(Path(__file__).parent))
 
-from validate_state import RepositoryStateValidator, RepositoryState
 from update_imports import ImportUpdater
+from validate_state import RepositoryState
+from validate_state import RepositoryStateValidator
 
 
 def validate_python_imports():
@@ -123,7 +125,7 @@ def validate_configuration_files():
         file_path = repo_root / config_file
         if file_path.exists():
             try:
-                with open(file_path, "r") as f:
+                with open(file_path) as f:
                     content = f.read()
 
                 # Check for ord-plan path references (not package name or URLs)
@@ -173,7 +175,7 @@ def validate_documentation():
         file_path = repo_root / doc_file
         if file_path.exists():
             try:
-                with open(file_path, "r") as f:
+                with open(file_path) as f:
                     content = f.read()
 
                 # Check for ord-plan path references

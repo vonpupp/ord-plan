@@ -1,9 +1,10 @@
 """Tests for date protection functionality."""
 
+from datetime import datetime
+from datetime import timedelta
 from pathlib import Path
-import pytest
+
 from click.testing import CliRunner
-from datetime import datetime, timedelta
 
 from ord_plan.models.date_range import DateRange
 from ord_plan.services.date_service import DateService

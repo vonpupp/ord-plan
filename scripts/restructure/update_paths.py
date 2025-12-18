@@ -6,12 +6,13 @@ and path references during repository restructuring.
 """
 
 import re
-import os
 import subprocess
 import sys
-from pathlib import Path
-from typing import List, Dict, Tuple, Pattern
 from dataclasses import dataclass
+from pathlib import Path
+from typing import Dict
+from typing import List
+from typing import Tuple
 
 
 @dataclass
@@ -163,7 +164,7 @@ class PathMapper:
             Tuple of (success, error_message)
         """
         try:
-            with open(file_path, "r", encoding="utf-8") as f:
+            with open(file_path, encoding="utf-8") as f:
                 content = f.read()
 
             original_content = content
@@ -241,7 +242,7 @@ class PathMapper:
         print("🚀 Starting comprehensive path mapping updates...")
 
         # Group mappings by scope to avoid processing files multiple times
-        scopes = set(mapping.scope for mapping in self.mappings)
+        scopes = {mapping.scope for mapping in self.mappings}
 
         for scope in scopes:
             success, error = self.update_by_scope(scope)
@@ -266,7 +267,7 @@ class PathMapper:
         self.updated_files.clear()
 
         preview = {}
-        scopes = set(mapping.scope for mapping in self.mappings)
+        scopes = {mapping.scope for mapping in self.mappings}
 
         for scope in scopes:
             scope_mappings = [m for m in self.mappings if m.scope == scope]

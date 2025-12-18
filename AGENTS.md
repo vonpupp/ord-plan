@@ -28,6 +28,7 @@ Python 3.7+ (as specified in pyproject.toml): Follow standard conventions
 ## Testing Patterns
 
 All test data MUST be centralized in `tests/fixtures/` directory. Use the fixture helper functions in `tests/fixtures.py`:
+
 - `get_fixture_path(filename)` - Get absolute path to fixture file
 - `read_fixture(filename)` - Read fixture contents as string
 - `write_to_fixture(filename, content)` - Write temporary fixtures

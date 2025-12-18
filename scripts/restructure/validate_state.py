@@ -8,10 +8,13 @@ during the restructuring process.
 import os
 import subprocess
 import sys
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, Tuple, Optional, Any
-from dataclasses import dataclass
+from typing import Any
+from typing import Dict
+from typing import List
+from typing import Optional
 
 
 class RepositoryState(Enum):
@@ -65,7 +68,7 @@ class RepositoryStateValidator:
             try:
                 test_file = self.repo_root / "tests" / "test_main.py"
                 if test_file.exists():
-                    with open(test_file, "r") as f:
+                    with open(test_file) as f:
                         content = f.read()
                         if "from ord_plan." in content or "import ord_plan." in content:
                             return RepositoryState.FILES_MOVED

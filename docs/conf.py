@@ -1,4 +1,5 @@
 """Sphinx configuration."""
+
 project = "ORD Plan"
 author = "vonpupp"
 copyright = "2025, vonpupp"

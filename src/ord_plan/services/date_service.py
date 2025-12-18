@@ -1,7 +1,10 @@
 """Date service for handling date ranges and validation."""
 
-from datetime import datetime, timedelta
-from typing import Tuple, Union, List
+from datetime import datetime
+from datetime import timedelta
+from typing import List
+from typing import Tuple
+from typing import Union
 
 import click
 from dateutil import parser as date_parser
@@ -253,7 +256,7 @@ class DateService:
             date_range.end_date.date() - date_range.start_date.date()
         ).days + 1
 
-        click.echo(f"\n📅 Date Range Summary:")
+        click.echo("\n📅 Date Range Summary:")
         click.echo(f"   From: {from_date_str}")
         click.echo(f"   To:   {to_date_str}")
         click.echo(f"   Days: {days_count}")

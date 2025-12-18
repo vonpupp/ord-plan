@@ -11,9 +11,9 @@ Move Python package files from ord-plan/ subdirectory to repository root level w
 
 ## Technical Context
 
-**Language/Version**: Python 3.7+ (as specified in pyproject.toml)  
-**Primary Dependencies**: Click (>=8.0.1), Poetry for dependency management  
-**Testing**: pytest with 100% coverage requirement  
+**Language/Version**: Python 3.7+ (as specified in pyproject.toml)
+**Primary Dependencies**: Click (>=8.0.1), Poetry for dependency management
+**Testing**: pytest with 100% coverage requirement
 **Target Platform**: Linux/macOS/Windows (CLI tool)
 **Project Type**: Repository refactoring (infrastructure operation)
 **Git Operations**: git mv for history preservation
@@ -25,13 +25,13 @@ Move Python package files from ord-plan/ subdirectory to repository root level w
 
 ## Constitution Check
 
-*GATE: Must pass before Phase 0 research. Re-check after Phase 1 design.*
+_GATE: Must pass before Phase 0 research. Re-check after Phase 1 design._
 
 ### Required Constitution Compliance Gates
 
 - **✅ CLI-First Design**: Repository refactoring is not a CLI feature - infrastructure operation using scripts
 - **✅ Test-Driven Development**: TDD mandatory with 100% test coverage for any new validation scripts
-- **✅ Org-Mode Native**: Not applicable - refactoring doesn't change output formats  
+- **✅ Org-Mode Native**: Not applicable - refactoring doesn't change output formats
 - **✅ Template Generation Focus**: Not applicable - refactoring preserves existing functionality
 - **✅ Hypermodern Python Standards**: All file operations and updates follow Python packaging standards
 - **✅ Script-Based Approach**: Refactoring operations use scripts, not CLI commands, as this is a one-time infrastructure change
@@ -55,6 +55,7 @@ specs/[###-feature]/
 ```
 
 ### Source Code (repository root)
+
 <!--
   ACTION REQUIRED: Replace the placeholder tree below with the concrete layout
   for this feature. Delete unused options and expand the chosen structure with
@@ -84,7 +85,7 @@ src/ord_plan/
 
 tests/
 ├── contract/           # CLI interface tests
-├── integration/        # End-to-end template generation tests  
+├── integration/        # End-to-end template generation tests
 └── unit/              # Individual component tests
     ├── test_cli/
     ├── test_templates/
@@ -101,6 +102,6 @@ docs/                  # Sphinx documentation
 
 > **No Constitution violations - all standards met with straightforward restructuring approach**
 
-| Violation | Why Needed | Simpler Alternative Rejected Because |
-|-----------|------------|-------------------------------------|
-| None | All constitution requirements satisfied through standard file operations and git mv commands | N/A |
+| Violation | Why Needed                                                                                   | Simpler Alternative Rejected Because |
+| --------- | -------------------------------------------------------------------------------------------- | ------------------------------------ |
+| None      | All constitution requirements satisfied through standard file operations and git mv commands | N/A                                  |

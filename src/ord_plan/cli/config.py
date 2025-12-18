@@ -2,7 +2,9 @@
 
 import os
 from dataclasses import dataclass
-from typing import Optional, Dict, Union
+from typing import Dict
+from typing import Optional
+from typing import Union
 
 
 @dataclass

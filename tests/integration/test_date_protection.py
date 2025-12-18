@@ -1,10 +1,9 @@
 """Integration tests for date protection functionality."""
 
-import tempfile
-from datetime import datetime, timedelta
+from datetime import datetime
+from datetime import timedelta
 from pathlib import Path
 
-import pytest
 import yaml
 from click.testing import CliRunner
 

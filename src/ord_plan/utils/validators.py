@@ -1,9 +1,10 @@
 """Validation utilities for ord-plan."""
 
 import os
-from typing import List, Optional, Callable, Any, TYPE_CHECKING
+from typing import List
 
 from croniter import croniter
+
 
 HAS_DATEUTIL = True
 try:
@@ -183,7 +184,7 @@ def validate_file_path(file_path: str) -> List[str]:
 
     # Check path length (reasonable limits)
     if len(file_path) > 4096:  # Typical MAX_PATH limit
-        errors.append(f"File path too long (max 4096 characters)")
+        errors.append("File path too long (max 4096 characters)")
 
     return errors
 

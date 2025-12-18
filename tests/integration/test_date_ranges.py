@@ -1,9 +1,8 @@
 """Integration tests for date range functionality."""
 
-import pytest
-from click.testing import CliRunner
-from datetime import datetime, timedelta
 from pathlib import Path
+
+from click.testing import CliRunner
 
 from ord_plan.cli import cli_group
 
@@ -14,11 +13,13 @@ class TestDateRanges:
     def test_default_date_range(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test default date range (current week)."""
         rules_file = tmp_path / "rules.yaml"
-        rules_file.write_text("""
+        rules_file.write_text(
+            """
 events:
   - title: "Daily Task"
     cron: "0 9 * * *"
-""")
+"""
+        )
 
         result = runner.invoke(
             cli_group,
@@ -49,11 +50,13 @@ events:
     def test_relative_dates(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test relative date parsing."""
         rules_file = tmp_path / "rules.yaml"
-        rules_file.write_text("""
+        rules_file.write_text(
+            """
 events:
   - title: "Test Task"
     cron: "0 9 * * *"
-""")
+"""
+        )
 
         result = runner.invoke(
             cli_group,
@@ -77,11 +80,13 @@ events:
     def test_next_weekday(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test 'next monday' parsing."""
         rules_file = tmp_path / "rules.yaml"
-        rules_file.write_text("""
+        rules_file.write_text(
+            """
 events:
   - title: "Monday Meeting"
     cron: "0 14 * * 1"
-""")
+"""
+        )
 
         result = runner.invoke(
             cli_group,
