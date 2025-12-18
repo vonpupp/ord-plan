@@ -149,7 +149,9 @@ class YamlParser:
         return errors
 
     @staticmethod
-    def _validate_event_schema(event_config: Any, index: int) -> List[str]:
+    def _validate_event_schema(
+        event_config: Any, index: int
+    ) -> List[str]:  # noqa: C901
         """Validate a single event configuration.
 
         Args:

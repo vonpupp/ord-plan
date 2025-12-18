@@ -1,8 +1,8 @@
 <!-- Sync Impact Report:
-- Version change: 1.0.0 → 1.1.0 (template consistency update + CLI-specific requirements)
-- Modified principles: None (principles unchanged, but enhanced with implementation details)
-- Added sections: CLI-specific functional requirements in spec template, detailed project structure in plan template
-- Removed sections: None
+- Version change: 1.2.0 → 1.3.0 (migrated from bin/test.sh to invoke task automation)
+- Modified principles: Comprehensive Testing Requirements (updated testing interface from bin/test.sh to invoke)
+- Added sections: Invoke task mappings, individual test task support, help task
+- Removed sections: bin/test.sh references
 - Templates requiring updates: ✅ plan-template.md, ✅ spec-template.md, ✅ tasks-template.md
 - Follow-up TODOs: None
 -->
@@ -87,26 +87,23 @@ All changes require pull request review with:
 
 ### Comprehensive Testing Requirements
 
-All testing and code quality checks MUST be run through the single entry point: `bin/test.sh`. This script is the ONLY authorized way to run tests for the project. No individual test commands should be run independently for development workflow compliance.
+All testing and code quality checks MUST be run through the single entry point: `invoke`. This is the ONLY authorized way to run tests for the project. Individual invoke tasks are available for specific testing needs, but full workflow compliance requires using appropriate invoke commands.
 
-**Required Test Components (all run by bin/test.sh):**
+**Required Test Components (available through invoke tasks):**
 
-- **Syntax Checks**: Python compilation validation for all source files
-- **Type Checking**: mypy strict mode with all error codes enabled
-- **Code Style**: ruff or flake8 linting with automatic fixing where possible
-- **Unit Tests**: pytest on tests/unit/ directory
-- **Integration Tests**: pytest on tests/integration/ directory
-- **Contract Tests**: pytest on tests/contract/ directory
-- **Security Scanning**: bandit vulnerability analysis
-- **Coverage Analysis**: pytest-cov with minimum 50% coverage requirement
+- **Type Checking**: `invoke mypy` - mypy strict mode with all error codes enabled
+- **Code Style**: `invoke flake8` - ruff or flake8 linting with automatic fixing where possible
+- **Coverage Analysis**: `invoke pytest` - pytest-cov with minimum 50% coverage requirement
+- **Linting**: `invoke lint` - All linting checks (black, isort, flake8, mypy, darglint)
 
 **Usage Requirements:**
 
-- ALL development must use `./bin/test.sh` for validation
-- Custom test execution is only allowed for debugging individual failures
-- Pre-commit hooks must call `./bin/test.sh syntax mypy style`
-- Pull request validation requires `./bin/test.sh all` to pass
-- Documentation must reference `bin/test.sh` as the sole testing interface
+- ALL development must use `invoke` commands for validation
+- Individual tasks (`invoke pytest`, `invoke mypy`, etc.) are allowed for targeted testing
+- Pre-commit hooks must call `invoke lint mypy pytest` or `invoke all`
+- Pull request validation requires `invoke all` to pass
+- Documentation must reference `invoke` as the primary testing interface
+- Use `invoke help` for comprehensive usage guidance
 
 ### File Management Rules
 
@@ -136,4 +133,4 @@ This constitution supersedes all other development practices and guidelines. Ame
 
 All pull requests and code reviews must verify compliance with constitution principles. Any complexity or deviation from these principles must be explicitly justified with alternatives considered and rejected.
 
-**Version**: 1.2.0 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-17
+**Version**: 1.3.1 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-18

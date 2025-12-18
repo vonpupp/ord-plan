@@ -19,7 +19,6 @@ from ..utils.validators import validate_file_writable
 
 @click.command(
     epilog="""
-Examples:
   # Basic usage with default date range (current week)
   ord-plan generate --rules my-events.yaml --file tasks.org
 

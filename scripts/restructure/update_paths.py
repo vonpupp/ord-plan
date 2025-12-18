@@ -116,7 +116,9 @@ class PathMapper:
             # Use find command for efficient file discovery
             try:
                 cmd = ["find", str(self.repo_root), "-type", "f", "-name", f"*{ext}"]
-                result = subprocess.run(cmd, capture_output=True, text=True, check=True)
+                result = subprocess.run(
+                    ["/usr/bin/git"] + cmd, capture_output=True, text=True, check=True
+                )
 
                 if result.stdout.strip():
                     files = [

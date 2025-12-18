@@ -63,10 +63,45 @@ $ poetry run ord-plan
 
 ## How to test the project
 
-Run the full test suite:
+### Using Invoke (Recommended)
+
+Run tests and quality checks with Invoke:
+
+```console
+# Run all tests with coverage
+$ invoke pytest
+
+# Run all checks (tests, linting, security, docs)
+$ invoke all
+
+# Run specific test types
+$ invoke test-unit
+$ invoke test-integration
+
+# Show all available tasks
+$ invoke help
+$ invoke --list
+```
+
+### Using Nox
+
+Run full test suite:
 
 ```console
 $ nox
+```
+
+List available Nox sessions:
+
+```console
+$ nox --list-sessions
+```
+
+You can also run a specific Nox session.
+For example, invoke unit test suite like this:
+
+```console
+$ nox --session=tests
 ```
 
 List the available Nox sessions:
@@ -93,15 +128,19 @@ Open a [pull request] to submit changes to this project.
 
 Your pull request needs to meet the following guidelines for acceptance:
 
-- The Nox test suite must pass without errors and warnings.
+- The test suite must pass without errors and warnings (use `invoke all` or `nox`).
 - Include unit tests. This project maintains 100% code coverage.
 - If your changes add functionality, update the documentation accordingly.
 
 Feel free to submit early, though—we can always iterate on this.
 
-To run linting and code formatting checks before committing your change, you can install pre-commit as a Git hook by running the following command:
+To run linting and code formatting checks before committing your change, you can:
 
 ```console
+# Using Invoke (recommended)
+$ invoke lint
+
+# Or install pre-commit as a Git hook
 $ nox --session=pre-commit -- install
 ```
 

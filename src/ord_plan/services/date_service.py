@@ -139,12 +139,14 @@ class DateService:
                 return datetime.now() + timedelta(days=days)
             except (ValueError, IndexError) as e:
                 raise click.BadParameter(
-                    f"Invalid days format: {date_str}. Use '+N days' where N is a number"
+                    f"Invalid days format: {date_str}. "
+                    "Use '+N days' where N is a number"
                 ) from e
 
         # Try to parse as absolute date or using dateutil parser
         try:
             result: datetime = date_parser.parse(date_str)
+
             return result
         except Exception as e:
             raise click.BadParameter(
@@ -178,7 +180,8 @@ class DateService:
                         err=True,
                     )
                     click.echo(
-                        "   This might not be what you intended. Use --force to override.",
+                        "   This might not be what you intended. "
+                        "Use --force to override.",
                         err=True,
                     )
                     if not click.confirm("   Do you want to continue anyway?"):
@@ -212,7 +215,8 @@ class DateService:
                         err=True,
                     )
                     click.echo(
-                        "   This might not be what you intended. Use --force to override.",
+                        "   This might not be what you intended. "
+                        "Use --force to override.",
                         err=True,
                     )
                     if not click.confirm("   Do you want to continue anyway?"):
@@ -310,7 +314,7 @@ class DateService:
             years_future = date_range.end_date.year - datetime.now().year
             if years_future > 1:
                 violations.append(
-                    f"Generating events {years_future} years in the future (beyond 1 year)"
+                    f"Generating events {years_future} years in the future (beyond 1 year\n)"
                 )
 
         return violations

@@ -240,7 +240,10 @@ class RepositoryStateValidator:
                     "+",
                 ]
                 result = subprocess.run(
-                    cmd, cwd=self.repo_root, capture_output=True, text=True
+                    ["/usr/bin/git"] + cmd,
+                    cwd=self.repo_root,
+                    capture_output=True,
+                    text=True,
                 )
 
                 if result.returncode == 0 and result.stdout.strip():
@@ -291,7 +294,7 @@ class RepositoryStateValidator:
 
         try:
             result = subprocess.run(
-                ["python", "-m", "pytest", "tests/", "--tb=short"],
+                ["/usr/bin/git"] + ["python", "-m", "pytest", "tests/", "--tb=short"],
                 cwd=self.repo_root,
                 capture_output=True,
                 text=True,
@@ -312,7 +315,7 @@ class RepositoryStateValidator:
         # Try running linting
         try:
             result = subprocess.run(
-                ["ruff", "check", "."],
+                ["/usr/bin/git"] + ["ruff", "check", "."],
                 cwd=self.repo_root,
                 capture_output=True,
                 text=True,
@@ -383,7 +386,7 @@ class RepositoryStateValidator:
             {
                 "timestamp": str(
                     subprocess.run(
-                        ["date"], capture_output=True, text=True
+                        ["/usr/bin/git"] + ["date"], capture_output=True, text=True
                     ).stdout.strip()
                 ),
                 "current_state": current_state.value,

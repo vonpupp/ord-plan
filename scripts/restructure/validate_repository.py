@@ -24,7 +24,7 @@ class RepositoryValidator:
         """Check if current directory is a git repository."""
         try:
             result = subprocess.run(
-                ["git", "rev-parse", "--git-dir"],
+                ["/usr/bin/git"] + ["git", "rev-parse", "--git-dir"],
                 cwd=self.repo_root,
                 capture_output=True,
                 text=True,
@@ -39,7 +39,7 @@ class RepositoryValidator:
         try:
             # Check for staged and unstaged changes
             result = subprocess.run(
-                ["git", "status", "--porcelain"],
+                ["/usr/bin/git"] + ["git", "status", "--porcelain"],
                 cwd=self.repo_root,
                 capture_output=True,
                 text=True,
@@ -58,7 +58,7 @@ class RepositoryValidator:
         """Get detailed git status information."""
         try:
             result = subprocess.run(
-                ["git", "status", "--porcelain", "-v"],
+                ["/usr/bin/git"] + ["git", "status", "--porcelain", "-v"],
                 cwd=self.repo_root,
                 capture_output=True,
                 text=True,
@@ -111,7 +111,8 @@ class RepositoryValidator:
             env["PYTHONPATH"] = str(self.repo_root / "ord-plan" / "src")
 
             result = subprocess.run(
-                ["python", "-m", "pytest", "ord-plan/tests/", "--tb=short"],
+                ["/usr/bin/git"]
+                + ["python", "-m", "pytest", "ord-plan/tests/", "--tb=short"],
                 cwd=self.repo_root,
                 capture_output=True,
                 text=True,

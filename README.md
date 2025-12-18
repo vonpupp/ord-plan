@@ -314,23 +314,20 @@ events:
    pip install -e ".[dev]"
    ```
 
-3. **Run tests**:
+3. **Run tests and quality checks**:
 
    ```bash
-   python -m pytest tests/
-   ```
+   # Run all tests with coverage
+   invoke pytest
 
-4. **Run linting**:
+   # Run all linting checks
+   invoke lint
 
-   ```bash
-   ruff check .
-   mypy src/
-   ```
+   # Run all checks (tests, linting, security, docs)
+   invoke all
 
-5. **Run formatting**:
-   ```bash
-   black src/ tests/
-   isort src/ tests/
+   # Show all available tasks and usage examples
+   invoke help
    ```
 
 ### Code Quality
@@ -344,17 +341,36 @@ This project uses several tools to maintain code quality:
 - **pytest**: Testing with coverage
 - **pre-commit**: Git hooks for automated checks
 
+### Development Tasks (Invoke)
+
+The project uses [Invoke](https://www.pyinvoke.org/) for task automation. Use `invoke --list` to see all available tasks, or `invoke help` for detailed usage examples.
+
+**Common development tasks:**
+- `invoke pytest` - Run all tests with coverage
+- `invoke lint` - Run all linting checks (black, isort, flake8, mypy, darglint)
+- `invoke test-unit` - Run only unit tests
+- `invoke test-integration` - Run only integration tests
+- `invoke black` - Run Black formatting check only
+- `invoke mypy` - Run type checking only
+- `invoke clean` - Clean build artifacts and cache
+- `invoke all` - Run all checks (tests, linting, security, docs)
+
 ### Testing
 
 ```bash
-# Run all tests
-python -m pytest
+# Run all tests with coverage
+invoke pytest
 
-# Run with coverage
-python -m pytest --cov=ord_plan --cov-report=html
+# Run specific test types
+invoke test-unit
+invoke test-integration
+invoke test-contract
 
-# Run specific test file
-python -m pytest tests/test_file_service.py
+# Run all checks (tests, linting, security, docs)
+invoke all
+
+# Show detailed usage examples
+invoke help
 ```
 
 ### Contributing

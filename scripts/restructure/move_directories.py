@@ -41,7 +41,11 @@ class FileMover:
                 return True, ""
 
             subprocess.run(
-                cmd, cwd=self.repo_root, capture_output=True, text=True, check=True
+                ["/usr/bin/git"] + ["/usr/bin/git"] + cmd[1:],
+                cwd=self.repo_root,
+                capture_output=True,
+                text=True,
+                check=True,
             )
 
             print(f"✅ Moved {source} -> {target}")
