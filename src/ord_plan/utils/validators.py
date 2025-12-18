@@ -1,16 +1,15 @@
 """Validation utilities for ord-plan."""
 
 import os
-from typing import List, Optional, Callable, Any
+from typing import List, Optional, Callable, Any, TYPE_CHECKING
 
 from croniter import croniter
 
+HAS_DATEUTIL = True
 try:
-    from dateutil.parser import parse as dateutil_parse
-
-    HAS_DATEUTIL = True
+    from dateutil.parser import parse as _dateutil_parse
 except ImportError:
-    dateutil_parse = None  # type: ignore[assignment]
+    _dateutil_parse = None  # type: ignore[assignment]
     HAS_DATEUTIL = False
 
 
@@ -264,9 +263,9 @@ def validate_date_format(date_str: str, field_name: str = "date") -> List[str]:
             return errors
 
     # Try parsing with dateutil if available
-    if HAS_DATEUTIL and dateutil_parse is not None:
+    if HAS_DATEUTIL and _dateutil_parse is not None:
         try:
-            dateutil_parse(date_str)
+            _dateutil_parse(date_str)
             return errors  # Valid date
         except Exception:
             pass  # Fall through to basic validation
