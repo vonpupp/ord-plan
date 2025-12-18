@@ -14,7 +14,12 @@ jobs:
         include:
           - { python: "3.10", os: "ubuntu-latest", session: "pre-commit" }
           - { python: "3.10", os: "ubuntu-latest", session: "mypy" }
-          - { python: "3.10", os: "ubuntu-latest", session: "tests" }
+          - {
+              python: "3.10",
+              os: "ubuntu-latest",
+              session: "tests",
+              upload-coverage: true,
+            }
           - { python: "3.10", os: "windows-latest", session: "tests" }
           - { python: "3.10", os: "macos-latest", session: "tests" }
 
@@ -92,7 +97,7 @@ jobs:
           nox --python=${{ matrix.python }}
 
       - name: Upload coverage data
-        if: always() && matrix.session == 'tests'
+        if: always() && matrix.upload-coverage
         uses: "actions/upload-artifact@v4"
         with:
           name: coverage-data
@@ -139,6 +144,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: coverage-data
+          path: coverage-data/
 
       - name: Combine coverage data and display human readable report
         run: |
