@@ -209,6 +209,14 @@ def coverage(session: Session) -> None:
 
     session.run("coverage", *args)
 
+    # Also generate XML report for Codecov
+    if not session.posargs:
+        session.run("coverage", "xml", "-o", "coverage.xml")
+
+    # Also generate XML report for Codecov
+    if not session.posargs:
+        session.run("coverage", "xml", "-o", "coverage.xml")
+
 
 @session(python=python_versions)
 def xdoctest(session: Session) -> None:

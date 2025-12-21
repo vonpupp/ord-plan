@@ -80,6 +80,7 @@ jobs:
           name: coverage-data
           path: .coverage
           retention-days: 1
+          if-no-files-found: error
 
       - name: Upload documentation
         if: matrix.session == 'docs-build'
@@ -112,6 +113,7 @@ jobs:
         with:
           name: coverage-data
           path: coverage-data/
+          if-no-files-found: error
 
       - name: Combine coverage data
         run: |
@@ -124,3 +126,5 @@ jobs:
 
       - name: Upload coverage report to Codecov
         uses: codecov/codecov-action@v3.1.0
+        with:
+          files: coverage.xml
