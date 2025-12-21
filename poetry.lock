@@ -2625,6 +2625,7 @@ description = "Sphinx extension that automatically documents click applications"
 optional = false
 python-versions = ">=3.8"
 groups = ["dev"]
+markers = "python_version == \"3.9\""
 files = [
     {file = "sphinx_click-6.0.0-py3-none-any.whl", hash = "sha256:1e0a3c83bcb7c55497751b19d07ebe56b5d7b85eb76dd399cf9061b497adc317"},
     {file = "sphinx_click-6.0.0.tar.gz", hash = "sha256:f5d664321dc0c6622ff019f1e1c84e58ce0cecfddeb510e004cf60c2a3ab465b"},
@@ -2634,6 +2635,28 @@ files = [
 click = ">=8.0"
 docutils = "*"
 sphinx = ">=4.0"
+
+[[package]]
+name = "sphinx-click"
+version = "6.2.0"
+description = "Sphinx extension that automatically documents click applications"
+optional = false
+python-versions = ">=3.10"
+groups = ["dev"]
+markers = "python_version >= \"3.10\""
+files = [
+    {file = "sphinx_click-6.2.0-py3-none-any.whl", hash = "sha256:1fb1851cb4f2c286d43cbcd57f55db6ef5a8d208bfc3370f19adde232e5803d7"},
+    {file = "sphinx_click-6.2.0.tar.gz", hash = "sha256:fc78b4154a4e5159462e36de55b8643747da6cda86b3b52a8bb62289e603776c"},
+]
+
+[package.dependencies]
+click = ">=8.0"
+docutils = "*"
+sphinx = ">=4.0"
+
+[package.extras]
+docs = ["reno"]
+test = ["pytest", "pytest-cov"]
 
 [[package]]
 name = "sphinxcontrib-applehelp"
