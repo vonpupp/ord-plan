@@ -15,3 +15,16 @@ Thumbs.db
 *.tmp
 *.bak
 *.log
+
+# Python related
+*.pyc
+.mypy_cache/
+/.coverage
+/.coverage.*
+/.nox/
+/.python-version
+/.pytype/
+/dist/
+/docs/_build/
+/src/*.egg-info/
+__pycache__/

@@ -1,8 +1,0 @@
-REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
-REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
-REVERSE_DATETREE_YEAR_FORMAT: "%Y"
-
-events:
-  - title: "New Generated Event"
-    cron: "0 10 * * 1,3,5"
-    tags: ["generated"]

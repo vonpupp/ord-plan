@@ -1,0 +1,13 @@
+events:
+  - title: "Morning Exercise"
+    cron: "0 7 * * 1,3,5"
+    tags: ["health", "exercise"]
+    description: "Daily morning workout routine"
+  - title: "Team Meeting"
+    cron: "0 14 * * 2"
+    todo_state: "TODO"
+    description: "Weekly team sync meeting"
+  - title: "Code Review"
+    cron: "0 16 * * 4"
+    tags: ["work", "development"]
+    description: "Review pull requests and code changes"

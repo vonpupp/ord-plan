@@ -1,17 +1,17 @@
 # Feature Specification: [FEATURE NAME]
 
-**Feature Branch**: `[###-feature-name]`  
-**Created**: [DATE]  
-**Status**: Draft  
+**Feature Branch**: `[###-feature-name]`
+**Created**: [DATE]
+**Status**: Draft
 **Input**: User description: "$ARGUMENTS"
 
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 <!--
   IMPORTANT: User stories should be PRIORITIZED as user journeys ordered by importance.
   Each user story/journey must be INDEPENDENTLY TESTABLE - meaning if you implement just ONE of them,
   you should still have a viable MVP (Minimum Viable Product) that delivers value.
-  
+
   Assign priorities (P1, P2, P3, etc.) to each story, where P1 is the most critical.
   Think of each story as a standalone slice of functionality that can be:
   - Developed independently
@@ -75,7 +75,7 @@
 - What happens when [boundary condition]?
 - How does system handle [error scenario]?
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 <!--
   ACTION REQUIRED: The content in this section represents placeholders.
@@ -86,31 +86,31 @@
 
 - **FR-001**: CLI tool MUST provide command-line interface for template generation
 - **FR-002**: System MUST output org-mode format as primary output format
-- **FR-003**: System MUST support JSON as secondary output format  
+- **FR-003**: System MUST support JSON as secondary output format
 - **FR-004**: CLI commands MUST be self-documenting and follow POSIX conventions
 - **FR-005**: Templates MUST be configurable via configuration files, not code modifications
 - **FR-006**: System MUST validate generated templates against org-mode parser standards
 - **FR-007**: All functionality MUST be implemented using Test-Driven Development (TDD)
 - **FR-008**: Tests MUST achieve 100% coverage for all new code paths
 
-*CLI-Specific Requirements:*
+_CLI-Specific Requirements:_
 
 - **FR-009**: CLI MUST support stdin/args input and stdout/stderr output
 - **FR-010**: CLI MUST complete template generation within 2 seconds (<1000 lines)
 - **FR-011**: System MUST stay below 50MB memory usage during normal operations
 - **FR-012**: Output MUST be streaming-friendly for large templates
 
-*Example of marking unclear requirements:*
+_Example of marking unclear requirements:_
 
 - **FR-013**: Template types MUST support [NEEDS CLARIFICATION: specific template types not specified]
 - **FR-014**: Configuration format MUST be [NEEDS CLARIFICATION: YAML, TOML, JSON?]
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **[Entity 1]**: [What it represents, key attributes without implementation]
 - **[Entity 2]**: [What it represents, relationships to other entities]
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 <!--
   ACTION REQUIRED: Define measurable success criteria.

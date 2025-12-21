@@ -6,11 +6,13 @@
 **Input**: User description: "For this tool I want to use the python packages croniter, orgparse and pyyaml.
 
 This is an example of the generate command:
+
 ```
 ord-plan generate --rules expanded_rules.yaml --file ~/org/tasks.org
 ```
 
 Explanation:
+
 - The rules file is a yaml file, I will exemplify later.
 - The from flag is the beginning date of the generated events (optional)
 - The to flag is the end date of the generated events (optional)
@@ -18,88 +20,83 @@ Explanation:
 - The file flag is the file where the events will be generated. The data on the file must be preserved, no data loss should ever happen, just data aggregation. This flag is also optional, if it is not provided the output should be stdout
 
 Cooincidentally the following command if executed on the 2025-12-14 without providing any "from" or "to" flag, should generate the same output. I will show the expected output later
+
 ```
 ord-plan generate --rules expanded_rules.yaml --from 2025-12-14 --to 2025-12-21 --file ~/org/tasks.org
 ```
-cat expanded_rules.yaml
----
+
+## cat expanded_rules.yaml
+
 REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%W"
 REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
 REVERSE_DATETREE_YEAR_FORMAT: "%Y"
 events:
-  - title: "Gym"
-    cron: "0 0 * * 1,3,5"
-    tags: ["health", "gym"]
-  - title: "Coding"
-    cron: "0 0 * * 1,2,3,4,5,7"
-    tags: ["skills", "code", "project"]
-  - title: "Music learning"
-    cron: "0 0 * * 1,2,3,4,5,6"
-    tags: ["learn", "music", "project"]
-  - title: "Music composition"
-    cron: "0 0 * * 6,0"
-    tags: ["learn", "music", "project"]
-  - title: "DSI"
-    cron: "0 0 * * 0"  # All-day event on Sundays
-    todo_state: "TODO"
-    tags: ["family"]
-    description: |
-      - [ ] Planning time
-      - [ ] What went fine
-      - [ ] What went wrong
-      - [ ] What can be improved
-  - title: "Date night"
-    cron: "0 0 * * 4"
-    tags: ["family"]
+
+- title: "Gym"
+  cron: "0 0 \* \* 1,3,5"
+  tags: ["health", "gym"]
+- title: "Coding"
+  cron: "0 0 \* \* 1,2,3,4,5,7"
+  tags: ["skills", "code", "project"]
+- title: "Music learning"
+  cron: "0 0 \* \* 1,2,3,4,5,6"
+  tags: ["learn", "music", "project"]
+- title: "Music composition"
+  cron: "0 0 \* \* 6,0"
+  tags: ["learn", "music", "project"]
+- title: "DSI"
+  cron: "0 0 \* \* 0" # All-day event on Sundays
+  todo_state: "TODO"
+  tags: ["family"]
+  description: |
+  - [ ] Planning time
+  - [ ] What went fine
+  - [ ] What went wrong
+  - [ ] What can be improved
+- title: "Date night"
+  cron: "0 0 \* \* 4"
+  tags: ["family"]
 
 cat ~/org/tasks.org
-* 2025
-** 2025-W50
-*** 2025-12-21 Sun
-**** TODO Coding                                      :skill:code:project:
-**** TODO Music composition                                  :learn:music:
-**** TODO DSI                                                     :family:
-- [ ] Planning time
-- [ ] What went fine
-- [ ] What went wrong
-- [ ] What can be improved
-***  2025-12-20 Sat
-**** TODO Music learning                                     :learn:music:
-**** TODO Music composition                                  :learn:music:
-***  2025-12-19 Fri
-**** TODO Gym                                                 :health:gym:
-**** TODO Coding                                      :skill:code:project:
-**** TODO Music learning                                     :learn:music:
-***  2025-12-18 Thu
-**** TODO Coding                                      :skill:code:project:
-**** TODO Music learning                                     :learn:music:
-**** TODO Date night                                              :family:
-**** TODO APPOINTMENT Dentist                                     :health:
-***  2025-12-17 Wed
-**** TODO Gym                                                 :health:gym:
-**** TODO Coding                                      :skill:code:project:
-**** TODO Music learning                                     :learn:music:
-***  2025-12-16 Tue
-**** TODO Coding                                      :skill:code:project:
-**** TODO Music learning                                     :learn:music:
-***  2025-12-15 Mon
-**** TODO Coding                                      :skill:code:project:
-**** TODO Music learning                                     :learn:music:
-*** 2025-12-14 Sun
-**** TODO Coding                                      :skill:code:project:
-**** TODO Music composition                                  :learn:music:
-**** TODO DSI                                                     :family:
-- [ ] Planning time
-- [ ] What went fine
-- [ ] What went wrong
-- [ ] What can be improved
-... File continues with previous entries that should not be modified
+
+- 2025
+  ** 2025-W50 \*** 2025-12-21 Sun \***\* TODO Coding :skill:code:project:
+  \*\*** TODO Music composition :learn:music:
+  \*\*\*\* TODO DSI :family:
+
+* [ ] Planning time
+* [ ] What went fine
+* [ ] What went wrong
+* [ ] What can be improved
+      **\* 2025-12-20 Sat
+      \*\*** TODO Music learning :learn:music: \***_ TODO Music composition :learn:music:
+      _** 2025-12-19 Fri \***\* TODO Gym :health:gym:
+      \*\*** TODO Coding :skill:code:project: \***_ TODO Music learning :learn:music:
+      _** 2025-12-18 Thu \***\* TODO Coding :skill:code:project:
+      \*\*** TODO Music learning :learn:music: \***\* TODO Date night :family:
+      \*\*** TODO APPOINTMENT Dentist :health:
+      **\* 2025-12-17 Wed
+      \*\*** TODO Gym :health:gym: \***\* TODO Coding :skill:code:project:
+      \*\*** TODO Music learning :learn:music:
+      **\* 2025-12-16 Tue
+      \*\*** TODO Coding :skill:code:project: \***_ TODO Music learning :learn:music:
+      _** 2025-12-15 Mon \***\* TODO Coding :skill:code:project:
+      \*\*** TODO Music learning :learn:music:
+      **\* 2025-12-14 Sun
+      \*\*** TODO Coding :skill:code:project: \***\* TODO Music composition :learn:music:
+      \*\*** TODO DSI :family:
+* [ ] Planning time
+* [ ] What went fine
+* [ ] What went wrong
+* [ ] What can be improved
+      ... File continues with previous entries that should not be modified
 
 Notice that on thursday there was already a dentist appointment. The system will just aggregate the tasks of that day, preserving the existing task.
 
 Use these outputs as fixtures to test the app before even implementing the generate command feature.
 
 Some edge cases:
+
 - If the cron expression is broken, the app must trough an exception.
 - If on that day there are events already, the events are kept. Regardless if they look repeated. You must NEVER delete data from the file.
 - If the cron expression doesn't produce any events, just don't produce any events. The user will have to figure it out.
@@ -109,13 +106,11 @@ Some edge cases:
 ## Clarifications
 
 ### Session 2025-12-16
+
 - Q: How should the system handle events with identical titles, dates, and times? → A: Treat events with same title/date/time as separate entries, never deduplicate
 - Q: How should YAML configuration schema validation work? → A: Validate required fields but allow unknown properties for extensibility
 
-
-
-
-## User Scenarios & Testing *(mandatory)*
+## User Scenarios & Testing _(mandatory)_
 
 ### User Story 1 - Basic Event Generation (Priority: P1)
 
@@ -203,7 +198,7 @@ As a user, I want warnings when generating events for past dates or far future d
 - How does system handle events with identical titles and dates? System treats them as separate entries and never deduplicates
 - What happens when timezone is not specified? System should use system local timezone
 
-## Requirements *(mandatory)*
+## Requirements _(mandatory)_
 
 ### Functional Requirements
 
@@ -223,14 +218,14 @@ As a user, I want warnings when generating events for past dates or far future d
 - **FR-014**: System MUST handle events with todo states, tags, descriptions, and titles
 - **FR-015**: System MUST aggregate events by date without deleting existing entries
 
-### Key Entities *(include if feature involves data)*
+### Key Entities _(include if feature involves data)_
 
 - **Event Rule**: Represents a recurring event with title, cron expression, tags, todo state, and description
 - **Date Range**: Defines the start and end dates for event generation with validation for past/future ranges
 - **Org File Structure**: Hierarchical organization of years, weeks, dates, and individual events with preserved existing content
 - **Configuration**: YAML-based formatting rules for date structures and output patterns
 
-## Success Criteria *(mandatory)*
+## Success Criteria _(mandatory)_
 
 ### Measurable Outcomes
 

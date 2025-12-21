@@ -14,11 +14,11 @@ This task breakdown implements a CLI tool that generates org-mode events from cr
 - [x] T002 Set up Poetry with required dependencies (Click>=8.0.1, croniter, orgparse, PyYAML)
 - [x] T003 Configure pre-commit hooks (Black, mypy, flake8)
 - [x] T004 Set up pytest configuration with coverage requirements
-- [x] T005 Create basic CLI entry point in src/ord_plan/__main__.py
+- [x] T005 Create basic CLI entry point in src/ord_plan/**main**.py
 
 ## Phase 2: Foundational
 
-- [x] T006 Create CLI command structure in src/ord_plan/cli/__init__.py
+- [x] T006 Create CLI command structure in src/ord_plan/cli/**init**.py
 - [x] T007 Implement configuration handling in src/ord_plan/cli/config.py
 - [x] T008 Create utility validators in src/ord_plan/utils/validators.py
 - [x] T009 [P] Set up org-mode parser in src/ord_plan/parsers/org_mode.py
@@ -37,7 +37,7 @@ This task breakdown implements a CLI tool that generates org-mode events from cr
 - [x] T016 [US1] Create event generation service in src/ord_plan/services/event_service.py
 - [x] T017 [P] [US1] Implement org-mode renderer in src/ord_plan/parsers/org_mode.py
 - [x] T018 [US1] Create main generate command in src/ord_plan/cli/generate.py
-- [x] T019 [US1] Integrate generate command with CLI in src/ord_plan/cli/__init__.py
+- [x] T019 [US1] Integrate generate command with CLI in src/ord_plan/cli/**init**.py
 - [x] T020 [US1] Add end-to-end test for basic event generation in tests/integration/test_basic_generation.py
 
 ## Phase 4: User Story 2 - Date Range Flexibility (Priority: P1)
@@ -107,6 +107,7 @@ Phase 3 (US1) → Phase 4 (US2) → Phase 5 (US3) → Phase 6 (US4) → Phase 7 
 ```
 
 ### Critical Dependencies
+
 - **Phase 1-2**: Must complete before any user story implementation
 - **US1 Basic Generation**: Foundation for all other user stories
 - **US3 File Preservation**: Required before US4, US5 (they modify file operations)
@@ -116,6 +117,7 @@ Phase 3 (US1) → Phase 4 (US2) → Phase 5 (US3) → Phase 6 (US4) → Phase 7 
 ## Parallel Execution Opportunities
 
 ### Within User Stories
+
 - **US1 Phase**: T011-T017 can be parallel (different model files)
 - **US2 Phase**: T025-T026 can be parallel (tests vs implementation)
 - **US3 Phase**: T031-T032 can be parallel (tests vs implementation)
@@ -124,13 +126,16 @@ Phase 3 (US1) → Phase 4 (US2) → Phase 5 (US3) → Phase 6 (US4) → Phase 7 
 - **Phase 8**: T045-T051 have various parallel opportunities
 
 ### Across Stories
+
 - **Testing**: Many test tasks (T020, T026, T032, T038, T044) can be parallel once implementations are ready
 - **Documentation**: T050 can be done in parallel with final testing
 
 ## Implementation Strategy
 
 ### MVP Scope (User Story 1)
+
 Focus on getting basic event generation working:
+
 1. Complete Phase 1-2 setup
 2. Implement US1 with core event generation
 3. Add basic tests (T020)
@@ -138,6 +143,7 @@ Focus on getting basic event generation working:
 5. Test with provided examples from spec
 
 ### Incremental Delivery
+
 1. **First Increment**: US1 - Basic event generation with hardcoded date ranges
 2. **Second Increment**: US3 - Add file preservation and output options
 3. **Third Increment**: US2 - Add date range flexibility
@@ -145,6 +151,7 @@ Focus on getting basic event generation working:
 5. **Final Increment**: US5 - Add date protection and polish
 
 ### Testing Strategy
+
 - **Unit Tests**: Each component tested independently (validators, services, models)
 - **Integration Tests**: End-to-end workflow testing for each user story
 - **Contract Tests**: CLI interface compliance and parameter validation

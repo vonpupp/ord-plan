@@ -5,6 +5,7 @@
 ## Installation
 
 Ensure you have the required dependencies installed:
+
 ```bash
 pip install croniter orgparse pyyaml click
 ```
@@ -37,6 +38,7 @@ ord-plan generate --rules my-rules.yaml --file tasks.org
 ```
 
 This creates a hierarchical org-mode file like:
+
 ```org
 * 2025
 ** 2025-W51
@@ -87,13 +89,13 @@ ord-plan generate --rules my-rules.yaml --from 2024-12-01 --to 2024-12-31 --file
 
 ## Cron Expression Examples
 
-| Schedule | Cron Expression | Description |
-|-----------|-----------------|-------------|
-| Daily at 9 AM | `0 9 * * *` | Every day at 9:00 |
-| Weekdays at 2 PM | `0 14 * * 1-5` | Monday-Friday at 14:00 |
+| Schedule                | Cron Expression | Description               |
+| ----------------------- | --------------- | ------------------------- |
+| Daily at 9 AM           | `0 9 * * *`     | Every day at 9:00         |
+| Weekdays at 2 PM        | `0 14 * * 1-5`  | Monday-Friday at 14:00    |
 | Monday/Wednesday/Friday | `0 0 * * 1,3,5` | Mon, Wed, Fri at midnight |
-| First of month | `0 0 1 * *` | 1st day of each month |
-| Every 2 hours | `0 */2 * * *` | Every 2 hours on the hour |
+| First of month          | `0 0 1 * *`     | 1st day of each month     |
+| Every 2 hours           | `0 */2 * * *`   | Every 2 hours on the hour |
 
 ## Event Configuration Options
 
@@ -147,15 +149,18 @@ events:
 ### Common Issues
 
 **"Invalid cron expression"**
+
 - Check cron syntax format: `minute hour day month weekday`
 - Use numbers (0-6) for weekdays, not names
 
 **"File not found"**
+
 - Verify file paths are correct
 - Use absolute paths if needed
 - Check file permissions
 
 **"No events generated"**
+
 - Verify cron expressions match your date range
 - Check that weekdays in cron align with your target dates
 - Try a broader date range for testing

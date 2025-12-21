@@ -1,0 +1,25 @@
+[flake8]
+select = F,E,W
+ignore = E203,E266,E501,W503,F541,E402
+max-line-length = 88
+exclude =
+    .git,
+    __pycache__,
+    .venv,
+    venv,
+    .eggs,
+    *.egg,
+    build,
+    dist,
+    .tox,
+    .nox,
+    docs/_build
+per-file-ignores =
+    scripts/restructure/validate_moves.py:E402
+    scripts/restructure/validate_references.py:E402
+    scripts/restructure/validate_repository.py:E402
+    conftest.py:F401
+    noxfile.py:E402
+    src/ord_plan/parsers/yaml_parser.py:DAR401,DAR402
+    src/ord_plan/services/file_service.py:DAR401,DAR402
+    src/ord_plan/services/date_service.py:DAR401,DAR402

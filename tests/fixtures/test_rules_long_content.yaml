@@ -1,0 +1,17 @@
+REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
+REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
+REVERSE_DATETREE_YEAR_FORMAT: "%Y"
+
+events:
+  - title: "Very Long Title Event That Exceeds Normal Length Limits And Contains Many Words To Test Parameter Handling"
+    cron: "0 11 * * 3"
+    description: "This is an extremely long description that contains many characters to test the handling of long parameter values in the application. It includes multiple sentences and should generate a substantial amount of org-mode content when processed by the generator. The purpose is to ensure that the CLI can handle long parameter values without truncation or errors. This description should be long enough to make the output exceed 500 characters when combined with the title and org-mode formatting."
+    tags: ["very-long", "parameter-test", "extended-content", "validation-test"]
+  - title: "Another Long Event for Additional Content Generation"
+    cron: "0 12 * * 3"
+    description: "This is another long description to add more content to the output and ensure we exceed the 500 character threshold. The test needs to verify that long parameter values are handled gracefully throughout the entire processing pipeline."
+    tags: ["additional", "content-generation", "test-coverage"]
+  - title: "Medium Length Event"
+    cron: "0 13 * * 3"
+    description: "This event adds more content to help reach the 500 character requirement for the test output validation."
+    tags: ["medium", "content"]
