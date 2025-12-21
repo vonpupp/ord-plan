@@ -191,6 +191,10 @@ def tests(session: Session) -> None:
     finally:
         if session.interactive:
             session.notify("coverage", posargs=[])
+        else:
+            # In non-interactive mode, combine coverage files
+            session.run("coverage", "combine")
+            session.run("coverage", "report")
 
 
 @session(python=["3.13", "3.10"])

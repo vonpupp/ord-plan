@@ -16,7 +16,7 @@ classifiers = [
 Changelog = "https://github.com/vonpupp/releases"
 
 [tool.poetry.dependencies]
-python = "^3.8"
+python = "^3.9"
 click = ">=8.0.1"
 orgparse = ">=0.1.0"
 python-dateutil = ">=2.8.0"
@@ -53,6 +53,8 @@ sphinx-click = ">=3.0.2"
 # typeguard = ">=2.13.3"  # Temporarily disabled due to CLI issues
 xdoctest = {extras = ["colors"], version = ">=0.15.10"}
 myst-parser = {version = ">=0.16.1"}
+nox = "^2025.11.12"
+nox-poetry = "^1.2.0"
 
 [tool.poetry.scripts]
 ord-plan = "ord_plan.__main__:main"
