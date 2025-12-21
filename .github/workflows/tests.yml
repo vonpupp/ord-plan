@@ -65,6 +65,14 @@ jobs:
         run: |
           nox --python=${{ matrix.python }} --session=${{ matrix.session }}
 
+      - name: Check if .coverage exists
+        if: matrix.session == 'tests' && matrix.os == 'ubuntu-latest'
+        run: |
+          if [ ! -f .coverage ]; then
+            echo ".coverage file not found!"
+            exit 1
+          fi
+
       - name: Upload coverage data
         if: always() && matrix.session == 'tests' && matrix.os == 'ubuntu-latest'
         uses: actions/upload-artifact@v4
