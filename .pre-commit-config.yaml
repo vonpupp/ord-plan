@@ -26,12 +26,10 @@ repos:
         entry: poetry run darglint
         language: system
         types: [python]
-        stages: [manual]
+        stages: [pre-commit, manual]
         args:
-          [
-            --ignore-raise,
-            "FileNotFoundError,PermissionError,OSError,BadParameter",
-          ]
+          - --ignore-raise
+          - "FileNotFoundError,PermissionError,OSError,BadParameter"
       - id: end-of-file-fixer
         name: Fix End of Files
         entry: poetry run end-of-file-fixer
@@ -69,3 +67,6 @@ repos:
     rev: v2.6.0
     hooks:
       - id: prettier
+        name: prettier
+        entry: prettier
+        types: [markdown, css, scss, html, yaml, json]

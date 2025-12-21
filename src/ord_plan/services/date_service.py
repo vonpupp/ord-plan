@@ -69,6 +69,7 @@ class DateService:
             datetime object
 
         Raises:
+            ValueError: If date string is empty
             BadParameter: If date string cannot be parsed
         """
         if not date_str:
