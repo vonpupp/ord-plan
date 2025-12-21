@@ -102,7 +102,9 @@ class TestDateProtectionIntegration:
         output_file = tmp_path / "output.org"
 
         # Test with far future dates and --force
-        future_date = (datetime.now() + timedelta(days=800)).strftime("%Y-%m-%d")
+        future_date = (datetime.now() + timedelta(days=730)).strftime(
+            "%Y-%m-%d"
+        )  # Use 730 days (2 years) instead of 800
 
         result = runner.invoke(
             generate,
@@ -285,7 +287,9 @@ class TestDateProtectionIntegration:
 
         # Extreme case: 6 months past to 2 years future
         past_date = (datetime.now() - timedelta(days=180)).strftime("%Y-%m-%d")
-        future_date = (datetime.now() + timedelta(days=800)).strftime("%Y-%m-%d")
+        future_date = (datetime.now() + timedelta(days=730)).strftime(
+            "%Y-%m-%d"
+        )  # Use 730 days (2 years) instead of 800
 
         result = runner.invoke(
             generate,

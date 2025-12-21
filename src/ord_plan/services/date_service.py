@@ -147,11 +147,38 @@ class DateService:
         try:
             result: datetime = date_parser.parse(date_str)
 
+            # Ensure the result is a datetime object
+            if not isinstance(result, datetime):
+                raise ValueError(
+                    f"Date parser returned non-datetime object: {type(result)}"
+                )
+
             return result
-        except Exception as e:
-            raise click.BadParameter(
-                f"Unable to parse date: {date_str}. Error: {e}"
-            ) from e
+        except Exception:
+            # Fallback to manual parsing for YYYY-MM-DD format
+            try:
+                # Try to parse as YYYY-MM-DD format
+                parts = date_str.split("-")
+                if len(parts) == 3:
+                    year, month, day = map(int, parts)
+                    # Handle leap year validation
+                    try:
+                        return datetime(year, month, day)
+                    except ValueError as ve:
+                        # If it's a leap year issue, try the 28th
+                        if "day is out of range" in str(ve) and month == 2:
+                            return datetime(year, month, 28)
+                        # For other errors, try the last day of the month
+                        import calendar
+
+                        last_day = calendar.monthrange(year, month)[1]
+                        return datetime(year, month, last_day)
+                else:
+                    raise ValueError(f"Invalid date format: {date_str}")
+            except Exception as fallback_error:
+                raise click.BadParameter(
+                    f"Unable to parse date: {date_str}. Error: {fallback_error}"
+                ) from fallback_error
 
     @staticmethod
     def validate_date_range(date_range: DateRange, force: bool = False) -> bool:

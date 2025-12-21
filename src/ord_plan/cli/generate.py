@@ -161,163 +161,131 @@ def generate(
             click.echo("Error: " + "; ".join(date_errors), err=True)
             raise click.Abort()
 
+    # Enhanced YAML parsing with schema validation
     try:
-        # Enhanced YAML parsing with schema validation
-        try:
-            config, schema_errors = YamlParser.parse_and_validate(rules)
-            if schema_errors:
-                # Separate errors from warnings
-                errors = [
-                    err for err in schema_errors if not err.startswith("Warning:")
-                ]
-                warnings = [
-                    warn for warn in schema_errors if warn.startswith("Warning:")
-                ]
+        config, schema_errors = YamlParser.parse_and_validate(rules)
+        if schema_errors:
+            # Separate errors from warnings
+            errors = [err for err in schema_errors if not err.startswith("Warning:")]
+            warnings = [warn for warn in schema_errors if warn.startswith("Warning:")]
 
-                if errors:
-                    click.echo("YAML validation errors:", err=True)
-                    for error in errors:
-                        click.echo(f"  - {error}", err=True)
-                    raise click.Abort()
-
-                if warnings:
-                    click.echo("YAML warnings:", err=True)
-                    for warning in warnings:
-                        click.echo(f"  - {warning}", err=True)
-        except Exception as e:
-            if hasattr(e, "problem_mark") and e.problem_mark is not None:
-                mark = e.problem_mark
-                click.echo(
-                    f"YAML parsing error at line {mark.line + 1}, "
-                    f"column {mark.column + 1}:",
-                    err=True,
-                )
-                click.echo(f"  {getattr(e, 'problem', str(e))}", err=True)
-            else:
-                click.echo(f"YAML parsing error: {e}", err=True)
-            raise click.Abort()
-
-        # Parse event rules
-        try:
-            event_rules = YamlParser.parse_event_rules(config)
-        except ValueError as err:
-            click.echo(f"Error parsing event rules: {err}", err=True)
-            raise click.Abort() from err
-
-        # Validate cron expressions for all rules
-        cron_errors = []
-        for rule in event_rules:
-            errors = validate_cron_expression(rule.cron, rule.title)
-            cron_errors.extend(errors)
-
-        if cron_errors:
-            click.echo("Cron expression validation errors:", err=True)
-            for error in cron_errors:
-                click.echo(f"  - {error}", err=True)
-            raise click.Abort()
-
-        # Parse enhanced configuration
-        try:
-            app_config = Configuration.from_env_and_dict(config)
-
-            # Validate configuration
-            config_errors = app_config.validate_date_formats()
-            if config_errors:
-                click.echo("Configuration errors:", err=True)
-                for error in config_errors:
+            if errors:
+                click.echo("YAML validation errors:", err=True)
+                for error in errors:
                     click.echo(f"  - {error}", err=True)
                 raise click.Abort()
 
-        except Exception as e:
-            click.echo(f"Error processing file {file}: {e}", err=True)
-            raise click.Abort() from e
-
-        # Parse date range
-        date_range = DateService.parse_date_range(from_date, to_date)
-
-        # Handle remaining warnings if not forced
-        if not force and date_range.warnings:
-            click.echo("Additional warnings:", err=True)
-            for warning in date_range.warnings:
-                click.echo(f"  - {warning}", err=True)
-            if not click.confirm("Do you want to proceed despite these warnings?"):
-                click.echo("Aborted.", err=True)
-                raise click.Abort()
-        elif force and date_range.warnings:
-            # Show warnings even when forcing so user knows what was bypassed
-            click.echo("ℹ️  Note: Bypassing following warnings with --force:", err=True)
-            for warning in date_range.warnings:
-                click.echo(f"  - {warning}", err=True)
-
-        # Handle dry-run mode
-        if dry_run:
-            click.echo("🔍 DRY RUN MODE - No files will be modified", err=True)
-            click.echo(f"   Rules file: {rules}")
-            click.echo(
-                f"   Date range: {date_range.start_date.strftime('%Y-%m-%d')} to "
-                f"{date_range.end_date.strftime('%Y-%m-%d')}"
-            )
-            click.echo(f"   Events to generate: ~{len(event_rules) * 7} (estimated)")
-            click.echo(
-                "   Use --force to proceed with actual file generation", err=True
-            )
-            return
-
-        # Read existing content if file exists
-        existing_nodes = []
-        if file:
-            existing_nodes = OrgModeParser.read_existing_content(file)
-
-        # Generate events
-        date_nodes = EventService.generate_complete_event_set(
-            event_rules, date_range, existing_nodes, app_config.default_todo_state
-        )
-
-        # Render content
-        content = OrgModeParser.render_org_content(date_nodes)
-
-        # Output content using FileService
-        if file:
-            try:
-                # Get file stats before processing
-                stats_before = FileService.get_file_content_stats(file)
-                if stats_before["exists"]:
-                    click.echo(f"Reading existing file: {file}")
-                    click.echo(f"  Existing events: {stats_before['events']}")
-
-                # Write content using FileService
-                FileService.write_org_content(content, file)
-
-                # Show summary
-                total_events = sum(
-                    len(node.existing_events) + len(node.new_events)
-                    for node in date_nodes
-                )
-                new_events = sum(len(node.new_events) for node in date_nodes)
-
-                click.echo(f"Events written to {file}")
-                click.echo(f"  Total events: {total_events}")
-                click.echo(f"  New events added: {new_events}")
-                if stats_before["exists"]:
-                    click.echo(f"  Existing events preserved: {stats_before['events']}")
-
-            except Exception as e:
-                click.echo(f"Unexpected error: {e}", err=True)
-                click.echo(
-                    "This appears to be an internal error. Please report this issue.",
-                    err=True,
-                )
-                raise click.Abort() from e
-        else:
-            click.echo(content)
-
-    except click.Abort:
-        # Re-raise abort exceptions without modification
-        raise
+            if warnings:
+                click.echo("YAML warnings:", err=True)
+                for warning in warnings:
+                    click.echo(f"  - {warning}", err=True)
     except Exception as e:
-        # Catch any other unexpected errors and provide helpful context
-        click.echo(f"Unexpected error: {e}", err=True)
-        click.echo(
-            "This appears to be an internal error. Please report this issue.", err=True
-        )
+        click.echo(f"YAML parsing error: {e}", err=True)
         raise click.Abort()
+
+    # Parse event rules
+    try:
+        event_rules = YamlParser.parse_event_rules(config)
+    except ValueError as err:
+        click.echo(f"Error parsing event rules: {err}", err=True)
+        raise click.Abort() from err
+
+    # Validate cron expressions for all rules
+    cron_errors = []
+    for rule in event_rules:
+        errors = validate_cron_expression(rule.cron, rule.title)
+        cron_errors.extend(errors)
+
+    if cron_errors:
+        click.echo("Cron expression validation errors:", err=True)
+        for error in cron_errors:
+            click.echo(f"  - {error}", err=True)
+        raise click.Abort()
+
+    # Parse enhanced configuration
+    try:
+        app_config = Configuration.from_env_and_dict(config)
+
+        # Validate configuration
+        config_errors = app_config.validate_date_formats()
+        if config_errors:
+            click.echo("Configuration errors:", err=True)
+            for error in config_errors:
+                click.echo(f"  - {error}", err=True)
+            raise click.Abort()
+
+    except Exception as e:
+        click.echo(f"Error processing file {file}: {e}", err=True)
+        raise click.Abort() from e
+
+    # Parse date range
+    date_range = DateService.parse_date_range(from_date, to_date)
+
+    # Validate date range with protection checks
+    if not DateService.validate_date_range(date_range, force):
+        click.echo("Aborted.", err=True)
+        raise click.Abort()
+    elif force and date_range.warnings:
+        # Show warnings even when forcing so user knows what was bypassed
+        click.echo("ℹ️  Note: Bypassing following warnings with --force:", err=True)
+        for warning in date_range.warnings:
+            click.echo(f"  - {warning}", err=True)
+
+    # Handle dry-run mode
+    if dry_run:
+        click.echo("🔍 DRY RUN MODE - No files will be modified", err=True)
+        click.echo(f"   Rules file: {rules}")
+        click.echo(
+            f"   Date range: {date_range.start_date.strftime('%Y-%m-%d')} to "
+            f"{date_range.end_date.strftime('%Y-%m-%d')}"
+        )
+        click.echo(f"   Events to generate: ~{len(event_rules) * 7} (estimated)")
+        click.echo("   Use --force to proceed with actual file generation", err=True)
+        return
+
+    # Read existing content if file exists
+    existing_nodes = []
+    if file:
+        existing_nodes = OrgModeParser.read_existing_content(file)
+
+    # Generate events
+    date_nodes = EventService.generate_complete_event_set(
+        event_rules, date_range, existing_nodes, app_config.default_todo_state
+    )
+
+    # Render content
+    content = OrgModeParser.render_org_content(date_nodes)
+
+    # Output content using FileService
+    if file:
+        try:
+            # Get file stats before processing
+            stats_before = FileService.get_file_content_stats(file)
+            if stats_before["exists"]:
+                click.echo(f"Reading existing file: {file}")
+                click.echo(f"  Existing events: {stats_before['events']}")
+
+            # Write content using FileService
+            FileService.write_org_content(content, file)
+
+            # Show summary
+            total_events = sum(
+                len(node.existing_events) + len(node.new_events) for node in date_nodes
+            )
+            new_events = sum(len(node.new_events) for node in date_nodes)
+
+            click.echo(f"Events written to {file}")
+            click.echo(f"  Total events: {total_events}")
+            click.echo(f"  New events added: {new_events}")
+            if stats_before["exists"]:
+                click.echo(f"  Existing events preserved: {stats_before['events']}")
+
+        except Exception as e:
+            click.echo(f"Unexpected error: {e}", err=True)
+            click.echo(
+                "This appears to be an internal error. Please report this issue.",
+                err=True,
+            )
+            raise click.Abort() from e
+    else:
+        click.echo(content)
