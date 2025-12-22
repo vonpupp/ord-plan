@@ -77,12 +77,16 @@ class TestGenerateCommandContract:
     ) -> None:
         """Test --from and --to parameter validation."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -100,12 +104,16 @@ class TestGenerateCommandContract:
     def test_force_flag_parameter(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test --force flag parameter."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -129,12 +137,16 @@ class TestGenerateCommandContract:
     def test_dry_run_flag_parameter(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test --dry-run flag parameter."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -193,6 +205,10 @@ class TestGenerateCommandContract:
         """Test various parameter combinations."""
         # Create YAML with long title
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": (
@@ -201,7 +217,7 @@ class TestGenerateCommandContract:
                     ),
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -228,6 +244,10 @@ class TestGenerateCommandContract:
         """Test handling of long parameter values."""
         # Use fixture file with long content
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": (
@@ -236,7 +256,7 @@ class TestGenerateCommandContract:
                     ),
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"

@@ -19,12 +19,16 @@ class TestDateProtectionIntegration:
         """Test past date generation with --force flag."""
         # Create rules file
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -60,12 +64,16 @@ class TestDateProtectionIntegration:
     ) -> None:
         """Test past date warning without --force flag."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -88,12 +96,16 @@ class TestDateProtectionIntegration:
     ) -> None:
         """Test future date generation with --force flag."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -130,12 +142,16 @@ class TestDateProtectionIntegration:
     ) -> None:
         """Test future date warning without --force flag."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -158,12 +174,16 @@ class TestDateProtectionIntegration:
     ) -> None:
         """Test normal date range without warnings."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -202,12 +222,16 @@ class TestDateProtectionIntegration:
     ) -> None:
         """Test date range with both past and future warnings."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -228,12 +252,16 @@ class TestDateProtectionIntegration:
     def test_edge_case_today_date(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test that today's date doesn't trigger past date warning."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -272,12 +300,16 @@ class TestDateProtectionIntegration:
     ) -> None:
         """Test that --force overrides all date protection warnings."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"
@@ -315,12 +347,16 @@ class TestDateProtectionIntegration:
     def test_date_range_summary_output(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test that date range summary is shown when there are warnings."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "rules.yaml"

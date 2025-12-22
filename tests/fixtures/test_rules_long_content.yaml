@@ -1,6 +1,7 @@
 REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
 REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
 REVERSE_DATETREE_YEAR_FORMAT: "%Y"
+REVERSE_DATETREE_USE_WEEK_TREE: true
 
 events:
   - title: "Very Long Title Event That Exceeds Normal Length Limits And Contains Many Words To Test Parameter Handling"

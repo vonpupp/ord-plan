@@ -107,12 +107,27 @@ class YamlParser:
             errors.append("Root of YAML file must be a dictionary/object")
             return errors
 
+        # Validate mandatory header variables
+        mandatory_headers = {
+            "REVERSE_DATETREE_WEEK_FORMAT",
+            "REVERSE_DATETREE_DATE_FORMAT",
+            "REVERSE_DATETREE_YEAR_FORMAT",
+            "REVERSE_DATETREE_USE_WEEK_TREE",
+        }
+
+        missing_headers = mandatory_headers - set(config.keys())
+        if missing_headers:
+            for header in sorted(missing_headers):
+                errors.append(f"Missing mandatory header variable: {header}")
+            return errors
+
         # Validate configuration keys (allow unknown keys for extensibility)
         config_keys = set(config.keys())
         known_config_keys = {
             "REVERSE_DATETREE_WEEK_FORMAT",
             "REVERSE_DATETREE_DATE_FORMAT",
             "REVERSE_DATETREE_YEAR_FORMAT",
+            "REVERSE_DATETREE_USE_WEEK_TREE",
             "events",
         }
 

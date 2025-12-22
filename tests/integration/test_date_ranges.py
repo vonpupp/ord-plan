@@ -15,6 +15,11 @@ class TestDateRanges:
         rules_file = tmp_path / "rules.yaml"
         rules_file.write_text(
             """
+REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
+REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
+REVERSE_DATETREE_YEAR_FORMAT: "%Y"
+REVERSE_DATETREE_USE_WEEK_TREE: true
+
 events:
   - title: "Daily Task"
     cron: "0 9 * * *"
@@ -52,6 +57,11 @@ events:
         rules_file = tmp_path / "rules.yaml"
         rules_file.write_text(
             """
+REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
+REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
+REVERSE_DATETREE_YEAR_FORMAT: "%Y"
+REVERSE_DATETREE_USE_WEEK_TREE: true
+
 events:
   - title: "Test Task"
     cron: "0 9 * * *"
@@ -82,6 +92,11 @@ events:
         rules_file = tmp_path / "rules.yaml"
         rules_file.write_text(
             """
+REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
+REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
+REVERSE_DATETREE_YEAR_FORMAT: "%Y"
+REVERSE_DATETREE_USE_WEEK_TREE: true
+
 events:
   - title: "Monday Meeting"
     cron: "0 14 * * 1"

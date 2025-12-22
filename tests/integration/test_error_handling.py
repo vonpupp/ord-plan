@@ -33,10 +33,14 @@ class TestErrorHandlingIntegration:
     def test_missing_required_fields(self, tmp_path: Path, runner: CliRunner) -> None:
         """Test handling of missing required fields."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {"title": "Test Event"},  # Missing cron field
                 {"cron": "0 9 * * 1"},  # Missing title field
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "incomplete.yaml"
@@ -50,6 +54,10 @@ class TestErrorHandlingIntegration:
     def test_invalid_cron_expressions(self, tmp_path: Path, runner: CliRunner) -> None:
         """Test handling of invalid cron expressions."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Invalid Cron Event",
@@ -59,7 +67,7 @@ class TestErrorHandlingIntegration:
                     "title": "Another Invalid Event",
                     "cron": "25 0 * * *",  # Invalid hour
                 },
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "bad_cron.yaml"
@@ -74,12 +82,16 @@ class TestErrorHandlingIntegration:
     def test_invalid_date_formats(self, tmp_path: Path, runner: CliRunner) -> None:
         """Test handling of invalid date formats."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Test Event",
                     "cron": "0 9 * * 1",
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "simple.yaml"
@@ -111,6 +123,10 @@ class TestErrorHandlingIntegration:
     ) -> None:
         """Test handling of mixed valid and invalid events."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Valid Event",
@@ -124,7 +140,7 @@ class TestErrorHandlingIntegration:
                     "title": "Another Valid Event",
                     "cron": "0 17 * * 5",  # Valid
                 },
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "mixed.yaml"
@@ -139,6 +155,10 @@ class TestErrorHandlingIntegration:
     def test_warning_handling(self, tmp_path: Path, runner: CliRunner) -> None:
         """Test that warnings are displayed but don't prevent execution."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "unknown_field": "will be ignored",  # Should generate warning
             "events": [
                 {
@@ -164,6 +184,10 @@ class TestErrorHandlingIntegration:
     def test_yaml_schema_validation(self, tmp_path: Path, runner: CliRunner) -> None:
         """Test comprehensive YAML schema validation."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "",  # Invalid: empty title
@@ -171,7 +195,7 @@ class TestErrorHandlingIntegration:
                     "tags": ["tag with spaces"],  # Invalid: spaces in tag
                     "description": "x" * 1001,  # Invalid: too long
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "schema_errors.yaml"
@@ -187,12 +211,16 @@ class TestErrorHandlingIntegration:
     def test_error_recovery(self, tmp_path: Path, runner: CliRunner) -> None:
         """Test that error handling provides recovery suggestions."""
         yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
             "events": [
                 {
                     "title": "Event with typo",
                     "cron": "0 9 * * *1",  # Common typo: extra number for weekday
                 }
-            ]
+            ],
         }
 
         yaml_file = tmp_path / "typo.yaml"

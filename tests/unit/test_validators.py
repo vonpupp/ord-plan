@@ -8,6 +8,7 @@ from ord_plan.utils.validators import validate_file_path
 from ord_plan.utils.validators import validate_file_readable
 from ord_plan.utils.validators import validate_file_writable
 from ord_plan.utils.validators import validate_org_file_content
+from ord_plan.utils.validators import validate_yaml_headers
 
 
 class TestCronValidation:
@@ -220,3 +221,85 @@ class TestFileWritableValidation:
 
         if errors:
             assert "Cannot create file" in errors[0]
+
+
+class TestYamlHeadersValidation:
+    """Test YAML header validation."""
+
+    def test_valid_headers(self) -> None:
+        """Test that valid headers pass validation."""
+        valid_config = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
+        }
+
+        errors = validate_yaml_headers(valid_config)
+        assert errors == []
+
+    def test_missing_week_format(self) -> None:
+        """Test that missing week format header is caught."""
+        config = {
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
+        }
+
+        errors = validate_yaml_headers(config)
+        assert len(errors) > 0
+        assert "REVERSE_DATETREE_WEEK_FORMAT" in errors[0]
+
+    def test_missing_date_format(self) -> None:
+        """Test that missing date format header is caught."""
+        config = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
+        }
+
+        errors = validate_yaml_headers(config)
+        assert len(errors) > 0
+        assert "REVERSE_DATETREE_DATE_FORMAT" in errors[0]
+
+    def test_missing_year_format(self) -> None:
+        """Test that missing year format header is caught."""
+        config = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
+        }
+
+        errors = validate_yaml_headers(config)
+        assert len(errors) > 0
+        assert "REVERSE_DATETREE_YEAR_FORMAT" in errors[0]
+
+    def test_missing_use_week_tree(self) -> None:
+        """Test that missing use week tree header is caught."""
+        config = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+        }
+
+        errors = validate_yaml_headers(config)
+        assert len(errors) > 0
+        assert "REVERSE_DATETREE_USE_WEEK_TREE" in errors[0]
+
+    def test_missing_all_headers(self) -> None:
+        """Test that all missing headers are reported."""
+        config = {}
+
+        errors = validate_yaml_headers(config)
+        assert len(errors) == 4
+        error_messages = "".join(errors)
+        assert "REVERSE_DATETREE_WEEK_FORMAT" in error_messages
+        assert "REVERSE_DATETREE_DATE_FORMAT" in error_messages
+        assert "REVERSE_DATETREE_YEAR_FORMAT" in error_messages
+        assert "REVERSE_DATETREE_USE_WEEK_TREE" in error_messages
+
+    def test_invalid_config_type(self) -> None:
+        """Test that invalid config type is caught."""
+        errors = validate_yaml_headers("not a dict")
+        assert len(errors) > 0
+        assert "dictionary" in errors[0].lower()
