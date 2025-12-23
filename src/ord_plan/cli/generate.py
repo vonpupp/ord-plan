@@ -60,6 +60,14 @@ For detailed help with examples, visit: https://github.com/vonpupp/ord-plan
         description: "Weekly team sync""",
 )
 @click.option(
+    "--format",
+    type=click.Path(exists=True, readable=True),
+    help="""Path to YAML format configuration file.
+
+    Contains only formatting options (REVERSE_DATETREE_WEEK_FORMAT, etc.).
+    Format file options take precedence over rules file options.""",
+)
+@click.option(
     "--file",
     type=click.Path(),
     help="""Path to target org-mode file.
@@ -107,6 +115,7 @@ week/month/year, +N days
 )
 def generate(
     rules: str,
+    format: Optional[str],
     file: Optional[str],
     from_date: Optional[str],
     to_date: Optional[str],
@@ -148,6 +157,45 @@ def generate(
             click.echo("Error: " + "; ".join(file_errors), err=True)
             raise click.Abort()
 
+    # Validate format file if provided
+    format_config = None
+    format_errors = []
+    if format:
+        # Enhanced file path validation for format file
+        format_path_errors = validate_file_path(format)
+        if format_path_errors:
+            click.echo("Error: " + "; ".join(format_path_errors), err=True)
+            raise click.Abort()
+
+        # Validate format file readability
+        format_read_errors = validate_file_readable(format)
+        if format_read_errors:
+            click.echo("Error: " + "; ".join(format_read_errors), err=True)
+            raise click.Abort()
+
+        # Parse format file
+        try:
+            format_config = YamlParser.parse_format_file(format)
+            format_errors = YamlParser.validate_format_schema(format_config)
+
+            # Separate errors from warnings
+            errors = [err for err in format_errors if not err.startswith("Warning:")]
+            warnings = [warn for warn in format_errors if warn.startswith("Warning:")]
+
+            if errors:
+                click.echo("Format file validation errors:", err=True)
+                for error in errors:
+                    click.echo(f"  - {error}", err=True)
+                raise click.Abort()
+
+            if warnings:
+                click.echo("Format file warnings:", err=True)
+                for warning in warnings:
+                    click.echo(f"  - {warning}", err=True)
+        except Exception as e:
+            click.echo(f"Format file error: {e}", err=True)
+            raise click.Abort() from e
+
     # Validate date formats if provided
     if from_date:
         date_errors = validate_date_format(from_date, "--from date")
@@ -181,7 +229,7 @@ def generate(
                     click.echo(f"  - {warning}", err=True)
     except Exception as e:
         click.echo(f"YAML parsing error: {e}", err=True)
-        raise click.Abort()
+        raise click.Abort() from e
 
     # Parse event rules
     try:
@@ -202,9 +250,9 @@ def generate(
             click.echo(f"  - {error}", err=True)
         raise click.Abort()
 
-    # Parse enhanced configuration
+    # Parse enhanced configuration with format file merge
     try:
-        app_config = Configuration.from_env_and_dict(config)
+        app_config = Configuration.merge_format_config(config, format_config)
 
         # Validate configuration
         config_errors = app_config.validate_date_formats()

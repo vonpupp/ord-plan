@@ -185,37 +185,22 @@ def mypy(session: Session) -> None:
 def tests(session: Session) -> None:
     """Run the test suite."""
     session.install(".")
-    session.install("coverage[toml]", "pytest", "pygments")
+    session.install("coverage[toml]", "pytest", "pytest-cov", "pygments")
     try:
-        session.run("coverage", "run", "--parallel", "-m", "pytest", *session.posargs)
+        session.run("pytest", *session.posargs, "--cov", "--cov-report=term-missing")
     finally:
         if session.interactive:
             session.notify("coverage", posargs=[])
-        else:
-            # In non-interactive mode, combine coverage files
-            session.run("coverage", "combine")
-            session.run("coverage", "report")
 
 
 @session(python=python_versions)
 def coverage(session: Session) -> None:
-    """Produce the coverage report."""
-    args = session.posargs or ["report"]
+    """Produce coverage report using pytest-cov."""
+    args = session.posargs or []
 
-    session.install("coverage[toml]")
+    session.install("coverage[toml]", "pytest", "pytest-cov", "pygments")
 
-    if not session.posargs and any(Path().glob(".coverage.*")):
-        session.run("coverage", "combine")
-
-    session.run("coverage", *args)
-
-    # Also generate XML report for Codecov
-    if not session.posargs:
-        session.run("coverage", "xml", "-o", "coverage.xml")
-
-    # Also generate XML report for Codecov
-    if not session.posargs:
-        session.run("coverage", "xml", "-o", "coverage.xml")
+    session.run("pytest", *args, "--cov", "--cov-branch", "--cov-report=xml")
 
 
 @session(python=python_versions)

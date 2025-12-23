@@ -12,7 +12,17 @@
 [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)][pre-commit]
 [![Black](https://img.shields.io/badge/code%20style-black-000000.svg)][black]
 
-ORD Plan is a powerful CLI tool for generating structured org-mode events from cron-based YAML rules. It helps you create automated task schedules while preserving existing content in your org files.
+ORD Plan stands for Org-mode Reverse Datetree plan.
+
+If you don't use org-mode or use
+[org-reverse-datetree](https://github.com/akirak/org-reverse-datetree), probably
+this is not going to be interesting to you.
+
+In a nutshell the goal is to be able to create rules for repeating tasks (like
+weekly, monthly, etc) using cron expressions. The tool will expand these rules
+for you following a defined format and generate the org-mode events.
+
+This tool has been developed aided by AI using opencode, GLM 4.7 and spec-kit.
 
 [pypi_]: https://pypi.org/project/
 [status]: https://pypi.org/project/
@@ -23,21 +33,19 @@ ORD Plan is a powerful CLI tool for generating structured org-mode events from c
 [pre-commit]: https://github.com/pre-commit/pre-commit
 [black]: https://github.com/psf/black
 
-## ✨ Features
+## Features
 
-- 🚀 **Fast CLI** - Generate thousands of events in seconds
-- 📅 **Flexible Scheduling** - Full cron expression support
-- 📝 **Org-mode Native** - Perfect integration with Emacs org-mode
-- 🔄 **Content Preservation** - Safely merge with existing org files
-- ⚡ **Performance Optimized** - Efficient processing of large date ranges
-- 🛡️ **Date Protection** - Warnings for potentially dangerous date ranges
-- 🎯 **Dry Run Mode** - Preview changes before applying them
-- 🌍 **Unicode Support** - Full international character support
-- 🔧 **Configurable** - Custom date formats and behavior
+- **Flexible Scheduling** - Full cron expression support
+- **Org-mode Native** - Perfect integration with Emacs org-mode
+- **Content Preservation** - Safely merge with existing org files
+- **Date Protection** - Warnings for potentially dangerous date ranges
+- **Dry Run Mode** - Preview changes before applying them
+- **Unicode Support** - Full international character support
+- **Configurable** - Custom date formats and behavior
 
 ## 📋 Requirements
 
-- Python 3.7+
+- Python 3.10+
 - Click 8.0.1+
 
 ## 🚀 Installation

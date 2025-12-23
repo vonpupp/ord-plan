@@ -1,0 +1,3 @@
+events:
+  - title: "Meeting"
+    cron: "0 10 * * 1"

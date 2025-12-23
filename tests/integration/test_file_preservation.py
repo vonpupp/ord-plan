@@ -232,7 +232,7 @@ class TestFilePreservation:
 
             # Should preserve multiline formatting
             assert "Email: contact@cityhall.example.gov" in content
-            assert "Documentos:" in content
+            assert "Documents:" in content
             assert "- Balance sheet" in content
             assert "- Balance" in content
             assert "- Income statement" in content

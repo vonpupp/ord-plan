@@ -1,5 +1,6 @@
 """Contract tests for ord-plan generate command."""
 
+import sys
 from pathlib import Path
 
 import pytest
@@ -179,6 +180,106 @@ class TestGenerateCommandContract:
         assert "--file" in result.output
         assert "--from" in result.output
         assert "--to" in result.output
+        assert "--format" in result.output
+
+    def test_format_flag_optional(self, runner: CliRunner) -> None:
+        """Test that --format parameter is optional."""
+        yaml_file = get_fixture_path("minimal_events.yaml")
+
+        # Should work without --format flag
+        result = runner.invoke(
+            generate,
+            ["--rules", str(yaml_file), "--from", "2025-12-22", "--to", "2025-12-22"],
+        )
+
+        assert result.exit_code == 0
+
+    def test_format_file_must_exist(self, runner: CliRunner) -> None:
+        """Test that format file must exist."""
+        yaml_file = get_fixture_path("minimal_events.yaml")
+        result = runner.invoke(
+            generate,
+            [
+                "--rules",
+                str(yaml_file),
+                "--format",
+                "/nonexistent/format.yaml",
+                "--from",
+                "2025-12-22",
+                "--to",
+                "2025-12-22",
+            ],
+        )
+
+        assert result.exit_code != 0
+        assert (
+            "does not exist" in result.output or "File does not exist" in result.output
+        )
+
+    @pytest.mark.skipif(
+        sys.platform == "win32",
+        reason="chmod does not work the same on Windows",
+    )
+    def test_format_file_must_be_readable(
+        self, runner: CliRunner, tmp_path: Path
+    ) -> None:
+        """Test that format file must be readable."""
+
+        # Create a format file
+        format_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
+        }
+        format_file = tmp_path / "format.yaml"
+        import yaml
+
+        format_file.write_text(yaml.dump(format_content))
+
+        # Create rules file
+        yaml_content = {
+            "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
+            "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
+            "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
+            "REVERSE_DATETREE_USE_WEEK_TREE": True,
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                }
+            ],
+        }
+        yaml_file = tmp_path / "rules.yaml"
+        yaml_file.write_text(yaml.dump(yaml_content))
+
+        # Try to make file unreadable - this might not work on all systems
+        try:
+            format_file.chmod(0o000)
+        except OSError:
+            pytest.skip("File permission test not supported on this platform")
+            return
+
+        result = runner.invoke(
+            generate,
+            [
+                "--rules",
+                str(yaml_file),
+                "--format",
+                str(format_file),
+                "--from",
+                "2025-12-22",
+                "--to",
+                "2025-12-22",
+            ],
+        )
+
+        assert result.exit_code != 0
+        assert (
+            "not readable" in result.output
+            or "Format file error" in result.output
+            or "Error reading" in result.output
+        )
 
     def test_exit_codes(self, runner: CliRunner) -> None:
         """Test various exit code scenarios."""
