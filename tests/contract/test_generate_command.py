@@ -1,5 +1,6 @@
 """Contract tests for ord-plan generate command."""
 
+import sys
 from pathlib import Path
 
 import pytest
@@ -215,6 +216,10 @@ class TestGenerateCommandContract:
             "does not exist" in result.output or "File does not exist" in result.output
         )
 
+    @pytest.mark.skipif(
+        sys.platform == "win32",
+        reason="chmod does not work the same on Windows",
+    )
     def test_format_file_must_be_readable(
         self, runner: CliRunner, tmp_path: Path
     ) -> None:
