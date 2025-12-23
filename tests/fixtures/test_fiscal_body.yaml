@@ -27,7 +27,7 @@ events:
     tags: ["fiscal"]
     body: |
       Email: contact@cityhall.example.gov
-      Documentos:
+      Documents:
       - Balance sheet
       - Balance
       - Income statement

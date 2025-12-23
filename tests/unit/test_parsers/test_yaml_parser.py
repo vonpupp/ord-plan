@@ -65,7 +65,7 @@ class TestFormatSchemaValidation:
 
     def test_validate_format_schema_empty(self) -> None:
         """Test validating an empty format schema."""
-        format_config = {}
+        format_config: dict[str, str | int | bool] = {}
 
         errors = YamlParser.validate_format_schema(format_config)
 
@@ -130,7 +130,7 @@ class TestFormatSchemaValidation:
         """Test validating a format schema that is not a dictionary."""
         format_config = "invalid"
 
-        errors = YamlParser.validate_format_schema(format_config)
+        errors = YamlParser.validate_format_schema(format_config)  # type: ignore[arg-type]
 
         # Should have an error
         assert len(errors) > 0

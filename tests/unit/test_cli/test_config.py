@@ -8,7 +8,7 @@ class TestMergeFormatConfig:
 
     def test_merge_format_only(self) -> None:
         """Test merging with only format config."""
-        format_config = {
+        format_config: dict[str, str | int | bool] = {
             "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
             "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
             "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
@@ -24,7 +24,7 @@ class TestMergeFormatConfig:
 
     def test_merge_rules_only(self) -> None:
         """Test merging with only rules config."""
-        rules_config = {
+        rules_config: dict[str, str | int | bool] = {
             "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
             "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d %a",
             "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
@@ -39,14 +39,14 @@ class TestMergeFormatConfig:
 
     def test_merge_format_overrides_rules(self) -> None:
         """Test that format config overrides rules config."""
-        rules_config = {
+        rules_config: dict[str, str | int | bool] = {
             "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d",
             "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
             "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
             "REVERSE_DATETREE_USE_WEEK_TREE": True,
         }
 
-        format_config = {
+        format_config: dict[str, str | int | bool] = {
             "REVERSE_DATETREE_DATE_FORMAT": "%d/%m/%Y",
         }
 
@@ -71,14 +71,14 @@ class TestMergeFormatConfig:
 
     def test_merge_format_partial(self) -> None:
         """Test merging with partial format config."""
-        rules_config = {
+        rules_config: dict[str, str | int | bool] = {
             "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
             "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d",
             "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
             "REVERSE_DATETREE_USE_WEEK_TREE": True,
         }
 
-        format_config = {
+        format_config: dict[str, str | int | bool] = {
             "REVERSE_DATETREE_DATE_FORMAT": "%d/%m/%Y",
         }
 
@@ -94,11 +94,11 @@ class TestMergeFormatConfig:
 
     def test_merge_rules_partial(self) -> None:
         """Test merging with partial rules config."""
-        rules_config = {
+        rules_config: dict[str, str | int | bool] = {
             "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d",
         }
 
-        format_config = {}
+        format_config: dict[str, str | int | bool] = {}
 
         config = Configuration.merge_format_config(
             rules_config=rules_config, format_config=format_config
@@ -112,14 +112,14 @@ class TestMergeFormatConfig:
 
     def test_precedence_format_over_rules(self) -> None:
         """Test that format file has highest precedence."""
-        rules_config = {
+        rules_config: dict[str, str | int | bool] = {
             "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d",
             "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",
             "REVERSE_DATETREE_YEAR_FORMAT": "%Y",
             "REVERSE_DATETREE_USE_WEEK_TREE": True,
         }
 
-        format_config = {
+        format_config: dict[str, str | int | bool] = {
             "REVERSE_DATETREE_DATE_FORMAT": "%d/%m/%Y",
         }
 
@@ -135,11 +135,11 @@ class TestMergeFormatConfig:
 
     def test_precedence_order(self) -> None:
         """Test precedence order: format > rules > defaults."""
-        rules_config = {
+        rules_config: dict[str, str | int | bool] = {
             "REVERSE_DATETREE_DATE_FORMAT": "%Y-%m-%d",
         }
 
-        format_config = {}
+        format_config: dict[str, str | int | bool] = {}
 
         config = Configuration.merge_format_config(
             rules_config=rules_config, format_config=format_config
@@ -149,7 +149,7 @@ class TestMergeFormatConfig:
         assert config.reverse_datetree_date_format == "%Y-%m-%d"
 
         # Now add format config to override
-        format_config_override = {
+        format_config_override: dict[str, str | int | bool] = {
             "REVERSE_DATETREE_DATE_FORMAT": "%d/%m/%Y",
         }
 
