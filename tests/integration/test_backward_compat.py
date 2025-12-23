@@ -59,7 +59,7 @@ class TestBackwardCompatibility:
     def test_events_only_rules_file_without_format_flag(
         self, runner: CliRunner
     ) -> None:
-        """Test using events-only rules file without --format flag (should fail)."""
+        """Test using events-only rules file without --format flag (uses defaults)."""
         with tempfile.TemporaryDirectory() as tmpdir:
             tmpdir_path = Path(tmpdir)
 
@@ -76,7 +76,7 @@ class TestBackwardCompatibility:
             rules_file = tmpdir_path / "rules.yaml"
             rules_file.write_text(yaml.dump(rules_content))
 
-            # Run generate without --format flag (should fail with missing headers)
+            # Run generate without --format flag (uses default formatting)
             result = runner.invoke(
                 generate,
                 [
@@ -89,9 +89,9 @@ class TestBackwardCompatibility:
                 ],
             )
 
-            # Should fail because format file is not provided and headers are missing
-            assert result.exit_code != 0
-            assert "Missing mandatory header variable" in result.output
+            # Should succeed with default formatting values
+            assert result.exit_code == 0
+            assert "Morning Exercise" in result.output
 
     def test_existing_workflow_unchanged(self, runner: CliRunner) -> None:
         """Test that existing workflow (combined rules file) is unchanged."""

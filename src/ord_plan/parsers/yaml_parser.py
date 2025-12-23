@@ -163,14 +163,13 @@ class YamlParser:
 
     @staticmethod
     def validate_yaml_schema(
-        config: Dict[str, Any], require_headers: bool = True
+        config: Dict[str, Any], require_headers: bool = False
     ) -> List[str]:
         """Validate YAML schema with detailed error messages.
 
         Args:
             config: Parsed YAML configuration
             require_headers: If True, require mandatory header variables.
-                           Set to False when format file provides headers.
 
         Returns:
             List of validation errors, empty if valid
@@ -200,11 +199,11 @@ class YamlParser:
         # Validate configuration keys (allow unknown keys for extensibility)
         config_keys = set(config.keys())
         known_config_keys = {
+            "events",
             "REVERSE_DATETREE_WEEK_FORMAT",
             "REVERSE_DATETREE_DATE_FORMAT",
             "REVERSE_DATETREE_YEAR_FORMAT",
             "REVERSE_DATETREE_USE_WEEK_TREE",
-            "events",
         }
 
         # Check for unknown keys (warning only)
@@ -345,14 +344,13 @@ class YamlParser:
 
     @staticmethod
     def parse_and_validate(
-        file_path: str, require_headers: bool = True
+        file_path: str, require_headers: bool = False
     ) -> Tuple[Dict[str, Any], List[str]]:
         """Parse YAML file and validate schema with comprehensive error reporting.
 
         Args:
             file_path: Path to YAML rules file
             require_headers: If True, require mandatory header variables.
-                           Set to False when format file provides headers.
 
         Returns:
             Tuple of (config_dict, errors_list)

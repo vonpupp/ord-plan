@@ -211,9 +211,7 @@ def generate(
 
     # Enhanced YAML parsing with schema validation
     try:
-        # If format file is provided, don't require headers in rules file
-        require_headers = format is None
-        config, schema_errors = YamlParser.parse_and_validate(rules, require_headers)
+        config, schema_errors = YamlParser.parse_and_validate(rules)
         if schema_errors:
             # Separate errors from warnings
             errors = [err for err in schema_errors if not err.startswith("Warning:")]
