@@ -193,6 +193,6 @@ class OrgModeParser:
 
         # Add body if present
         if event.body:
-            heading += "\n" + event.body
+            heading += "\n" + event.body.rstrip()
 
         return heading

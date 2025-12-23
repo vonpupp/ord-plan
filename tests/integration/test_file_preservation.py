@@ -238,6 +238,9 @@ class TestFilePreservation:
             assert "- Income statement" in content
             assert "- Tax form" in content
 
+            # Should not have extra blank line after body (no double newline)
+            assert "\n- Tax form\n\n" not in content
+
     def test_cron_midnight_on_start_date(self) -> None:
         """Test that events scheduled at midnight (00:00) on start_date are included.
 
