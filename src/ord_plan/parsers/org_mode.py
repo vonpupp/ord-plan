@@ -159,17 +159,17 @@ class OrgModeParser:
         # Extract tags from heading
         tags = list(node.tags) if hasattr(node, "tags") else []
 
-        # Get body content as description
-        description = None
+        # Get body content as body
+        body = None
         if node.body:
-            description = "\n".join(str(line) for line in node.body)
-            description = description.strip() or None
+            body = "\n".join(str(line) for line in node.body)
+            body = body.strip() or None
 
         return OrgEvent(
             title=title.strip(),
             todo_state=todo_state,
             tags=tags,
-            description=description,
+            body=body,
         )
 
     @staticmethod
@@ -191,8 +191,8 @@ class OrgModeParser:
 
         heading = " " * event.level + " ".join(parts)
 
-        # Add description if present
-        if event.description:
-            heading += "\n" + event.description
+        # Add body if present
+        if event.body:
+            heading += "\n" + event.body
 
         return heading

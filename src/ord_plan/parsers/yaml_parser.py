@@ -76,6 +76,10 @@ class YamlParser:
             if description is not None and not isinstance(description, str):
                 raise ValueError(f"Event at index {i} 'description' must be a string")
 
+            body = event_config.get("body")
+            if body is not None and not isinstance(body, str):
+                raise ValueError(f"Event at index {i} 'body' must be a string")
+
             try:
                 event_rule = EventRule(
                     title=title,
@@ -83,6 +87,7 @@ class YamlParser:
                     tags=tags,
                     todo_state=todo_state,
                     description=description,
+                    body=body,
                 )
                 event_rules.append(event_rule)
             except ValueError as e:
@@ -249,8 +254,16 @@ class YamlParser:
                     f"{event_prefix}: 'description' too long (max 1000 characters)"
                 )
 
+        # Body validation
+        body = event_config.get("body")
+        if body is not None:
+            if not isinstance(body, str):
+                errors.append(f"{event_prefix}: 'body' must be a string")
+            elif len(body) > 5000:
+                errors.append(f"{event_prefix}: 'body' too long (max 5000 characters)")
+
         # Check for unknown fields (warning only)
-        known_fields = {"title", "cron", "tags", "todo_state", "description"}
+        known_fields = {"title", "cron", "tags", "todo_state", "description", "body"}
         unknown_fields = set(event_config.keys()) - known_fields
         for field in sorted(unknown_fields):
             errors.append(

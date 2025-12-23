@@ -1,6 +1,7 @@
 """Cron service for processing cron expressions."""
 
 from datetime import datetime
+from datetime import timedelta
 from typing import List
 
 from croniter import croniter
@@ -34,7 +35,9 @@ class CronService:
 
         # Validate cron expression
         try:
-            cron = croniter(rule.cron, date_range.start_date)
+            # Start one microsecond before start_date to include events at start_date
+            cron_start_time = date_range.start_date - timedelta(microseconds=1)
+            cron = croniter(rule.cron, cron_start_time)
         except ValueError as e:
             raise ValueError(f"Invalid cron expression {rule.cron!r}: {e}") from e
 
@@ -52,6 +55,7 @@ class CronService:
                     todo_state=rule.todo_state or default_todo_state,
                     tags=rule.tags,
                     description=rule.description,
+                    body=rule.body,
                 )
                 events.append(event)
 

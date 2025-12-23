@@ -1,0 +1,10 @@
+REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
+REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
+REVERSE_DATETREE_YEAR_FORMAT: "%Y"
+REVERSE_DATETREE_USE_WEEK_TREE: true
+
+events:
+  - title: "Monday Midnight Task"
+    cron: "0 0 * * 1"
+    tags: ["test", "boundary"]
+    description: "Test event at midnight on Monday"

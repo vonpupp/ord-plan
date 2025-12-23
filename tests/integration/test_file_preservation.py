@@ -197,3 +197,81 @@ class TestFilePreservation:
             # Should handle error gracefully (either succeed with proper dirs
             # or fail gracefully)
             assert result.exit_code != 0 or "Events written to" in result.output
+
+    def test_generate_with_multiline_body(self) -> None:
+        """Test that multiline body field is correctly rendered."""
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = get_fixture_path("test_fiscal_body.yaml")
+            target_file = os.path.join(temp_dir, "body_output.org")
+
+            # Run generate command with future date range to avoid warnings
+            runner = CliRunner()
+            result = runner.invoke(
+                generate,
+                [
+                    "--rules",
+                    str(rules_file),
+                    "--file",
+                    target_file,
+                    "--from",
+                    "2026-01-01",
+                    "--to",
+                    "2026-06-30",
+                ],
+            )
+
+            assert result.exit_code == 0
+            assert os.path.exists(target_file)
+
+            # Check content includes multiline body
+            with open(target_file) as f:
+                content = f.read()
+
+            # Should include the event with body
+            assert "FISCAL City hall documents submission / 06-01" in content
+
+            # Should preserve multiline formatting
+            assert "Email: contact@cityhall.example.gov" in content
+            assert "Documentos:" in content
+            assert "- Balance sheet" in content
+            assert "- Balance" in content
+            assert "- Income statement" in content
+            assert "- Tax form" in content
+
+    def test_cron_midnight_on_start_date(self) -> None:
+        """Test that events scheduled at midnight (00:00) on start_date are included.
+
+        Regression test for bug where croniter.get_next() would skip events
+        scheduled exactly at start_date because it returns the next occurrence AFTER
+        the start time, not ON or AFTER it.
+        """
+        with tempfile.TemporaryDirectory() as temp_dir:
+            rules_file = get_fixture_path("test_cron_boundary.yaml")
+            target_file = os.path.join(temp_dir, "boundary_output.org")
+
+            # 2026-01-05 is a Monday
+            runner = CliRunner()
+            result = runner.invoke(
+                generate,
+                [
+                    "--rules",
+                    str(rules_file),
+                    "--file",
+                    target_file,
+                    "--from",
+                    "2026-01-05",
+                    "--to",
+                    "2026-01-11",
+                ],
+            )
+
+            assert result.exit_code == 0
+            assert os.path.exists(target_file)
+
+            # Check content
+            with open(target_file) as f:
+                content = f.read()
+
+            # Should include the Monday midnight task on the start date
+            assert "Monday Midnight Task" in content
+            assert "2026-01-05 Mon" in content
