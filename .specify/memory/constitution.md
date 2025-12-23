@@ -113,7 +113,8 @@ All testing and code quality checks MUST be run through the single entry point: 
 - **Fixtures Location**: All test data belongs in `tests/fixtures/` using proper naming conventions
 - **Temporary Files**: Quick tests may use `/tmp/` or project's temporary directories
 - **Clean Up Required**: Any test/debug files created during development must be removed before commits
-- **Exception**: Files in `tests/fixtures/` are version-controlled and intended for testing
+- **Exception 1**: Files in `tests/fixtures/` are version-controlled and intended for testing
+- **Exception 2**: The `mytests/` folder is reserved for manual testing by the user only. The AI may read files from this folder when explicitly asked by the user to test use cases, but is NEVER allowed to write to or modify files in `mytests/`
 
 ### Commit Message Conventions
 
@@ -140,4 +141,4 @@ This constitution supersedes all other development practices and guidelines. Ame
 
 All pull requests and code reviews must verify compliance with constitution principles. Any complexity or deviation from these principles must be explicitly justified with alternatives considered and rejected.
 
-**Version**: 1.3.2 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-23
+**Version**: 1.3.3 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-23
