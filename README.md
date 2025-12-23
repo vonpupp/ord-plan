@@ -22,6 +22,8 @@ In a nutshell the goal is to be able to create rules for repeating tasks (like
 weekly, monthly, etc) using cron expressions. The tool will expand these rules
 for you following a defined format and generate the org-mode events.
 
+This tool has been developed aided by AI using opencode, GLM 4.7 and spec-kit.
+
 [pypi_]: https://pypi.org/project/
 [status]: https://pypi.org/project/
 [python version]: https://pypi.org/project/ord-plan
