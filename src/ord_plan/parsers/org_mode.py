@@ -189,7 +189,7 @@ class OrgModeParser:
             tag_str = ":" + ":".join(event.tags) + ":"
             parts.append(tag_str)
 
-        heading = " " * event.level + " ".join(parts)
+        heading = "*" * event.level + " " + " ".join(parts)
 
         # Add body if present
         if event.body:
