@@ -4,5 +4,7 @@ REVERSE_DATETREE_YEAR_FORMAT: "%Y"
 REVERSE_DATETREE_USE_WEEK_TREE: true
 
 events:
-  - title: "Nested Event"
-    cron: "0 15 * * 4"
+  - title: "Monday Midnight Task"
+    cron: "0 0 * * 1"
+    tags: ["test", "boundary"]
+    description: "Test event at midnight on Monday"

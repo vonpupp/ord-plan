@@ -1,6 +1,8 @@
 """Validation utilities for ord-plan."""
 
 import os
+from typing import Any
+from typing import Dict
 from typing import List
 
 from croniter import croniter
@@ -236,6 +238,36 @@ def validate_org_file_content(
             )
 
     return warnings
+
+
+def validate_yaml_headers(config: Dict[str, Any]) -> List[str]:
+    """Validate mandatory YAML header variables.
+
+    Args:
+        config: Parsed YAML configuration dictionary
+
+    Returns:
+        List of error messages, empty if valid
+    """
+    errors = []
+
+    mandatory_headers = {
+        "REVERSE_DATETREE_WEEK_FORMAT",
+        "REVERSE_DATETREE_DATE_FORMAT",
+        "REVERSE_DATETREE_YEAR_FORMAT",
+        "REVERSE_DATETREE_USE_WEEK_TREE",
+    }
+
+    if not isinstance(config, dict):
+        errors.append("Configuration must be a dictionary")
+        return errors
+
+    missing_headers = mandatory_headers - set(config.keys())
+    if missing_headers:
+        for header in sorted(missing_headers):
+            errors.append(f"Missing mandatory header variable: {header}")
+
+    return errors
 
 
 def validate_date_format(date_str: str, field_name: str = "date") -> List[str]:

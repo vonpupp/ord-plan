@@ -1,7 +1,8 @@
 <!-- Sync Impact Report:
 - Version change: 1.2.0 → 1.3.0 (migrated from bin/test.sh to invoke task automation)
+- Version change: 1.3.1 → 1.3.2 (added commit message conventions for AI model naming)
 - Modified principles: Comprehensive Testing Requirements (updated testing interface from bin/test.sh to invoke)
-- Added sections: Invoke task mappings, individual test task support, help task
+- Added sections: Invoke task mappings, individual test task support, help task, Commit Message Conventions
 - Removed sections: bin/test.sh references
 - Templates requiring updates: ✅ plan-template.md, ✅ spec-template.md, ✅ tasks-template.md
 - Follow-up TODOs: None
@@ -114,6 +115,12 @@ All testing and code quality checks MUST be run through the single entry point: 
 - **Clean Up Required**: Any test/debug files created during development must be removed before commits
 - **Exception**: Files in `tests/fixtures/` are version-controlled and intended for testing
 
+### Commit Message Conventions
+
+When creating Git commits that reference AI assistance, the model name MUST be used instead of the tool name ("opencode"). The model name is specified in the `opencode.json` file under the `model` key. Commit messages should follow the format: "AI ({model}): {description}" where `{model}` is the model identifier from the configuration file. This ensures accurate tracking of which AI model contributed to changes.
+
+You are NEVER allowed to push directly into the main branch. EVER!
+
 ### Release Process
 
 - Semantic versioning (MAJOR.MINOR.PATCH)
@@ -133,4 +140,4 @@ This constitution supersedes all other development practices and guidelines. Ame
 
 All pull requests and code reviews must verify compliance with constitution principles. Any complexity or deviation from these principles must be explicitly justified with alternatives considered and rejected.
 
-**Version**: 1.3.1 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-18
+**Version**: 1.3.2 | **Ratified**: 2025-12-16 | **Last Amended**: 2025-12-23

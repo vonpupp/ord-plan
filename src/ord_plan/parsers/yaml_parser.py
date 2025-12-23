@@ -76,6 +76,10 @@ class YamlParser:
             if description is not None and not isinstance(description, str):
                 raise ValueError(f"Event at index {i} 'description' must be a string")
 
+            body = event_config.get("body")
+            if body is not None and not isinstance(body, str):
+                raise ValueError(f"Event at index {i} 'body' must be a string")
+
             try:
                 event_rule = EventRule(
                     title=title,
@@ -83,6 +87,7 @@ class YamlParser:
                     tags=tags,
                     todo_state=todo_state,
                     description=description,
+                    body=body,
                 )
                 event_rules.append(event_rule)
             except ValueError as e:
@@ -107,12 +112,27 @@ class YamlParser:
             errors.append("Root of YAML file must be a dictionary/object")
             return errors
 
+        # Validate mandatory header variables
+        mandatory_headers = {
+            "REVERSE_DATETREE_WEEK_FORMAT",
+            "REVERSE_DATETREE_DATE_FORMAT",
+            "REVERSE_DATETREE_YEAR_FORMAT",
+            "REVERSE_DATETREE_USE_WEEK_TREE",
+        }
+
+        missing_headers = mandatory_headers - set(config.keys())
+        if missing_headers:
+            for header in sorted(missing_headers):
+                errors.append(f"Missing mandatory header variable: {header}")
+            return errors
+
         # Validate configuration keys (allow unknown keys for extensibility)
         config_keys = set(config.keys())
         known_config_keys = {
             "REVERSE_DATETREE_WEEK_FORMAT",
             "REVERSE_DATETREE_DATE_FORMAT",
             "REVERSE_DATETREE_YEAR_FORMAT",
+            "REVERSE_DATETREE_USE_WEEK_TREE",
             "events",
         }
 
@@ -234,8 +254,16 @@ class YamlParser:
                     f"{event_prefix}: 'description' too long (max 1000 characters)"
                 )
 
+        # Body validation
+        body = event_config.get("body")
+        if body is not None:
+            if not isinstance(body, str):
+                errors.append(f"{event_prefix}: 'body' must be a string")
+            elif len(body) > 5000:
+                errors.append(f"{event_prefix}: 'body' too long (max 5000 characters)")
+
         # Check for unknown fields (warning only)
-        known_fields = {"title", "cron", "tags", "todo_state", "description"}
+        known_fields = {"title", "cron", "tags", "todo_state", "description", "body"}
         unknown_fields = set(event_config.keys()) - known_fields
         for field in sorted(unknown_fields):
             errors.append(

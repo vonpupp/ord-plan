@@ -15,6 +15,7 @@ class OrgEvent:
     todo_state: Optional[str] = None
     tags: List[str] = field(default_factory=list)
     description: Optional[str] = None
+    body: Optional[str] = None
 
     def __post_init__(self) -> None:
         """Validate the org event after initialization."""

@@ -1,0 +1,28 @@
+events:
+  - title: "Weekly Meeting / 2026-04-03 18:00"
+    cron: "0 18 3 4 *"
+    tags: ["work"]
+  - title: "Project Review / 2026-04-04 19:00 [HS]"
+    cron: "0 19 4 4 *"
+    tags: ["work"]
+  - title: "Team Standup / 2026-04-05 19:00"
+    cron: "0 19 5 4 *"
+    tags: ["work"]
+  - title: "Sprint Planning / 2026-04-10 19:00 [HS]"
+    cron: "0 19 10 4 *"
+    tags: ["work"]
+  - title: "Code Review / 2026-05-24 19:00 [HS]"
+    cron: "0 19 24 5 *"
+    tags: ["work"]
+  - title: "Release Meeting / 2026-09-13 19:00 [HS]"
+    cron: "0 19 13 9 *"
+    tags: ["work"]
+  - title: "Sprint Retro / 2026-09-22 19:00 [HS]"
+    cron: "0 19 22 9 *"
+    tags: ["work"]
+  - title: "Architecture Review / 2026-09-27 19:00 [HS]"
+    cron: "0 19 27 9 *"
+    tags: ["work"]
+  - title: "Final Review / 2026-10-04 19:00 [HS]"
+    cron: "0 19 4 10 *"
+    tags: ["work"]

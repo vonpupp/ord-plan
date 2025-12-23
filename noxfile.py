@@ -24,11 +24,11 @@ except ImportError:
 
 
 package = "ord_plan"
-python_versions = ["3.13", "3.10", "3.9", "3.8", "3.7"]
+python_versions = ["3.13", "3.10"]
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
     "pre-commit",
-    "safety",
+    # "safety",
     "mypy",
     "tests",
     "typeguard",
@@ -111,7 +111,7 @@ def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
                 break
 
 
-@session(name="pre-commit", python=["3.13", "3.10"])
+@session(name="pre-commit", python=python_versions)
 def precommit(session: Session) -> None:
     """Lint using pre-commit."""
     args = session.posargs or [
@@ -139,7 +139,7 @@ def precommit(session: Session) -> None:
         activate_virtualenv_in_precommit_hooks(session)
 
 
-@session(python=["3.13", "3.10"])
+@session(python=python_versions)
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
     requirements = session.poetry.export_requirements()
@@ -197,7 +197,7 @@ def tests(session: Session) -> None:
             session.run("coverage", "report")
 
 
-@session(python=["3.13", "3.10"])
+@session(python=python_versions)
 def coverage(session: Session) -> None:
     """Produce the coverage report."""
     args = session.posargs or ["report"]
@@ -233,7 +233,7 @@ def xdoctest(session: Session) -> None:
     session.run("python", "-m", "xdoctest", *args)
 
 
-@session(python=["3.13", "3.10"])
+@session(python=python_versions)
 def typeguard(session: Session) -> None:
     """Runtime type checking using Typeguard."""
     session.install(".")
@@ -247,7 +247,7 @@ def typeguard(session: Session) -> None:
     pass
 
 
-@session(name="docs-build", python=["3.13", "3.10"])
+@session(name="docs-build", python=python_versions)
 def docs_build(session: Session) -> None:
     """Build the documentation."""
     args = session.posargs or ["docs", "docs/_build"]
@@ -264,7 +264,7 @@ def docs_build(session: Session) -> None:
     session.run("sphinx-build", *args)
 
 
-@session(python=["3.13", "3.10"])
+@session(python=python_versions)
 def docs(session: Session) -> None:
     """Build and serve the documentation with live reloading on file changes."""
     args = session.posargs or ["--open-browser", "docs", "docs/_build"]

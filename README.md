@@ -432,7 +432,7 @@ invoke help
 
 ### Contributing
 
-Contributions are very welcome! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
+Contributions are very welcome! Please see our [Contributing Guide](https://github.com/vonpupp/ord-plan/blob/main/CONTRIBUTING.md) for details on:
 
 - Code of Conduct
 - How to submit pull requests

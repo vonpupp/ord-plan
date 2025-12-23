@@ -244,6 +244,43 @@ def install_deps(c):
 
 
 @task
+def workflow_logs(c, run_id=None):
+    """Show logs from the last GitHub Actions workflow run.
+
+    Options:
+        run_id (str): Specific workflow run ID to view (default: most recent run)
+    """
+    setup_python_path()
+
+    if not run_id:
+        print("📋 Fetching the most recent workflow run ID...")
+        result = c.run(
+            "gh run list --limit 1 --json databaseId --jq '.[0].databaseId'",
+            hide=True,
+            warn=True,
+        )
+        if result.return_code != 0:
+            print(f"❌ Failed to fetch workflow run ID")
+            if result.stderr:
+                print(f"STDERR:\n{result.stderr}")
+            return False
+        run_id = result.stdout.strip()
+        if not run_id:
+            print("❌ No workflow runs found")
+            return False
+
+    print(f"📋 Showing logs for workflow run: {run_id}")
+    cmd = f"gh run view {run_id} --log"
+    result = c.run(cmd, hide=False, warn=True)
+    if result.return_code != 0:
+        print(f"❌ Failed to retrieve workflow logs")
+        if result.stderr:
+            print(f"STDERR:\n{result.stderr}")
+        return False
+    return True
+
+
+@task
 def help(c):
     """Show usage examples and task categories."""
     setup_python_path()
@@ -286,6 +323,7 @@ def help(c):
     print("  invoke pre-commit-install # Install pre-commit hooks")
     print("  invoke docs           # Build documentation")
     print("  invoke docs-serve     # Serve documentation locally")
+    print("  invoke workflow-logs  # Show logs from last GitHub Actions run")
     print()
 
     print("💡 QUICK EXAMPLES:")

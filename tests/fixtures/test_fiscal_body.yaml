@@ -1,0 +1,37 @@
+REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
+REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
+REVERSE_DATETREE_YEAR_FORMAT: "%Y"
+REVERSE_DATETREE_USE_WEEK_TREE: true
+
+events:
+  - title: "FISCAL Tax report submission / 08-01"
+    cron: "0 0 1 8 *"
+    tags: ["fiscal"]
+  - title: "FISCAL Income tax pre-preparation / 12-01"
+    cron: "0 0 1 12 *"
+    tags: ["fiscal"]
+  - title: "FISCAL Income tax preparation (Forms) / 03-01"
+    cron: "0 0 1 3 *"
+    tags: ["fiscal"]
+  - title: "FISCAL Income tax / 04-01"
+    cron: "0 0 1 4 *"
+    tags: ["fiscal"]
+  - title: "FISCAL TAX Vehicle registration (taxes / tickets) / 09-01"
+    cron: "0 0 1 9 *"
+    tags: ["fiscal"]
+  - title: "FISCAL TAX Vehicle (print docs) / 10-01"
+    cron: "0 0 1 10 *"
+    tags: ["fiscal"]
+  - title: "FISCAL City hall documents submission / 06-01"
+    cron: "0 0 1 6 *"
+    tags: ["fiscal"]
+    body: |
+      Email: contact@cityhall.example.gov
+      Documentos:
+      - Balance sheet
+      - Balance
+      - Income statement
+      - Tax form
+  - title: "FISCAL Company registration (city hall) / 05-01"
+    cron: "0 0 1 5 *"
+    tags: ["fiscal"]

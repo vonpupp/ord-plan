@@ -1,3 +1,4 @@
+.env
 .opencode/
 
 # OS-specific
@@ -28,3 +29,7 @@ Thumbs.db
 /docs/_build/
 /src/*.egg-info/
 __pycache__/
+
+coverage.xml
+
+mytests/
