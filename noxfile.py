@@ -35,7 +35,6 @@ nox.options.sessions = (
     "xdoctest",
     "docs-build",
 )
-nox.options.force_venv_backend = "uv"
 
 
 def activate_virtualenv_in_precommit_hooks(session: Session) -> None:
