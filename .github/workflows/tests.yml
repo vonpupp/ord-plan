@@ -68,11 +68,16 @@ jobs:
       - name: Check if coverage files exist
         if: matrix.session == 'tests' && matrix.os == 'ubuntu-latest'
         run: |
+          echo "Current directory:"
+          pwd
+          echo "Files in directory:"
+          ls -la
+          echo "Coverage files:"
+          ls -la .coverage* 2>/dev/null || echo "No .coverage files found"
           if [ ! -f .coverage ] && [ ! -f .coverage.* ]; then
             echo "No coverage files found (.coverage or .coverage.*)!"
             exit 1
           fi
-          ls -la .coverage* 2>/dev/null || true
 
       - name: Upload coverage data
         if: always() && matrix.session == 'tests' && matrix.os == 'ubuntu-latest'
