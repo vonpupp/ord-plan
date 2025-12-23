@@ -129,6 +129,23 @@ def pre_commit_install(c):
 
 
 @task
+def gitlint_install(c):
+    """Install gitlint commit-msg hook."""
+    setup_python_path()
+    hook_content = """#!/bin/sh
+gitlint --msg-file "$1"
+"""
+    hook_path = PROJECT_ROOT / ".git" / "hooks" / "commit-msg"
+    print(f"🔧 Creating gitlint hook at {hook_path}...")
+    hook_path.parent.mkdir(parents=True, exist_ok=True)
+    hook_path.write_text(hook_content)
+    if not run_command(c, f"chmod +x {hook_path}", "Making gitlint hook executable"):
+        return False
+    print(f"✅ Gitlint hook installed successfully!")
+    return True
+
+
+@task
 def security(c):
     """Run security checks."""
     setup_python_path()
@@ -297,6 +314,7 @@ def help(c):
     print("  invoke security       # Just security checks")
     print("  invoke pre-commit     # Run all pre-commit hooks")
     print("  invoke pre-commit-install # Install pre-commit hooks")
+    print("  invoke gitlint-install # Install gitlint commit-msg hook")
     print()
 
     print("🧪 SPECIFIC TEST TYPES:")
@@ -321,6 +339,7 @@ def help(c):
     print("  invoke clean          # Clean build artifacts and cache")
     print("  invoke install-deps   # Install development dependencies")
     print("  invoke pre-commit-install # Install pre-commit hooks")
+    print("  invoke gitlint-install # Install gitlint commit-msg hook")
     print("  invoke docs           # Build documentation")
     print("  invoke docs-serve     # Serve documentation locally")
     print("  invoke workflow-logs  # Show logs from last GitHub Actions run")
