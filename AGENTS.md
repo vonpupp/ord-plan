@@ -3,6 +3,8 @@
 Auto-generated from all feature plans. Last updated: 2025-12-18
 
 ## Active Technologies
+- Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, Poetry for dependency management (004-add-format-flag)
+- Files (YAML configuration and org-mode output) (004-add-format-flag)
 
 - Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), Poetry for dependency management (001-generate-org)
 
@@ -162,6 +164,7 @@ Pre-commit hooks are configured in `.pre-commit-config.yaml` and use poetry to e
 - **Both methods** use the same underlying tools and configuration for consistency
 
 ## Recent Changes
+- 004-add-format-flag: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, Poetry for dependency management
 
 - 001-generate-org: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), Poetry for dependency management
 - Added constitutional amendment: No performance testing - focus on functionality over performance metrics

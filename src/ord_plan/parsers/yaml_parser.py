@@ -29,6 +29,72 @@ class YamlParser:
         return content
 
     @staticmethod
+    def parse_format_file(file_path: str) -> Dict[str, Any]:
+        """Parse YAML format file containing only formatting options.
+
+        Args:
+            file_path: Path to YAML format file
+
+        Returns:
+            Dictionary containing the parsed format configuration
+
+        Raises:
+            YAMLError: If YAML parsing fails
+            Exception: For other file reading errors
+        """
+        try:
+            with open(file_path) as f:
+                content: Dict[str, Any] = yaml.safe_load(f) or {}
+        except yaml.YAMLError as e:
+            raise yaml.YAMLError(f"Invalid YAML in {file_path}: {e}") from e
+        except Exception as e:
+            raise Exception(f"Error reading {file_path}: {e}") from e
+
+        return content
+
+    @staticmethod
+    def validate_format_schema(format_config: Dict[str, Any]) -> List[str]:
+        """Validate format file schema.
+
+        Format files contain only formatting options, no events section.
+
+        Args:
+            format_config: Parsed format configuration
+
+        Returns:
+            List of validation errors and warnings
+        """
+        errors = []
+
+        # Validate root structure
+        if not isinstance(format_config, dict):
+            errors.append("Root of format file must be a dictionary/object")
+            return errors
+
+        # Check for forbidden events section
+        if "events" in format_config:
+            errors.append("Format file must not contain 'events' section")
+            return errors
+
+        # Validate allowed format keys
+        allowed_format_keys = {
+            "REVERSE_DATETREE_YEAR_FORMAT",
+            "REVERSE_DATETREE_WEEK_FORMAT",
+            "REVERSE_DATETREE_DATE_FORMAT",
+            "REVERSE_DATETREE_USE_WEEK_TREE",
+        }
+
+        # Check for unknown keys (warning only)
+        unknown_keys = set(format_config.keys()) - allowed_format_keys
+        if unknown_keys:
+            for key in sorted(unknown_keys):
+                errors.append(
+                    f"Warning: Unknown configuration key {key!r} will be ignored"
+                )
+
+        return errors
+
+    @staticmethod
     def parse_event_rules(config: Dict[str, Any]) -> List[EventRule]:
         """Parse event rules from configuration.
 
@@ -96,11 +162,15 @@ class YamlParser:
         return event_rules
 
     @staticmethod
-    def validate_yaml_schema(config: Dict[str, Any]) -> List[str]:
+    def validate_yaml_schema(
+        config: Dict[str, Any], require_headers: bool = True
+    ) -> List[str]:
         """Validate YAML schema with detailed error messages.
 
         Args:
             config: Parsed YAML configuration
+            require_headers: If True, require mandatory header variables.
+                           Set to False when format file provides headers.
 
         Returns:
             List of validation errors, empty if valid
@@ -112,19 +182,20 @@ class YamlParser:
             errors.append("Root of YAML file must be a dictionary/object")
             return errors
 
-        # Validate mandatory header variables
-        mandatory_headers = {
-            "REVERSE_DATETREE_WEEK_FORMAT",
-            "REVERSE_DATETREE_DATE_FORMAT",
-            "REVERSE_DATETREE_YEAR_FORMAT",
-            "REVERSE_DATETREE_USE_WEEK_TREE",
-        }
+        # Validate mandatory header variables (if required)
+        if require_headers:
+            mandatory_headers = {
+                "REVERSE_DATETREE_WEEK_FORMAT",
+                "REVERSE_DATETREE_DATE_FORMAT",
+                "REVERSE_DATETREE_YEAR_FORMAT",
+                "REVERSE_DATETREE_USE_WEEK_TREE",
+            }
 
-        missing_headers = mandatory_headers - set(config.keys())
-        if missing_headers:
-            for header in sorted(missing_headers):
-                errors.append(f"Missing mandatory header variable: {header}")
-            return errors
+            missing_headers = mandatory_headers - set(config.keys())
+            if missing_headers:
+                for header in sorted(missing_headers):
+                    errors.append(f"Missing mandatory header variable: {header}")
+                return errors
 
         # Validate configuration keys (allow unknown keys for extensibility)
         config_keys = set(config.keys())
@@ -273,11 +344,15 @@ class YamlParser:
         return errors
 
     @staticmethod
-    def parse_and_validate(file_path: str) -> Tuple[Dict[str, Any], List[str]]:
+    def parse_and_validate(
+        file_path: str, require_headers: bool = True
+    ) -> Tuple[Dict[str, Any], List[str]]:
         """Parse YAML file and validate schema with comprehensive error reporting.
 
         Args:
             file_path: Path to YAML rules file
+            require_headers: If True, require mandatory header variables.
+                           Set to False when format file provides headers.
 
         Returns:
             Tuple of (config_dict, errors_list)
@@ -295,6 +370,6 @@ class YamlParser:
             raise Exception(f"Error reading {file_path}: {e}") from e
 
         # Validate schema
-        errors = YamlParser.validate_yaml_schema(config)
+        errors = YamlParser.validate_yaml_schema(config, require_headers)
 
         return config, errors

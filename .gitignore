@@ -29,6 +29,8 @@ Thumbs.db
 /docs/_build/
 /src/*.egg-info/
 __pycache__/
+.venv/
+venv/
 
 coverage.xml
 

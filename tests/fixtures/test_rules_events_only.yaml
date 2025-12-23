@@ -1,0 +1,4 @@
+events:
+  - title: "Morning Exercise"
+    cron: "0 7 * * 1,3,5"
+    tags: ["health", "exercise"]

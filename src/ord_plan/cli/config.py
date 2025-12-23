@@ -89,6 +89,39 @@ class Configuration:
 
         return cls.from_dict(config_dict)
 
+    @classmethod
+    def merge_format_config(
+        cls,
+        rules_config: Optional[Dict[str, Union[str, int, bool]]] = None,
+        format_config: Optional[Dict[str, Union[str, int, bool]]] = None,
+    ) -> "Configuration":
+        """Merge formatting configs with format_file taking precedence.
+
+        Merge order (highest to lowest priority):
+        1. Format file options
+        2. Rules file options
+        3. Configuration defaults
+
+        Args:
+            rules_config: Configuration from rules file (optional)
+            format_config: Configuration from format file (optional)
+
+        Returns:
+            Merged Configuration object
+        """
+        merged: Dict[str, Union[str, int, bool]] = {}
+
+        # Start with rules config if provided
+        if rules_config:
+            merged.update(rules_config)
+
+        # Apply format config (overwrites rules config)
+        if format_config:
+            merged.update(format_config)
+
+        # Use from_env_and_dict which handles environment variable overrides
+        return cls.from_env_and_dict(merged)
+
     def validate_date_formats(self) -> list[str]:
         """Validate date format strings.
 
