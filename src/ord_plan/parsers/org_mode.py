@@ -64,13 +64,15 @@ class OrgModeParser:
                 year_weeks[year_week_key] = []
             year_weeks[year_week_key].append(node)
 
-        # Sort by year and week
-        sorted_year_weeks = sorted(year_weeks.keys())
+        # Sort by year and week (reverse order for reverse date tree)
+        sorted_year_weeks = sorted(year_weeks.keys(), reverse=True)
 
         current_year = None
 
         for year, week in sorted_year_weeks:
-            nodes_in_week = sorted(year_weeks[(year, week)], key=lambda n: n.date)
+            nodes_in_week = sorted(
+                year_weeks[(year, week)], key=lambda n: n.date, reverse=True
+            )
 
             # Add year heading if needed
             if year != current_year:
