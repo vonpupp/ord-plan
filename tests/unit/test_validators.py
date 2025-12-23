@@ -1,6 +1,7 @@
 """Tests for validation utilities."""
 
 from pathlib import Path
+from typing import Any
 
 from ord_plan.utils.validators import validate_cron_expression
 from ord_plan.utils.validators import validate_date_format
@@ -288,7 +289,7 @@ class TestYamlHeadersValidation:
 
     def test_missing_all_headers(self) -> None:
         """Test that all missing headers are reported."""
-        config = {}
+        config: dict[str, Any] = {}
 
         errors = validate_yaml_headers(config)
         assert len(errors) == 4
@@ -300,6 +301,6 @@ class TestYamlHeadersValidation:
 
     def test_invalid_config_type(self) -> None:
         """Test that invalid config type is caught."""
-        errors = validate_yaml_headers("not a dict")
+        errors = validate_yaml_headers("not a dict")  # type: ignore[arg-type]
         assert len(errors) > 0
         assert "dictionary" in errors[0].lower()

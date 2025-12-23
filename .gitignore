@@ -29,4 +29,6 @@ Thumbs.db
 /src/*.egg-info/
 __pycache__/
 
+coverage.xml
+
 mytests/
