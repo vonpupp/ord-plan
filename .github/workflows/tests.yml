@@ -123,10 +123,6 @@ jobs:
           mv coverage-data/.coverage* .
           nox --session=coverage
 
-      - name: Create coverage report
-        run: |
-          nox --session=coverage -- xml
-
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5
         with:
