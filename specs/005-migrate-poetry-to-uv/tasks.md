@@ -169,7 +169,7 @@
 - [X] T073 [US4] Run `invoke pre-commit-install` to verify pre-commit installation works
 - [X] T074 [US4] Run `invoke all` or verify all individual tasks work correctly
 - [X] T075 [US4] Run `invoke help` to verify help output is still correct - verified
-- [ ] T076 [US4] Commit changes to tasks.py
+- [X] T076 [US4] Commit changes to tasks.py
 
 **Checkpoint**: All invoke tasks execute with UV commands successfully
 
