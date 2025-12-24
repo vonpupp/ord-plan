@@ -6,7 +6,6 @@
 [![License](https://img.shields.io/pypi/l/ord-plan)][license]
 
 [![Read the documentation at https://ord-plan.readthedocs.io/](https://img.shields.io/readthedocs/latest.svg?label=Read%20the%20Docs)][read the docs]
-[![Tests](https://github.com/vonpupp/workflows/Tests/badge.svg)][tests]
 [![Tests](https://github.com/vonpupp/ord-plan/actions/workflows/tests.yml/badge.svg)][tests]
 [![codecov](https://codecov.io/gh/vonpupp/ord-plan/graph/badge.svg?token=D4679X3FFH)][codecov]
 
