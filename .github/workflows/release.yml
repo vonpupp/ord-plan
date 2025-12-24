@@ -55,7 +55,7 @@ jobs:
           parts[-1] = str(int(parts[-1]) + 1)
           new_version = '.'.join(parts)
           data['project']['version'] = f'{new_version}.dev.$(date +%s)'
-          with open('pyproject.toml', 'w') as f:
+          with open('pyproject.toml', 'wb') as f:
               import tomli_w
               tomli_w.dump(data, f)
           "
