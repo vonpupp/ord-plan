@@ -123,11 +123,12 @@ def pre_commit_install(c):
     return run_command(c, "uv run pre-commit install", "Installing pre-commit hooks")
 
 
-@task
-def gitlint_install(c):
-    """Install gitlint commit-msg hook."""
-    setup_python_path()
-    return run_command(c, "uv run gitlint install-hook", "Installing gitlint hook")
+# gitlint is no longer used - replaced by commitizen
+# @task
+# def gitlint_install(c):
+#     """Install gitlint commit-msg hook."""
+#     setup_python_path()
+#     return run_command(c, "uv run gitlint install-hook", "Installing gitlint hook")
 
 
 @task
