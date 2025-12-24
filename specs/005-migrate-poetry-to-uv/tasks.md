@@ -59,15 +59,15 @@
 
 ### Implementation for User Story 1
 
-- [ ] T011 [US1] Remove Poetry installation step in .github/workflows/tests.yml
-- [ ] T012 [US1] Add UV installation step in .github/workflows/tests.yml using pipx with constraints
-- [ ] T013 [US1] Update Nox installation in .github/workflows/tests.yml to remove nox-poetry injection
-- [ ] T014 [US1] Update coverage job tooling installation in .github/workflows/tests.yml to replace Poetry with UV
-- [ ] T015 [US1] Replace Poetry installation with UV installation in .github/workflows/release.yml
-- [ ] T016 [US1] Replace version detection command in .github/workflows/release.yml to use Python with tomli instead of Poetry
-- [ ] T017 [US1] Replace version bump command in .github/workflows/release.yml for developmental releases using Python script
-- [ ] T018 [US1] Replace build command in .github/workflows/release.yml from `poetry build --ansi` to `uv build`
-- [ ] T019 [US1] Commit changes to workflow files with descriptive commit message
+- [X] T011 [US1] Remove Poetry installation step in .github/workflows/tests.yml
+- [X] T012 [US1] Add UV installation step in .github/workflows/tests.yml using pipx with constraints
+- [X] T013 [US1] Update Nox installation in .github/workflows/tests.yml to remove nox-poetry injection
+- [X] T014 [US1] Update coverage job tooling installation in .github/workflows/tests.yml to replace Poetry with UV
+- [X] T015 [US1] Replace Poetry installation with UV installation in .github/workflows/release.yml
+- [X] T016 [US1] Replace version detection command in .github/workflows/release.yml to use Python with tomli instead of Poetry
+- [X] T017 [US1] Replace version bump command in .github/workflows/release.yml for developmental releases using Python script
+- [X] T018 [US1] Replace build command in .github/workflows/release.yml from `poetry build --ansi` to `uv build`
+- [X] T019 [US1] Commit changes to workflow files with descriptive commit message
 - [ ] T020 [US1] Push changes to feature branch and monitor GitHub Actions execution
 - [ ] T021 [US1] Verify tests.yml passes on all platforms (ubuntu-latest, windows-latest, macos-latest)
 - [ ] T022 [US1] Verify release.yml builds package correctly (trigger manually or push tag if available)

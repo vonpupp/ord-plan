@@ -54,7 +54,7 @@ dev = [
     "xdoctest[colors]>=0.15.10",
     "myst-parser>=0.16.1",
     "nox>=2025.11.12,<2026",
-    "nox-poetry>=1.2.0,<2",
+    "tomli-w>=1.0.0",
 ]
 
 [build-system]
