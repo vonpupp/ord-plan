@@ -61,7 +61,7 @@ jobs:
 
       - name: Run Nox
         run: |
-          nox -s ${ matrix.session }
+          nox -s ${{ matrix.session }}
         env:
           NOXSESSION: ""
 
