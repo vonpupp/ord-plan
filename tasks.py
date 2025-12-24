@@ -140,9 +140,12 @@ def commitizen_install(c):
     print("🔧 Installing Commitizen git hooks...")
 
     prepare_commit_msg_content = f"""#!{venv_python}
+import os
 import shutil
 import subprocess
 import sys
+import tty
+import termios
 from pathlib import Path
 
 try:
@@ -153,7 +156,16 @@ except ImportError as error:
     exit(1)
 
 
+def is_tty_available():
+    '''Check if TTY is available for interactive input.'''
+    try:
+        return sys.stdin.isatty()
+    except:
+        return False
+
+
 def run_cz(args, capture=False, stdin=None):
+    '''Run cz command with uv.'''
     cmd = ["uv", "run", "cz"] + args
     if capture:
         return subprocess.run(cmd, capture_output=True)
@@ -161,17 +173,29 @@ def run_cz(args, capture=False, stdin=None):
 
 
 def prepare_commit_msg(commit_msg_file: str) -> int:
+    msg_file = Path(commit_msg_file)
+    existing_msg = msg_file.read_text().strip()
+
     exit_code = run_cz(
         ["check", "--commit-msg-file", commit_msg_file], capture=True
     ).returncode
+
     if exit_code == 0:
+        return 0
+
+    if not is_tty_available():
+        print("Note: Commit message doesn't follow commitizen format. Use 'uv run cz commit' for interactive commit creation.")
         return 0
 
     backup_file = Path(get_backup_file_path())
     if backup_file.is_file():
-        answer = input("retry with previous message? [y/N]: ")
-        if answer.lower() == "y":
-            shutil.copyfile(backup_file, commit_msg_file)
+        try:
+            answer = input("retry with previous message? [y/N]: ")
+            if answer.lower() == "y":
+                shutil.copyfile(backup_file, commit_msg_file)
+                return 0
+        except (EOFError, OSError):
+            print("No TTY available, skipping retry prompt")
             return 0
 
     exit_code = run_cz(
@@ -183,6 +207,7 @@ def prepare_commit_msg(commit_msg_file: str) -> int:
         ],
         stdin=sys.stdin,
     ).returncode
+
     if exit_code:
         return exit_code
 
@@ -192,11 +217,9 @@ def prepare_commit_msg(commit_msg_file: str) -> int:
 
 if __name__ == "__main__":
     try:
-        with open("/dev/tty") as tty:
-            sys.stdin = tty
-            exit_code = prepare_commit_msg(sys.argv[1])
-            exit(exit_code)
-    except OSError:
+        exit_code = prepare_commit_msg(sys.argv[1])
+        exit(exit_code)
+    except Exception as e:
         exit(0)
 """
 

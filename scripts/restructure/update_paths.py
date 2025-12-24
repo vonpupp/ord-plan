@@ -347,7 +347,9 @@ def main():
     if args.dry_run:
         print("💡 DRY RUN completed - no actual changes made")
     else:
-        print("✅ Path mapping completed. Review with 'git diff' and commit when ready.")
+        print(
+            "✅ Path mapping completed. Review with 'git diff' and commit when ready."
+        )
 
 
 if __name__ == "__main__":
