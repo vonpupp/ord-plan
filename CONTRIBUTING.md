@@ -39,27 +39,25 @@ Request features on the [Issue Tracker].
 
 You need Python 3.7+ and the following tools:
 
-- [Poetry]
+- [UV]
 - [Nox]
-- [nox-poetry]
 
 Install the package with development requirements:
 
 ```console
-$ poetry install
+$ uv pip install -e ".[dev]"
 ```
 
 You can now run an interactive Python session,
-or the command-line interface:
+or command-line interface:
 
 ```console
-$ poetry run python
-$ poetry run ord-plan
+$ uv run python
+$ uv run ord-plan
 ```
 
-[poetry]: https://python-poetry.org/
+[uv]: https://docs.astral.sh/uv/
 [nox]: https://nox.thea.codes/
-[nox-poetry]: https://nox-poetry.readthedocs.io/
 
 ## How to test the project
 
