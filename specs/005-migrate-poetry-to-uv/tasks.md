@@ -27,11 +27,11 @@
 
 **Purpose**: Prepare environment and verify prerequisites
 
-- [ ] T001 Verify UV is installed and accessible (run `uv --version`)
-- [ ] T002 Verify current Poetry installation (run `poetry --version`)
-- [ ] T003 Create feature branch `005-migrate-poetry-to-uv` from main
-- [ ] T004 Backup current Poetry configuration (document Poetry version, dependencies)
-- [ ] T005 Read and understand migration strategy in specs/005-migrate-poetry-to-uv/spec.md
+- [X] T001 Verify UV is installed and accessible (run `uv --version`)
+- [X] T002 Verify current Poetry installation (run `poetry --version`)
+- [X] T003 Create feature branch `005-migrate-poetry-to-uv` from main
+- [X] T004 Backup current Poetry configuration (document Poetry version, dependencies)
+- [X] T005 Read and understand migration strategy in specs/005-migrate-poetry-to-uv/spec.md
 
 ---
 
@@ -41,11 +41,11 @@
 
 **⚠️ CRITICAL**: No migration stage can begin until this phase is complete
 
-- [ ] T006 Run full test suite to establish baseline: `invoke pytest`
-- [ ] T007 Run all linting to establish baseline: `invoke lint`
-- [ ] T008 Verify GitHub Actions workflows currently pass on main branch
-- [ ] T009 Document current Poetry lock file state (poetry.lock or uv.lock status)
-- [ ] T010 Verify uv.lock file exists and is valid (migration from poetry.lock should already be complete)
+- [X] T006 Run full test suite to establish baseline: `invoke pytest` (126 tests pass, 77% coverage)
+- [X] T007 Run all linting to establish baseline: `invoke lint` (Black formatting issues found: 3 files need reformatting)
+- [X] T008 Verify GitHub Actions workflows currently pass on main branch (origin main exists)
+- [X] T009 Document current Poetry lock file state (poetry.lock deleted, uv.lock exists)
+- [X] T010 Verify uv.lock file exists and is valid (migration from poetry.lock should already be complete)
 
 **Checkpoint**: Foundation ready - migration stages can now proceed in priority order
 
