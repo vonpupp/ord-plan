@@ -1,0 +1,73 @@
+#!/usr/bin/env python3
+"""Commit-msg hook - validates and adds AI prefix to commit messages."""
+
+import os
+import sys
+from pathlib import Path
+
+
+def find_ai_process():
+    """Search through process tree to find an AI process."""
+    try:
+        import psutil
+
+        current = psutil.Process(os.getppid())
+
+        for _ in range(10):
+            try:
+                name = current.name().lower()
+                ai_indicators = [
+                    "opencode",
+                    "agent",
+                    "claude",
+                    "gpt",
+                    "copilot",
+                    "cursor",
+                    "cursor-ai",
+                    "aider",
+                    "continue",
+                ]
+
+                if any(indicator in name for indicator in ai_indicators):
+                    return True
+
+                current = current.parent()
+                if current is None:
+                    break
+            except (psutil.NoSuchProcess, psutil.AccessDenied):
+                break
+
+        return False
+    except Exception:
+        return False
+
+
+def ensure_ai_prefix(commit_msg_file: str):
+    """Ensure commit message has AI prefix if this is an AI commit."""
+    msg_file = Path(commit_msg_file)
+    existing_msg = msg_file.read_text().strip()
+
+    if not existing_msg:
+        return
+
+    if ": ai:" in existing_msg:
+        return
+
+    parts = existing_msg.split(":", 1)
+    if len(parts) != 2:
+        return
+
+    type_part = parts[0].strip()
+    rest = parts[1].strip()
+
+    prefixed = f"{type_part}: ai: {rest}"
+    msg_file.write_text(prefixed)
+
+
+if __name__ == "__main__":
+    commit_msg_file = sys.argv[1]
+
+    if find_ai_process():
+        ensure_ai_prefix(commit_msg_file)
+
+    sys.exit(0)

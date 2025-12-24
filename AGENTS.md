@@ -29,7 +29,8 @@ ruff check .
 
 - `invoke pytest` - Run all tests with coverage
 - `invoke lint` - Run all linting checks (black, isort, flake8, mypy, darglint)
-- `invoke pre-commit-install` - Install pre-commit hooks
+- `invoke install-hooks` - Install pre-commit and git hooks
+- `invoke install-hooks --use-symlinks` - Install hooks as symlinks instead of copying
 - `invoke pre-commit` - Run all pre-commit hooks on all files
 - `invoke help` - Show detailed usage examples
 - `invoke --list` - List all available tasks
@@ -119,10 +120,10 @@ Pre-commit hooks provide automated code quality checks before commits. They ensu
 
 ### Installation
 
-Install pre-commit hooks using invoke:
+Install pre-commit hooks and git hooks using invoke:
 
 ```bash
-invoke pre-commit-install
+invoke install-hooks  # Install pre-commit framework and project git hooks
 ```
 
 ### Manual Usage
@@ -166,6 +167,7 @@ Pre-commit hooks are configured in `.pre-commit-config.yaml` and use uv to ensur
 - **Both methods** use the same underlying tools and configuration for consistency
 
 ## Recent Changes
+- 2025-12-24: Added git-hooks/ directory with install-hooks task for managing git hooks
 - 005-migrate-poetry-to-uv: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, UV for dependency management (migrating from Poetry)
 - 004-add-format-flag: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, Poetry for dependency management
 

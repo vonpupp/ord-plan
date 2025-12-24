@@ -1,0 +1,40 @@
+#!/usr/bin/env bash
+# Custom pre-commit hook that runs pre-commit checks before commitizen
+
+# Get project root directory - we need to resolve this from the script location
+HOOK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Navigate up from .git/hooks to project root
+PROJECT_ROOT="$(cd "$HOOK_DIR/../.." && pwd)"
+
+# Run pre-commit checks first
+cd "$PROJECT_ROOT"
+
+INSTALL_PYTHON="$PROJECT_ROOT/.venv/bin/python3"
+ARGS=(hook-impl --config=.pre-commit-config.yaml --hook-type=pre-commit)
+
+ARGS+=(--hook-dir "$HOOK_DIR" -- "$@")
+
+if [ -x "$INSTALL_PYTHON" ]; then
+    "$INSTALL_PYTHON" -mpre_commit "${ARGS[@]}"
+elif command -v pre-commit > /dev/null; then
+    pre-commit "${ARGS[@]}"
+else
+    echo '`pre-commit` not found.  Did you forget to activate your virtualenv?' 1>&2
+    exit 1
+fi
+
+PRE_COMMIT_EXIT=$?
+
+# Only run commitizen if pre-commit checks passed
+if [ $PRE_COMMIT_EXIT -eq 0 ]; then
+    # Run commitizen commit preparation only if no message exists
+    # (e.g., when using 'git commit' without -m flag)
+    if [ ! -f "$PROJECT_ROOT/.git/COMMIT_EDITMSG" ] || [ ! -s "$PROJECT_ROOT/.git/COMMIT_EDITMSG" ]; then
+        cd "$PROJECT_ROOT"
+        uv run cz commit --dry-run --write-message-to-file .git/COMMIT_EDITMSG
+        CZ_EXIT=$?
+        exit $CZ_EXIT
+    fi
+fi
+
+exit $PRE_COMMIT_EXIT
