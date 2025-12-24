@@ -42,14 +42,14 @@ jobs:
         uses: salsify/action-detect-and-tag-new-version@v2.0.3
         with:
           version-command: |
-            bash -o pipefail -c "uv run python -c \"import tomli; print(tomli.load(open('pyproject.toml'))['project']['version'])\""
+            bash -o pipefail -c "uv run python -c \"import tomli; print(tomli.load(open('pyproject.toml', 'rb'))['project']['version'])\""
 
       - name: Bump version for developmental release
         if: "! steps.check-version.outputs.tag"
         run: |
           python -c "
           import tomli
-          data = tomli.load(open('pyproject.toml'))
+          data = tomli.load(open('pyproject.toml', 'rb'))
           version = data['project']['version']
           parts = version.split('.')
           parts[-1] = str(int(parts[-1]) + 1)
