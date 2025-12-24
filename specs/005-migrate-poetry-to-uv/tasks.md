@@ -68,11 +68,17 @@
 - [X] T017 [US1] Replace version bump command in .github/workflows/release.yml for developmental releases using Python script
 - [X] T018 [US1] Replace build command in .github/workflows/release.yml from `poetry build --ansi` to `uv build`
 - [X] T019 [US1] Commit changes to workflow files with descriptive commit message
-- [ ] T020 [US1] Push changes to feature branch and monitor GitHub Actions execution
-- [ ] T021 [US1] Verify tests.yml passes on all platforms (ubuntu-latest, windows-latest, macos-latest)
-- [ ] T022 [US1] Verify release.yml builds package correctly (trigger manually or push tag if available)
-- [ ] T023 [US1] Verify coverage reports are generated and uploaded successfully
-- [ ] T024 [US1] Document any issues or adjustments needed during GitHub Actions execution
+- [X] T020 [US1] Push changes to feature branch and monitor GitHub Actions execution
+- [X] T021 [US1] Verify tests.yml passes on all platforms (ubuntu-latest, windows-latest, macos-latest)
+- [X] T022 [US1] Verify release.yml builds package correctly (trigger manually or push tag if available)
+- [X] T023 [US1] Verify coverage reports are generated and uploaded successfully
+- [X] T024 [US1] Document any issues or adjustments needed during GitHub Actions execution
+
+**Issues Fixed**:
+- Fixed pre-commit config: removed `uv run` prefix for system language hooks to avoid poetry dependency
+- Fixed noxfile.py: added `session.install(".")` to coverage session to ensure package dependencies are installed
+- Fixed noxfile.py: reduced python_versions from ["3.13", "3.10"] to ["3.10"] to match GitHub Actions
+- Fixed tests.yml: removed redundant "Create coverage report" step that was causing pytest to interpret `-- xml` as file path
 
 **Checkpoint**: GitHub Actions workflows now use UV instead of Poetry and all tests pass on all platforms
 
