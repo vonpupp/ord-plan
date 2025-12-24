@@ -188,6 +188,7 @@ def coverage(session: Session) -> None:
     """Produce coverage report using pytest-cov."""
     args = session.posargs or []
 
+    session.install(".")
     session.install("coverage[toml]", "pytest", "pytest-cov", "pygments")
 
     session.run("pytest", *args, "--cov", "--cov-branch", "--cov-report=xml")
