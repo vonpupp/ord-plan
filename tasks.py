@@ -127,34 +127,7 @@ def pre_commit_install(c):
 def gitlint_install(c):
     """Install gitlint commit-msg hook."""
     setup_python_path()
-    hook_content = """#!/bin/sh
-gitlint --msg-file "$1"
-"""
-    hook_path = PROJECT_ROOT / ".git" / "hooks" / "commit-msg"
-    print(f"🔧 Creating gitlint hook at {hook_path}...")
-    hook_path.parent.mkdir(parents=True, exist_ok=True)
-    hook_path.write_text(hook_content)
-    if not run_command(c, f"chmod +x {hook_path}", "Making gitlint hook executable"):
-        return False
-    print(f"✅ Gitlint hook installed successfully!")
-    return True
-
-
-@task
-def gitlint_install(c):
-    """Install gitlint commit-msg hook."""
-    setup_python_path()
-    hook_content = """#!/bin/sh
-gitlint --msg-file "$1"
-"""
-    hook_path = PROJECT_ROOT / ".git" / "hooks" / "commit-msg"
-    print(f"🔧 Creating gitlint hook at {hook_path}...")
-    hook_path.parent.mkdir(parents=True, exist_ok=True)
-    hook_path.write_text(hook_content)
-    if not run_command(c, f"chmod +x {hook_path}", "Making gitlint hook executable"):
-        return False
-    print(f"✅ Gitlint hook installed successfully!")
-    return True
+    return run_command(c, "uv run gitlint install-hook", "Installing gitlint hook")
 
 
 @task
