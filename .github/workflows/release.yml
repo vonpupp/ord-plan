@@ -47,7 +47,7 @@ jobs:
       - name: Bump version for developmental release
         if: "! steps.check-version.outputs.tag"
         run: |
-          python -c "
+          uv run python -c "
           import tomli
           data = tomli.load(open('pyproject.toml', 'rb'))
           version = data['project']['version']
