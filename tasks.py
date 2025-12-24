@@ -138,7 +138,7 @@ def commitizen_install(c):
     venv_python = PROJECT_ROOT / ".venv" / "bin" / "python"
     print("🔧 Installing Commitizen git hooks...")
 
-    prepare_commit_msg_content = f"""#!/usr/bin/env {venv_python}
+    prepare_commit_msg_content = f"""#!{venv_python}
 import shutil
 import subprocess
 import sys
@@ -199,7 +199,7 @@ if __name__ == "__main__":
         exit(0)
 """
 
-    post_commit_content = f"""#!/usr/bin/env {venv_python}
+    post_commit_content = f"""#!{venv_python}
 
 try:
     from commitizen.cz.utils import get_backup_file_path
