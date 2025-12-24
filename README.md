@@ -59,19 +59,7 @@ This tool has been developed aided by AI using opencode, GLM 4.7 and spec-kit.
 $ uv tool install ord-plan
 ```
 
-### Method 2: Poetry
-
-If you're using [Poetry](https://python-poetry.org/) for dependency management:
-
-```console
-# Add to your project
-$ poetry add ord-plan
-
-# Or install globally
-$ poetry global add ord-plan
-```
-
-### Method 3: pip
+### Method 2: pip
 
 Traditional installation using pip:
 
@@ -96,18 +84,6 @@ $ cd ord-plan
 
 # Install in editable mode for development
 $ uv pip install -e .
-```
-
-#### Using Poetry
-
-```console
-# Clone the repository
-$ git clone https://github.com/vonpupp/ord-plan.git
-$ cd ord-plan
-
-# Install in editable mode
-$ poetry install
-$ poetry shell  # Activate the virtual environment
 ```
 
 #### Using pip
@@ -369,10 +345,10 @@ Run all pre-commit hooks manually on all files:
 invoke pre-commit
 ```
 
-Or run directly with poetry:
+Or run directly with uv:
 
 ```bash
-poetry run pre-commit run --all-files
+uv run pre-commit run --all-files
 ```
 
 #### Individual Hook Commands
@@ -389,7 +365,7 @@ invoke darglint       # Docstring linting (manual stage only)
 
 #### Hook Configuration
 
-Pre-commit hooks are configured in `.pre-commit-config.yaml` and use poetry to ensure all tools run in the correct virtual environment. The hooks include:
+Pre-commit hooks are configured in `.pre-commit-config.yaml` and use uv to ensure all tools run in the correct virtual environment. The hooks include:
 
 - **Formatting**: Black, isort
 - **Linting**: Flake8, darglint, mypy
@@ -477,5 +453,4 @@ This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter]
 [hypermodern python cookiecutter]: https://github.com/cjolowicz/cookiecutter-hypermodern-python
 [file an issue]: https://github.com/vonpupp/issues
 [pip]: https://pip.pypa.io/
-[poetry]: https://python-poetry.org/
 [uv]: https://docs.astral.sh/uv/

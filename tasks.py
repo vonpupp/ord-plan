@@ -11,7 +11,6 @@ from pathlib import Path
 
 from invoke import task
 
-
 # Project paths
 PROJECT_ROOT = Path(__file__).parent.parent
 SRC_DIR = PROJECT_ROOT / "src"
@@ -44,7 +43,7 @@ def pytest(c):
     return run_command(
         c,
         (
-            "poetry run pytest tests/ -v --cov=ord_plan --cov-report=term-missing "
+            "uv run pytest tests/ -v --cov=ord_plan --cov-report=term-missing "
             "-W ignore::DeprecationWarning"
         ),
         "Running pytest tests",
@@ -55,7 +54,7 @@ def pytest(c):
 def test_unit(c):
     """Run unit tests only."""
     setup_python_path()
-    return run_command(c, "poetry run pytest tests/unit/ -v", "Running unit tests")
+    return run_command(c, "uv run pytest tests/unit/ -v", "Running unit tests")
 
 
 @task
@@ -63,7 +62,7 @@ def test_integration(c):
     """Run integration tests only."""
     setup_python_path()
     return run_command(
-        c, "poetry run pytest tests/integration/ -v", "Running integration tests"
+        c, "uv run pytest tests/integration/ -v", "Running integration tests"
     )
 
 
@@ -71,9 +70,7 @@ def test_integration(c):
 def test_contract(c):
     """Run contract tests only."""
     setup_python_path()
-    return run_command(
-        c, "poetry run pytest tests/contract/ -v", "Running contract tests"
-    )
+    return run_command(c, "uv run pytest tests/contract/ -v", "Running contract tests")
 
 
 @task
@@ -115,7 +112,7 @@ def pre_commit(c):
     """Run pre-commit hooks on all files."""
     setup_python_path()
     return run_command(
-        c, "poetry run pre-commit run --all-files", "Running pre-commit hooks"
+        c, "uv run pre-commit run --all-files", "Running pre-commit hooks"
     )
 
 
@@ -123,16 +120,31 @@ def pre_commit(c):
 def pre_commit_install(c):
     """Install pre-commit hooks."""
     setup_python_path()
-    return run_command(
-        c, "poetry run pre-commit install", "Installing pre-commit hooks"
-    )
+    return run_command(c, "uv run pre-commit install", "Installing pre-commit hooks")
+
+
+@task
+def gitlint_install(c):
+    """Install gitlint commit-msg hook."""
+    setup_python_path()
+    hook_content = """#!/bin/sh
+gitlint --msg-file "$1"
+"""
+    hook_path = PROJECT_ROOT / ".git" / "hooks" / "commit-msg"
+    print(f"🔧 Creating gitlint hook at {hook_path}...")
+    hook_path.parent.mkdir(parents=True, exist_ok=True)
+    hook_path.write_text(hook_content)
+    if not run_command(c, f"chmod +x {hook_path}", "Making gitlint hook executable"):
+        return False
+    print(f"✅ Gitlint hook installed successfully!")
+    return True
 
 
 @task
 def security(c):
     """Run security checks."""
     setup_python_path()
-    return run_command(c, "poetry run safety check", "Running security checks")
+    return run_command(c, "uv run safety check", "Running security checks")
 
 
 @task
@@ -140,7 +152,7 @@ def mypy(c):
     """Run type checking."""
     setup_python_path()
     return run_command(
-        c, "poetry run mypy src/ --ignore-missing-imports", "Running type checking"
+        c, "uv run mypy src/ --ignore-missing-imports", "Running type checking"
     )
 
 
@@ -149,7 +161,7 @@ def black(c):
     """Run Black formatting check."""
     setup_python_path()
     return run_command(
-        c, "poetry run black --check src/ tests/", "Running Black formatting check"
+        c, "uv run black --check src/ tests/", "Running Black formatting check"
     )
 
 
@@ -158,7 +170,7 @@ def isort(c):
     """Run import sorting check."""
     setup_python_path()
     return run_command(
-        c, "poetry run isort --check-only src/ tests/", "Running import sorting check"
+        c, "uv run isort --check-only src/ tests/", "Running import sorting check"
     )
 
 
@@ -168,7 +180,7 @@ def flake8(c):
     setup_python_path()
     return run_command(
         c,
-        "poetry run flake8 src/ tests/",
+        "uv run flake8 src/ tests/",
         "Running Flake8 linting",
     )
 
@@ -179,7 +191,7 @@ def darglint(c):
     setup_python_path()
     return run_command(
         c,
-        'poetry run darglint --ignore-raise "FileNotFoundError,PermissionError,OSError,BadParameter" src/',
+        'uv run darglint --ignore-raise "FileNotFoundError,PermissionError,OSError,BadParameter" src/',
         "Running docstring linting",
     )
 
@@ -297,6 +309,7 @@ def help(c):
     print("  invoke security       # Just security checks")
     print("  invoke pre-commit     # Run all pre-commit hooks")
     print("  invoke pre-commit-install # Install pre-commit hooks")
+    print("  invoke gitlint-install # Install gitlint commit-msg hook")
     print()
 
     print("🧪 SPECIFIC TEST TYPES:")
@@ -321,6 +334,7 @@ def help(c):
     print("  invoke clean          # Clean build artifacts and cache")
     print("  invoke install-deps   # Install development dependencies")
     print("  invoke pre-commit-install # Install pre-commit hooks")
+    print("  invoke gitlint-install # Install gitlint commit-msg hook")
     print("  invoke docs           # Build documentation")
     print("  invoke docs-serve     # Serve documentation locally")
     print("  invoke workflow-logs  # Show logs from last GitHub Actions run")
