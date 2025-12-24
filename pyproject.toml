@@ -28,6 +28,7 @@ ord-plan = "ord_plan.__main__:main"
 dev = [
     "Pygments>=2.10.0",
     "black>=21.10b0",
+    "commitizen>=3.0.0",
     "coverage[toml]>=6.2,<7.0",
     "darglint>=1.8.1",
     "flake8>=4.0.1",
