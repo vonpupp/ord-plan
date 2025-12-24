@@ -17,7 +17,8 @@ from ..utils.validators import validate_file_readable
 from ..utils.validators import validate_file_writable
 
 
-@click.command(epilog="""
+@click.command(
+    epilog="""
   # Basic usage with default date range (current week)
   ord-plan generate --rules my-events.yaml --file tasks.org
 
@@ -39,8 +40,9 @@ Date Formats:
   - Relative: today, tomorrow, yesterday, next monday, next week, next month, next year
   - Offset: +N days (e.g., +7 days for one week from now)
 
-For detailed help with examples, visit: https://github.com/vonpupp/ord-plan
-""")
+ For detailed help with examples, visit: https://github.com/vonpupp/ord-plan
+"""
+)
 @click.option(
     "--rules",
     required=True,

@@ -13,7 +13,8 @@ class TestDateRanges:
     def test_default_date_range(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test default date range (current week)."""
         rules_file = tmp_path / "rules.yaml"
-        rules_file.write_text("""
+        rules_file.write_text(
+            """
 REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
 REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
 REVERSE_DATETREE_YEAR_FORMAT: "%Y"
@@ -22,7 +23,8 @@ REVERSE_DATETREE_USE_WEEK_TREE: true
 events:
   - title: "Daily Task"
     cron: "0 9 * * *"
-""")
+"""
+        )
 
         result = runner.invoke(
             cli_group,
@@ -53,7 +55,8 @@ events:
     def test_relative_dates(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test relative date parsing."""
         rules_file = tmp_path / "rules.yaml"
-        rules_file.write_text("""
+        rules_file.write_text(
+            """
 REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
 REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
 REVERSE_DATETREE_YEAR_FORMAT: "%Y"
@@ -62,7 +65,8 @@ REVERSE_DATETREE_USE_WEEK_TREE: true
 events:
   - title: "Test Task"
     cron: "0 9 * * *"
-""")
+"""
+        )
 
         result = runner.invoke(
             cli_group,

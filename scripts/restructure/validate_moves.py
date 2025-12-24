@@ -178,9 +178,7 @@ def main():
 
     overall_success = files_ok and state_ok and func_ok
     status_msg = (
-        "🎉 ALL VALIDATIONS PASSED"
-        if overall_success
-        else "⚠️  SOME VALIDATIONS FAILED"
+        "🎉 ALL VALIDATIONS PASSED" if overall_success else "⚠️  SOME VALIDATIONS FAILED"
     )
     print(f"\nOverall Status: {status_msg}")
 
