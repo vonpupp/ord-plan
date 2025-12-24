@@ -34,4 +34,7 @@ venv/
 
 coverage.xml
 
+# Node related
+node_modules/
+
 mytests/

@@ -123,37 +123,140 @@ def pre_commit_install(c):
     return run_command(c, "uv run pre-commit install", "Installing pre-commit hooks")
 
 
-@task
-def gitlint_install(c):
-    """Install gitlint commit-msg hook."""
-    setup_python_path()
-    hook_content = """#!/bin/sh
-gitlint --msg-file "$1"
-"""
-    hook_path = PROJECT_ROOT / ".git" / "hooks" / "commit-msg"
-    print(f"🔧 Creating gitlint hook at {hook_path}...")
-    hook_path.parent.mkdir(parents=True, exist_ok=True)
-    hook_path.write_text(hook_content)
-    if not run_command(c, f"chmod +x {hook_path}", "Making gitlint hook executable"):
-        return False
-    print(f"✅ Gitlint hook installed successfully!")
-    return True
+# gitlint is no longer used - replaced by commitizen
+# @task
+# def gitlint_install(c):
+#     """Install gitlint commit-msg hook."""
+#     setup_python_path()
+#     return run_command(c, "uv run gitlint install-hook", "Installing gitlint hook")
 
 
 @task
-def gitlint_install(c):
-    """Install gitlint commit-msg hook."""
+def commitizen_install(c):
+    """Install Commitizen git hooks for interactive commits."""
     setup_python_path()
-    hook_content = """#!/bin/sh
-gitlint --msg-file "$1"
-"""
-    hook_path = PROJECT_ROOT / ".git" / "hooks" / "commit-msg"
-    print(f"🔧 Creating gitlint hook at {hook_path}...")
-    hook_path.parent.mkdir(parents=True, exist_ok=True)
-    hook_path.write_text(hook_content)
-    if not run_command(c, f"chmod +x {hook_path}", "Making gitlint hook executable"):
+    hooks_dir = PROJECT_ROOT / ".git" / "hooks"
+    venv_python = PROJECT_ROOT / ".venv" / "bin" / "python"
+    print("🔧 Installing Commitizen git hooks...")
+
+    prepare_commit_msg_content = f"""#!{venv_python}
+import os
+import shutil
+import subprocess
+import sys
+import tty
+import termios
+from pathlib import Path
+
+try:
+    from commitizen.cz.utils import get_backup_file_path
+except ImportError as error:
+    print("could not import commitizen:")
+    print(error)
+    exit(1)
+
+
+def is_tty_available():
+    '''Check if TTY is available for interactive input.'''
+    try:
+        return sys.stdin.isatty()
+    except:
         return False
-    print(f"✅ Gitlint hook installed successfully!")
+
+
+def run_cz(args, capture=False, stdin=None):
+    '''Run cz command with uv.'''
+    cmd = ["uv", "run", "cz"] + args
+    if capture:
+        return subprocess.run(cmd, capture_output=True)
+    return subprocess.run(cmd, stdin=stdin, stdout=sys.stdout)
+
+
+def prepare_commit_msg(commit_msg_file: str) -> int:
+    msg_file = Path(commit_msg_file)
+    existing_msg = msg_file.read_text().strip()
+
+    exit_code = run_cz(
+        ["check", "--commit-msg-file", commit_msg_file], capture=True
+    ).returncode
+
+    if exit_code == 0:
+        return 0
+
+    if not is_tty_available():
+        print("Note: Commit message doesn't follow commitizen format. Use 'uv run cz commit' for interactive commit creation.")
+        return 0
+
+    backup_file = Path(get_backup_file_path())
+    if backup_file.is_file():
+        try:
+            answer = input("retry with previous message? [y/N]: ")
+            if answer.lower() == "y":
+                shutil.copyfile(backup_file, commit_msg_file)
+                return 0
+        except (EOFError, OSError):
+            print("No TTY available, skipping retry prompt")
+            return 0
+
+    exit_code = run_cz(
+        [
+            "commit",
+            "--dry-run",
+            "--write-message-to-file",
+            commit_msg_file,
+        ],
+        stdin=sys.stdin,
+    ).returncode
+
+    if exit_code:
+        return exit_code
+
+    shutil.copyfile(commit_msg_file, backup_file)
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        exit_code = prepare_commit_msg(sys.argv[1])
+        exit(exit_code)
+    except Exception as e:
+        exit(0)
+"""
+
+    post_commit_content = f"""#!{venv_python}
+
+try:
+    from commitizen.cz.utils import get_backup_file_path
+except ImportError as error:
+    print("could not import commitizen:")
+    print(error)
+    exit(1)
+
+
+def post_commit() -> None:
+    backup_file_path = get_backup_file_path()
+    if backup_file_path.is_file():
+        backup_file_path.unlink()
+
+
+if __name__ == "__main__":
+    post_commit()
+    exit(0)
+"""
+
+    for filename, content in [
+        ("prepare-commit-msg", prepare_commit_msg_content),
+        ("post-commit", post_commit_content),
+    ]:
+        dest_path = hooks_dir / filename
+        dest_path.write_text(content)
+        if not run_command(c, f"chmod +x {dest_path}", f"Making {filename} executable"):
+            return False
+        print(f"  ✅ {filename} installed")
+
+    print("✅ Commitizen hooks installed successfully!")
+    print("\nNow when you run 'git commit', Commitizen will guide you through")
+    print("creating a properly formatted commit message.")
     return True
 
 
