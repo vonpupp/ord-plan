@@ -11,7 +11,6 @@ import nox
 from nox import Session
 from nox import session
 
-
 package = "ord_plan"
 python_versions = ["3.10"]
 nox.needs_version = ">= 2021.6.6"

@@ -13,7 +13,6 @@ have been moved from ord-plan/ to repository root.
 import sys
 from pathlib import Path
 
-
 # Add current directory to path for imports
 current_dir = Path(__file__).parent
 if str(current_dir) not in sys.path:
