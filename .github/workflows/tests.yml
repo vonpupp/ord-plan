@@ -23,7 +23,7 @@ jobs:
           - { python: "3.10", os: "ubuntu-latest", session: "docs-build" }
 
     env:
-      NOXSESSION: ${{ matrix.session }}
+      NOXSESSION: ""
       FORCE_COLOR: "1"
       PRE_COMMIT_COLOR: "always"
       COVERAGE_FILE: ${{ github.workspace }}/.coverage
@@ -60,8 +60,12 @@ jobs:
           nox --version
 
       - name: Run Nox
-        run: |
-          nox --python=${{ matrix.python }} --session=${{ matrix.session }}
+         run: |
+           nox -s ${ matrix.session } --all-files 
+         env:
+           NOXSESSION: "" 
+         env:
+           NOXSESSION: ""
 
       - name: Check if coverage files exist
         if: matrix.session == 'tests' && matrix.os == 'ubuntu-latest'
