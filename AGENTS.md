@@ -5,6 +5,8 @@ Auto-generated from all feature plans. Last updated: 2025-12-18
 ## Active Technologies
 - Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, Poetry for dependency management (004-add-format-flag)
 - Files (YAML configuration and org-mode output) (004-add-format-flag)
+- Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, UV for dependency management (migrating from Poetry) (005-migrate-poetry-to-uv)
+- Files (template generation output - org-mode and JSON) (005-migrate-poetry-to-uv)
 
 - Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), Poetry for dependency management (001-generate-org)
 
@@ -131,10 +133,10 @@ Run all pre-commit hooks manually on all files:
 invoke pre-commit
 ```
 
-Or run directly with poetry:
+Or run directly with uv:
 
 ```bash
-poetry run pre-commit run --all-files
+uv run pre-commit run --all-files
 ```
 
 ### Individual Hook Commands
@@ -149,7 +151,7 @@ You can also run individual checks manually:
 
 ### Hook Configuration
 
-Pre-commit hooks are configured in `.pre-commit-config.yaml` and use poetry to ensure all tools run in the correct virtual environment. The hooks include:
+Pre-commit hooks are configured in `.pre-commit-config.yaml` and use uv to ensure all tools run in the correct virtual environment. The hooks include:
 
 - **Formatting**: Black, isort
 - **Linting**: Flake8, darglint, mypy
@@ -164,10 +166,10 @@ Pre-commit hooks are configured in `.pre-commit-config.yaml` and use poetry to e
 - **Both methods** use the same underlying tools and configuration for consistency
 
 ## Recent Changes
+- 005-migrate-poetry-to-uv: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, UV for dependency management (migrating from Poetry)
 - 004-add-format-flag: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, Poetry for dependency management
 
 - 001-generate-org: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), Poetry for dependency management
-- Added constitutional amendment: No performance testing - focus on functionality over performance metrics
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

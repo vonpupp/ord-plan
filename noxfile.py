@@ -8,23 +8,11 @@ from pathlib import Path
 from textwrap import dedent
 
 import nox
-
-
-try:
-    from nox_poetry import Session
-    from nox_poetry import session
-except ImportError:
-    message = f"""\
-    Nox failed to import the 'nox-poetry' package.
-
-    Please install it using the following command:
-
-    {sys.executable} -m pip install nox-poetry"""
-    raise SystemExit(dedent(message)) from None
-
+from nox import Session
+from nox import session
 
 package = "ord_plan"
-python_versions = ["3.13", "3.10"]
+python_versions = ["3.10"]
 nox.needs_version = ">= 2021.6.6"
 nox.options.sessions = (
     "pre-commit",
@@ -142,7 +130,8 @@ def precommit(session: Session) -> None:
 @session(python=python_versions)
 def safety(session: Session) -> None:
     """Scan dependencies for insecure packages."""
-    requirements = session.poetry.export_requirements()
+    requirements = session.create_tmp()
+    session.run("uv", "pip", "freeze", f"--output={requirements}", external=True)
     session.install("safety")
 
     # Run safety scan but don't fail CI for security issues during development
@@ -198,6 +187,7 @@ def coverage(session: Session) -> None:
     """Produce coverage report using pytest-cov."""
     args = session.posargs or []
 
+    session.install(".")
     session.install("coverage[toml]", "pytest", "pytest-cov", "pygments")
 
     session.run("pytest", *args, "--cov", "--cov-branch", "--cov-report=xml")

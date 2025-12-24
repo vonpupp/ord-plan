@@ -23,7 +23,7 @@ jobs:
           - { python: "3.10", os: "ubuntu-latest", session: "docs-build" }
 
     env:
-      NOXSESSION: ${{ matrix.session }}
+      NOXSESSION: ""
       FORCE_COLOR: "1"
       PRE_COMMIT_COLOR: "always"
       COVERAGE_FILE: ${{ github.workspace }}/.coverage
@@ -49,21 +49,21 @@ jobs:
           with open(os.environ["GITHUB_ENV"], "a") as io:
               print(f"VIRTUALENV_PIP={pip.__version__}", file=io)
 
-      - name: Install Poetry
+      - name: Install UV
         run: |
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt poetry
-          poetry self add poetry-plugin-export
-          poetry --version
+          pipx install --pip-args=--constraint=.github/workflows/constraints.txt uv
+          uv --version
 
       - name: Install Nox
         run: |
           pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
-          pipx inject --pip-args=--constraint=.github/workflows/constraints.txt nox nox-poetry
           nox --version
 
       - name: Run Nox
         run: |
-          nox --python=${{ matrix.python }} --session=${{ matrix.session }}
+          nox -s ${{ matrix.session }}
+        env:
+          NOXSESSION: ""
 
       - name: Check if coverage files exist
         if: matrix.session == 'tests' && matrix.os == 'ubuntu-latest'
@@ -111,9 +111,8 @@ jobs:
       - name: Install tooling
         run: |
           pip install --constraint=.github/workflows/constraints.txt pip
-          pipx install --pip-args=--constraint=.github/workflows/constraints.txt poetry
+          pipx install --pip-args=--constraint=.github/workflows/constraints.txt uv
           pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
-          pipx inject nox nox-poetry
 
       - name: Download coverage data
         uses: actions/download-artifact@v7
@@ -125,10 +124,6 @@ jobs:
         run: |
           mv coverage-data/.coverage* .
           nox --session=coverage
-
-      - name: Create coverage report
-        run: |
-          nox --session=coverage -- xml
 
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v5

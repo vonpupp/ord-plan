@@ -5,7 +5,6 @@ from typing import List
 
 from croniter import croniter
 
-
 HAS_DATEUTIL = True
 try:
     from dateutil.parser import parse as _dateutil_parse

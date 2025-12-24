@@ -3,27 +3,27 @@ repos:
     hooks:
       - id: black
         name: black
-        entry: poetry run black
+        entry: black
         language: system
         types: [python]
         require_serial: true
       - id: check-added-large-files
         name: Check for added large files
-        entry: poetry run check-added-large-files
+        entry: check-added-large-files
         language: system
       - id: check-toml
         name: Check Toml
-        entry: poetry run check-toml
+        entry: check-toml
         language: system
         types: [toml]
       - id: check-yaml
         name: Check Yaml
-        entry: poetry run check-yaml
+        entry: check-yaml
         language: system
         types: [yaml]
       - id: darglint
         name: darglint
-        entry: poetry run darglint
+        entry: darglint
         language: system
         types: [python]
         stages: [pre-commit, manual]
@@ -32,20 +32,20 @@ repos:
           - "FileNotFoundError,PermissionError,OSError,BadParameter"
       - id: end-of-file-fixer
         name: Fix End of Files
-        entry: poetry run end-of-file-fixer
+        entry: end-of-file-fixer
         language: system
         types: [text]
         stages: [pre-commit, pre-push, manual]
       - id: flake8
         name: flake8
-        entry: poetry run flake8
+        entry: flake8
         language: system
         types: [python]
         require_serial: true
         args: [--darglint-ignore-regex, .*]
       - id: isort
         name: isort
-        entry: poetry run isort
+        entry: isort
         require_serial: true
         language: system
         types_or: [cython, pyi, python]
@@ -53,13 +53,13 @@ repos:
       - id: pyupgrade
         name: pyupgrade
         description: Automatically upgrade syntax for newer versions.
-        entry: poetry run pyupgrade
+        entry: pyupgrade
         language: system
         types: [python]
         args: [--py37-plus]
       - id: trailing-whitespace
         name: Trim Trailing Whitespace
-        entry: poetry run trailing-whitespace-fixer
+        entry: trailing-whitespace-fixer
         language: system
         types: [text]
         stages: [pre-commit, pre-push, manual]
