@@ -1,0 +1,6 @@
+pyproject.toml
+cz_custom_minimal.egg-info/PKG-INFO
+cz_custom_minimal.egg-info/SOURCES.txt
+cz_custom_minimal.egg-info/dependency_links.txt
+cz_custom_minimal.egg-info/entry_points.txt
+cz_custom_minimal.egg-info/top_level.txt

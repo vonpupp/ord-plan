@@ -1,0 +1,2 @@
+[commitizen.plugin]
+cz_custom_minimal = cz_custom_minimal:AutoDetectCz

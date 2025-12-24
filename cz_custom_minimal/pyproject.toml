@@ -1,0 +1,6 @@
+[project]
+name = "cz_custom_minimal"
+version = "0.1.0"
+
+[project.entry-points."commitizen.plugin"]
+cz_custom_minimal = "cz_custom_minimal:AutoDetectCz"
