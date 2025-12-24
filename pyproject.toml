@@ -94,7 +94,7 @@ show_error_codes = true
 show_error_context = true
 
 [tool.commitizen]
-name = "cz_conventional_commits"
+name = "cz_custom_minimal"
 tag_format = "$version"
 version_scheme = "pep440"
 version_provider = "uv"
