@@ -60,12 +60,10 @@ jobs:
           nox --version
 
       - name: Run Nox
-         run: |
-           nox -s ${ matrix.session } --all-files 
-         env:
-           NOXSESSION: "" 
-         env:
-           NOXSESSION: ""
+        run: |
+          nox -s ${ matrix.session }
+        env:
+          NOXSESSION: ""
 
       - name: Check if coverage files exist
         if: matrix.session == 'tests' && matrix.os == 'ubuntu-latest'

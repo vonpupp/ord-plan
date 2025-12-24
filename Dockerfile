@@ -16,7 +16,7 @@ RUN update-alternatives --install /usr/bin/python python /usr/bin/python3.10 1
 RUN update-alternatives --install /usr/bin/python3 python3 /usr/bin/python3.10 1
 RUN update-alternatives --install /usr/bin/pip pip /usr/bin/pip3 1
 
-# Install pipx (required for Poetry and Nox)
+# Install pipx (required for UV and Nox)
 RUN python -m pip install --user pipx
 RUN python -m pipx ensurepath
 
@@ -25,14 +25,11 @@ ENV PATH="/root/.local/bin:$PATH"
 # Install tools with constraints (mimic GitHub Actions exactly)
 WORKDIR /workspace
 COPY .github/workflows/constraints.txt /tmp/constraints.txt
-RUN pipx install --pip-args=--constraint=/tmp/constraints.txt poetry
+RUN pipx install --pip-args=--constraint=/tmp/constraints.txt uv
 RUN pipx install --pip-args=--constraint=/tmp/constraints.txt nox
-RUN pipx inject --pip-args=--constraint=/tmp/constraints.txt nox nox-poetry
 
 # Verify installations
-RUN poetry --version
-RUN poetry config installer.parallel false || true
-RUN poetry self add poetry-plugin-export
+RUN uv --version
 RUN nox --version
 
 # Copy project
