@@ -220,7 +220,9 @@ def main():
 
     overall_success = all([imports_ok, state_ok, func_ok, config_ok, docs_ok])
     status_msg = (
-        "🎉 ALL VALIDATIONS PASSED" if overall_success else "⚠️  SOME VALIDATIONS FAILED"
+        "🎉 ALL VALIDATIONS PASSED"
+        if overall_success
+        else "⚠️  SOME VALIDATIONS FAILED"
     )
     print(f"\nOverall Status: {status_msg}")
 
