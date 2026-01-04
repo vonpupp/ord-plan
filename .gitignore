@@ -38,3 +38,6 @@ coverage.xml
 node_modules/
 
 mytests/
+
+# Git hooks (installed from git-hooks directory)
+.git/hooks/

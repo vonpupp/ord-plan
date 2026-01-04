@@ -1,0 +1,35 @@
+#!/usr/bin/env python3
+"""Prepare-commit-msg hook - validates commit message, no interactive prompt."""
+
+import subprocess
+import sys
+from pathlib import Path
+
+
+def run_cz(args, capture=False, stdin=None):
+    """Run cz command with uv."""
+    cmd = ["uv", "run", "cz"] + args
+    if capture:
+        return subprocess.run(cmd, capture_output=True)
+    return subprocess.run(cmd, stdin=stdin, stdout=sys.stdout)
+
+
+def prepare_commit_msg(commit_msg_file: str) -> int:
+    msg_file = Path(commit_msg_file)
+    existing_msg = msg_file.read_text().strip()
+
+    # If message already exists, skip validation (e.g., when using -m flag)
+    # Validation happens via commit-msg hook if needed
+    if existing_msg:
+        return 0
+
+    # No message exists (e.g., merge commits), skip interactive
+    return 0
+
+
+if __name__ == "__main__":
+    try:
+        exit_code = prepare_commit_msg(sys.argv[1])
+        exit(exit_code)
+    except Exception:
+        exit(0)

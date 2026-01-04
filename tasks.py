@@ -5,6 +5,7 @@ This module provides Fabric tasks for running tests, linting, and other
 development operations with proper task structure and individual entry points.
 """
 
+import os
 import subprocess
 import sys
 from pathlib import Path
@@ -12,7 +13,7 @@ from pathlib import Path
 from invoke import task
 
 # Project paths
-PROJECT_ROOT = Path(__file__).parent.parent
+PROJECT_ROOT = Path(__file__).parent.resolve()
 SRC_DIR = PROJECT_ROOT / "src"
 
 
@@ -116,13 +117,6 @@ def pre_commit(c):
     )
 
 
-@task
-def pre_commit_install(c):
-    """Install pre-commit hooks."""
-    setup_python_path()
-    return run_command(c, "uv run pre-commit install", "Installing pre-commit hooks")
-
-
 # gitlint is no longer used - replaced by commitizen
 # @task
 # def gitlint_install(c):
@@ -132,131 +126,63 @@ def pre_commit_install(c):
 
 
 @task
-def commitizen_install(c):
-    """Install Commitizen git hooks for interactive commits."""
+def install_hooks(c, use_symlinks=False):
+    """Install pre-commit framework hooks and project git hooks.
+
+    Options:
+        use_symlinks (bool): Use symlinks instead of copying (default: False)
+    """
     setup_python_path()
+    print("🔧 Installing git hooks...")
+
     hooks_dir = PROJECT_ROOT / ".git" / "hooks"
-    venv_python = PROJECT_ROOT / ".venv" / "bin" / "python"
-    print("🔧 Installing Commitizen git hooks...")
+    source_hooks_dir = PROJECT_ROOT / "git-hooks"
 
-    prepare_commit_msg_content = f"""#!{venv_python}
-import os
-import shutil
-import subprocess
-import sys
-import tty
-import termios
-from pathlib import Path
+    # Create hooks directory if it doesn't exist
+    hooks_dir.mkdir(parents=True, exist_ok=True)
 
-try:
-    from commitizen.cz.utils import get_backup_file_path
-except ImportError as error:
-    print("could not import commitizen:")
-    print(error)
-    exit(1)
+    # First, install project-specific hooks from git-hooks/
+    # This ensures our custom hooks are in place before pre-commit
+    hook_files = list(source_hooks_dir.glob("*"))
 
-
-def is_tty_available():
-    '''Check if TTY is available for interactive input.'''
-    try:
-        return sys.stdin.isatty()
-    except:
+    if not hook_files:
+        print("❌ No hook files found in git-hooks/ directory")
         return False
 
+    for hook_file in hook_files:
+        if not hook_file.is_file() or hook_file.name.startswith("."):
+            continue
 
-def run_cz(args, capture=False, stdin=None):
-    '''Run cz command with uv.'''
-    cmd = ["uv", "run", "cz"] + args
-    if capture:
-        return subprocess.run(cmd, capture_output=True)
-    return subprocess.run(cmd, stdin=stdin, stdout=sys.stdout)
+        dest_path = hooks_dir / hook_file.name
 
+        # Remove existing hook or symlink
+        if dest_path.exists() or dest_path.is_symlink():
+            dest_path.unlink()
 
-def prepare_commit_msg(commit_msg_file: str) -> int:
-    msg_file = Path(commit_msg_file)
-    existing_msg = msg_file.read_text().strip()
+        if use_symlinks:
+            # Create symlink
+            rel_path = os.path.relpath(hook_file, hooks_dir)
+            dest_path.symlink_to(rel_path)
+            print(f"  🔗 {hook_file.name} (symlinked)")
+        else:
+            # Copy file
+            import shutil
 
-    exit_code = run_cz(
-        ["check", "--commit-msg-file", commit_msg_file], capture=True
-    ).returncode
+            shutil.copy2(hook_file, dest_path)
+            print(f"  📋 {hook_file.name} (copied)")
 
-    if exit_code == 0:
-        return 0
-
-    if not is_tty_available():
-        print("Note: Commit message doesn't follow commitizen format. Use 'uv run cz commit' for interactive commit creation.")
-        return 0
-
-    backup_file = Path(get_backup_file_path())
-    if backup_file.is_file():
-        try:
-            answer = input("retry with previous message? [y/N]: ")
-            if answer.lower() == "y":
-                shutil.copyfile(backup_file, commit_msg_file)
-                return 0
-        except (EOFError, OSError):
-            print("No TTY available, skipping retry prompt")
-            return 0
-
-    exit_code = run_cz(
-        [
-            "commit",
-            "--dry-run",
-            "--write-message-to-file",
-            commit_msg_file,
-        ],
-        stdin=sys.stdin,
-    ).returncode
-
-    if exit_code:
-        return exit_code
-
-    shutil.copyfile(commit_msg_file, backup_file)
-    return 0
-
-
-if __name__ == "__main__":
-    try:
-        exit_code = prepare_commit_msg(sys.argv[1])
-        exit(exit_code)
-    except Exception as e:
-        exit(0)
-"""
-
-    post_commit_content = f"""#!{venv_python}
-
-try:
-    from commitizen.cz.utils import get_backup_file_path
-except ImportError as error:
-    print("could not import commitizen:")
-    print(error)
-    exit(1)
-
-
-def post_commit() -> None:
-    backup_file_path = get_backup_file_path()
-    if backup_file_path.is_file():
-        backup_file_path.unlink()
-
-
-if __name__ == "__main__":
-    post_commit()
-    exit(0)
-"""
-
-    for filename, content in [
-        ("prepare-commit-msg", prepare_commit_msg_content),
-        ("post-commit", post_commit_content),
-    ]:
-        dest_path = hooks_dir / filename
-        dest_path.write_text(content)
-        if not run_command(c, f"chmod +x {dest_path}", f"Making {filename} executable"):
+        # Make executable
+        if not run_command(
+            c, f"chmod +x {dest_path}", f"Making {hook_file.name} executable"
+        ):
             return False
-        print(f"  ✅ {filename} installed")
 
-    print("✅ Commitizen hooks installed successfully!")
-    print("\nNow when you run 'git commit', Commitizen will guide you through")
-    print("creating a properly formatted commit message.")
+    print("✅ Git hooks installed successfully!")
+    print("\nThe following hooks are now active:")
+    for hook_file in hook_files:
+        if not hook_file.is_file() or hook_file.name.startswith("."):
+            continue
+        print(f"  - {hook_file.name}")
     return True
 
 
@@ -428,8 +354,8 @@ def help(c):
     print("  invoke darglint       # Just docstring linting")
     print("  invoke security       # Just security checks")
     print("  invoke pre-commit     # Run all pre-commit hooks")
-    print("  invoke pre-commit-install # Install pre-commit hooks")
-    print("  invoke gitlint-install # Install gitlint commit-msg hook")
+    print("  invoke install-hooks  # Install pre-commit and git hooks")
+    print("  invoke install-hooks --use-symlinks # Install hooks as symlinks")
     print()
 
     print("🧪 SPECIFIC TEST TYPES:")
@@ -445,6 +371,7 @@ def help(c):
     print("  invoke style          # All style checks")
     print("                        # (black, isort, flake8, mypy, darglint)")
     print("  invoke pre-commit     # All pre-commit hooks (alternative to lint/style)")
+    print("  invoke install-hooks  # Install project git hooks")
     print("  invoke all            # All checks (tests, linting, security)")
     print("  invoke all --verbose  # All checks with detailed error output")
     print("  invoke all --use-pre-commit  # All checks using pre-commit hooks")
@@ -453,8 +380,7 @@ def help(c):
     print("🛠️  UTILITIES:")
     print("  invoke clean          # Clean build artifacts and cache")
     print("  invoke install-deps   # Install development dependencies")
-    print("  invoke pre-commit-install # Install pre-commit hooks")
-    print("  invoke gitlint-install # Install gitlint commit-msg hook")
+    print("  invoke install-hooks  # Install pre-commit and git hooks")
     print("  invoke docs           # Build documentation")
     print("  invoke docs-serve     # Serve documentation locally")
     print("  invoke workflow-logs  # Show logs from last GitHub Actions run")
@@ -466,9 +392,10 @@ def help(c):
     print("  invoke black && invoke flake8  # Run specific checks in sequence")
     print("  invoke lint            # Run all linting checks")
     print("  invoke pre-commit      # Run pre-commit hooks (alternative)")
+    print("  invoke install-hooks   # Install git hooks")
     print("  invoke test-unit       # Run only unit tests")
     print("  invoke all             # Run everything")
-    print("  invoke all --verbose    # Run everything with detailed output")
+    print("  invoke all --verbose   # Run everything with detailed output")
 
 
 @task

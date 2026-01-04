@@ -1,0 +1,21 @@
+#!/usr/bin/env python3
+"""Post-commit hook - cleans up commitizen backup file."""
+
+from pathlib import Path
+
+
+def post_commit() -> None:
+    """Clean up commitizen backup file using uv run."""
+    backup_file_path = Path.home() / ".cache" / "cz"
+    if backup_file_path.is_dir():
+        backup_files = list(backup_file_path.glob("message_*.tmp"))
+        for f in backup_files:
+            try:
+                f.unlink()
+            except Exception:
+                pass
+
+
+if __name__ == "__main__":
+    post_commit()
+    exit(0)

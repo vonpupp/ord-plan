@@ -1,6 +1,10 @@
 """Generate command for ord-plan."""
 
+from typing import Any
+from typing import Dict
+from typing import List
 from typing import Optional
+from typing import Tuple
 
 import click
 
@@ -28,6 +32,9 @@ from ..utils.validators import validate_file_writable
   # Generate for next 30 days with relative dates
   ord-plan generate --rules events.yaml --from today --to "+30 days"
 
+  # Use multiple rules files
+  ord-plan generate --rules holidays.yaml --rules weekly.yaml --from today --to "+7 days"
+
   # Override date warnings (use with caution)
   ord-plan generate --rules events.yaml --from 2024-01-01 --to 2024-12-31 --force
 
@@ -44,8 +51,10 @@ Date Formats:
 @click.option(
     "--rules",
     required=True,
+    multiple=True,
     type=click.Path(exists=True, readable=True),
     help="""Path to YAML rules file containing event definitions.
+    Can be specified multiple times to use multiple rules files.
 
     Example rules file format:
     events:
@@ -112,7 +121,7 @@ week/month/year, +N days
     Useful for testing and previewing output before committing changes.""",
 )
 def generate(
-    rules: str,
+    rules: Tuple[str, ...],
     format: Optional[str],
     file: Optional[str],
     from_date: Optional[str],
@@ -129,17 +138,18 @@ def generate(
     date hierarchy: Year > Week > Date > Events.
     """
 
-    # Enhanced file path validation
-    path_errors = validate_file_path(rules)
-    if path_errors:
-        click.echo("Error: " + "; ".join(path_errors), err=True)
-        raise click.Abort()
+    # Enhanced file path validation for all rules files
+    for rules_file in rules:
+        path_errors = validate_file_path(rules_file)
+        if path_errors:
+            click.echo(f"Error in {rules_file}: " + "; ".join(path_errors), err=True)
+            raise click.Abort()
 
-    # Validate rules file readability
-    file_errors = validate_file_readable(rules)
-    if file_errors:
-        click.echo("Error: " + "; ".join(file_errors), err=True)
-        raise click.Abort()
+        # Validate rules file readability
+        file_errors = validate_file_readable(rules_file)
+        if file_errors:
+            click.echo(f"Error in {rules_file}: " + "; ".join(file_errors), err=True)
+            raise click.Abort()
 
     # Validate target file if specified
     if file:
@@ -207,34 +217,50 @@ def generate(
             click.echo("Error: " + "; ".join(date_errors), err=True)
             raise click.Abort()
 
-    # Enhanced YAML parsing with schema validation
+    # Enhanced YAML parsing with schema validation for multiple files
+    from ..models.event_rule import EventRule
+
+    all_event_rules: List[EventRule] = []
+    all_configs = []
+
     try:
-        config, schema_errors = YamlParser.parse_and_validate(rules)
-        if schema_errors:
-            # Separate errors from warnings
-            errors = [err for err in schema_errors if not err.startswith("Warning:")]
-            warnings = [warn for warn in schema_errors if warn.startswith("Warning:")]
+        for rules_file in rules:
+            config, schema_errors = YamlParser.parse_and_validate(rules_file)
+            all_configs.append(config)
+            if schema_errors:
+                # Separate errors from warnings
+                errors = [
+                    err for err in schema_errors if not err.startswith("Warning:")
+                ]
+                warnings = [
+                    warn for warn in schema_errors if warn.startswith("Warning:")
+                ]
 
-            if errors:
-                click.echo("YAML validation errors:", err=True)
-                for error in errors:
-                    click.echo(f"  - {error}", err=True)
-                raise click.Abort()
+                if errors:
+                    click.echo(f"YAML validation errors in {rules_file}:", err=True)
+                    for error in errors:
+                        click.echo(f"  - {error}", err=True)
+                    raise click.Abort()
 
-            if warnings:
-                click.echo("YAML warnings:", err=True)
-                for warning in warnings:
-                    click.echo(f"  - {warning}", err=True)
+                if warnings:
+                    click.echo(f"YAML warnings in {rules_file}:", err=True)
+                    for warning in warnings:
+                        click.echo(f"  - {warning}", err=True)
+
+            # Parse event rules from this file
+            try:
+                event_rules = YamlParser.parse_event_rules(config)
+                all_event_rules.extend(event_rules)
+            except ValueError as err:
+                click.echo(
+                    f"Error parsing event rules in {rules_file}: {err}", err=True
+                )
+                raise click.Abort() from err
+
+        event_rules = all_event_rules
     except Exception as e:
         click.echo(f"YAML parsing error: {e}", err=True)
         raise click.Abort() from e
-
-    # Parse event rules
-    try:
-        event_rules = YamlParser.parse_event_rules(config)
-    except ValueError as err:
-        click.echo(f"Error parsing event rules: {err}", err=True)
-        raise click.Abort() from err
 
     # Validate cron expressions for all rules
     cron_errors = []
@@ -250,7 +276,15 @@ def generate(
 
     # Parse enhanced configuration with format file merge
     try:
-        app_config = Configuration.merge_format_config(config, format_config)
+        # Merge all rules configs (format config takes precedence)
+        merged_rules_config: Dict[str, Any] = {}
+        for cfg in all_configs:
+            if cfg:
+                merged_rules_config.update(cfg)
+
+        app_config = Configuration.merge_format_config(
+            merged_rules_config, format_config
+        )
 
         # Validate configuration
         config_errors = app_config.validate_date_formats()
@@ -280,7 +314,12 @@ def generate(
     # Handle dry-run mode
     if dry_run:
         click.echo("🔍 DRY RUN MODE - No files will be modified", err=True)
-        click.echo(f"   Rules file: {rules}")
+        if len(rules) == 1:
+            click.echo(f"   Rules file: {rules[0]}")
+        else:
+            click.echo(f"   Rules files ({len(rules)}):")
+            for rules_file in rules:
+                click.echo(f"     - {rules_file}")
         click.echo(
             f"   Date range: {date_range.start_date.strftime('%Y-%m-%d')} to "
             f"{date_range.end_date.strftime('%Y-%m-%d')}"
