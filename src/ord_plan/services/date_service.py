@@ -135,7 +135,7 @@ class DateService:
         # Handle "+N days" format
         if date_str.startswith("+") and "days" in date_str_lower:
             try:
-                days_str = date_str_lower.split()[1]
+                days_str = date_str_lower.split()[0][1:]
                 days = int(days_str)
                 return datetime.now() + timedelta(days=days)
             except (ValueError, IndexError) as e:
