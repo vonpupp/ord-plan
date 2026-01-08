@@ -1,4 +1,4 @@
 pip==25.3
 nox==2025.11.12
 uv==0.9.18
-virtualenv==20.35.4
+virtualenv==20.36.0
