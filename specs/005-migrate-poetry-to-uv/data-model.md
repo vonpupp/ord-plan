@@ -17,11 +17,13 @@ No new entities are created in this migration. The existing entities (events, or
 **Purpose**: Project configuration and dependency specification
 
 **Changes**:
+
 - Remove `[tool.poetry]` sections if present (already migrated to PEP 621 format)
 - Remove `nox-poetry` from dev dependencies
 - Add `tomli-w` to dev dependencies for version manipulation in release workflow
 
 **Structure** (target state):
+
 ```toml
 [project]
 name = "ord-plan"
@@ -71,10 +73,12 @@ dev = [
 ### Stage 1: GitHub Workflows
 
 **Files Modified**:
+
 - `.github/workflows/tests.yml`
 - `.github/workflows/release.yml`
 
 **Changes**:
+
 - Replace Poetry installation with UV installation
 - Remove nox-poetry injection
 - Update version detection to use Python + tomli
@@ -83,10 +87,12 @@ dev = [
 ### Stage 2: Noxfile
 
 **Files Modified**:
+
 - `noxfile.py`
 - `pyproject.toml`
 
 **Changes**:
+
 - Remove nox-poetry imports
 - Replace `session.poetry.export_requirements()` with `uv pip freeze`
 - Update session.install() calls (optionally use `uv pip install`)
@@ -94,6 +100,7 @@ dev = [
 ### Stage 3: Source Code
 
 **Files Checked**:
+
 - All files in `src/ord_plan/`
 
 **Expected Changes**: None (no Poetry commands in source code)
@@ -103,14 +110,17 @@ dev = [
 ### Stage 4: Tasks.py
 
 **Files Modified**:
+
 - `tasks.py`
 
 **Changes**:
+
 - Replace all `poetry run` with `uv run` in invoke task commands
 
 ### Stage 5: Documentation
 
 **Files Modified**:
+
 - `README.md`
 - `CONTRIBUTING.md`
 - `AGENTS.md`
@@ -119,6 +129,7 @@ dev = [
 - `docs/` (any Poetry references)
 
 **Changes**:
+
 - Update installation instructions to use UV
 - Remove Poetry installation sections
 - Replace `poetry run` with `uv run`
@@ -171,6 +182,7 @@ Each stage must pass all tests before proceeding to the next stage.
 ### Final Validation
 
 After all stages complete:
+
 - All tests pass (`invoke pytest`, `nox`)
 - All linting passes (`invoke lint`)
 - Pre-commit hooks pass (`invoke pre-commit`)
@@ -182,12 +194,14 @@ After all stages complete:
 ### No Data Migration Required
 
 This migration does not involve:
+
 - Database migrations
 - File format changes
 - Data structure modifications
 - API changes
 
 The migration is purely about:
+
 - Tooling replacement (Poetry → UV)
 - Command invocation updates
 - Documentation updates
@@ -195,6 +209,7 @@ The migration is purely about:
 ### Version Compatibility
 
 The migration maintains backward compatibility with:
+
 - Existing project structure
 - Source code functionality
 - Test suite behavior
@@ -205,6 +220,7 @@ The only breaking change is: Poetry is no longer required for development.
 ## Rollback Data
 
 Each migration stage is reversible via git:
+
 - Stage 1: Restore `.github/workflows/*.yml`
 - Stage 2: Restore `noxfile.py`, `pyproject.toml`
 - Stage 3: N/A (no changes expected)

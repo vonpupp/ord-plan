@@ -8,8 +8,7 @@ from pathlib import Path
 from textwrap import dedent
 
 import nox
-from nox import Session
-from nox import session
+from nox import Session, session
 
 package = "ord_plan"
 python_versions = ["3.10"]

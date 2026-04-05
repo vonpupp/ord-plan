@@ -141,6 +141,7 @@ ord-plan generate \
 ```
 
 **Behavior**:
+
 - Reads formatting options from `test_format_weekly_example.yaml`
 - Reads events from `test_fiscal_body.yaml`
 - Merges formatting and events
@@ -156,6 +157,7 @@ ord-plan generate \
 ```
 
 **Behavior**:
+
 - Reads combined rules file with both formatting and events
 - Uses formatting options from rules file
 - Same behavior as before `--format` flag was added
@@ -171,6 +173,7 @@ ord-plan generate \
 ```
 
 **Behavior**:
+
 - If `monthly_events.yaml` has `REVERSE_DATETREE_DATE_FORMAT: "%d/%m/%Y"`
 - And `weekly_format.yaml` has `REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d"`
 - Output uses `"%Y-%m-%d"` from format file (precedence)
@@ -187,6 +190,7 @@ ord-plan generate \
 ```
 
 **Behavior**:
+
 - Shows preview without creating files
 - Displays format file path and rules file path
 - Displays date range and estimated event count
@@ -268,6 +272,7 @@ All existing rules files continue to work:
 ### Default Behavior
 
 When `--format` is not provided:
+
 - Use formatting options from rules file (if present)
 - Use Configuration defaults (if rules file has no formatting)
 - Same output as before `--format` flag was added

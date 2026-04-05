@@ -4,10 +4,7 @@ import os
 import sys
 from datetime import datetime
 from pathlib import Path
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import TextIO
+from typing import Optional, TextIO
 
 from ..models.org_date_node import OrgDateNode
 from ..parsers.org_mode import OrgModeParser
@@ -48,9 +45,9 @@ class FileService:
 
     @staticmethod
     def merge_with_existing_content(
-        new_date_nodes: List[OrgDateNode],
+        new_date_nodes: list[OrgDateNode],
         existing_file_path: str,
-    ) -> List[OrgDateNode]:
+    ) -> list[OrgDateNode]:
         """Merge new events with existing file content.
 
         Args:
@@ -165,7 +162,7 @@ class FileService:
         return backup_path
 
     @staticmethod
-    def get_file_content_stats(file_path: str) -> Dict[str, int]:
+    def get_file_content_stats(file_path: str) -> dict[str, int]:
         """Get statistics about file content.
 
         Args:

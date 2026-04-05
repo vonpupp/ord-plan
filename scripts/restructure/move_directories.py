@@ -7,9 +7,7 @@ using git mv operations to preserve history.
 import subprocess
 import sys
 from pathlib import Path
-from typing import List
 from typing import Optional
-from typing import Tuple
 
 
 class FileMover:
@@ -21,7 +19,7 @@ class FileMover:
         self.dry_run = dry_run
         self.moved_items = []
 
-    def _run_git_mv(self, source: Path, target: Path) -> Tuple[bool, str]:
+    def _run_git_mv(self, source: Path, target: Path) -> tuple[bool, str]:
         """Run git mv command with proper error handling.
 
         Args:
@@ -55,7 +53,7 @@ class FileMover:
             print(f"❌ {error_msg}")
             return False, error_msg
 
-    def move_directory(self, dir_name: str) -> Tuple[bool, str]:
+    def move_directory(self, dir_name: str) -> tuple[bool, str]:
         """Move a directory from ord-plan/ to repository root.
 
         Args:
@@ -79,7 +77,7 @@ class FileMover:
 
         return self._run_git_mv(source_path, target_path)
 
-    def move_file(self, file_name: str) -> Tuple[bool, str]:
+    def move_file(self, file_name: str) -> tuple[bool, str]:
         """Move a file from ord-plan/ to repository root.
 
         Args:
@@ -103,7 +101,7 @@ class FileMover:
 
         return self._run_git_mv(source_path, target_path)
 
-    def _ensure_target_directory(self, target_path: Path) -> Tuple[bool, str]:
+    def _ensure_target_directory(self, target_path: Path) -> tuple[bool, str]:
         """Ensure target directory exists."""
         if not target_path.exists():
             if self.dry_run:
@@ -115,7 +113,7 @@ class FileMover:
 
     def _move_github_contents(
         self, source_path: Path, target_path: Path
-    ) -> Tuple[bool, str]:
+    ) -> tuple[bool, str]:
         """Move contents from source to target directory."""
         try:
             for item in source_path.iterdir():
@@ -139,7 +137,7 @@ class FileMover:
             print(f"❌ {error_msg}")
             return False, error_msg
 
-    def move_github_directory(self) -> Tuple[bool, str]:
+    def move_github_directory(self) -> tuple[bool, str]:
         """Move .github directory contents to repository root .github/.
 
         Returns:
@@ -161,7 +159,7 @@ class FileMover:
         # Move contents
         return self._move_github_contents(source_path, target_path)
 
-    def _move_directory_recursive(self, source: Path, target: Path) -> Tuple[bool, str]:
+    def _move_directory_recursive(self, source: Path, target: Path) -> tuple[bool, str]:
         """Recursively move directory contents."""
         try:
             if self.dry_run:
@@ -183,11 +181,11 @@ class FileMover:
         except Exception as e:
             return False, f"Failed to move directory recursively: {e}"
 
-    def get_moved_items(self) -> List[Tuple[Path, Path]]:
+    def get_moved_items(self) -> list[tuple[Path, Path]]:
         """Get list of successfully moved items."""
         return self.moved_items.copy()
 
-    def undo_moves(self) -> Tuple[bool, str]:
+    def undo_moves(self) -> tuple[bool, str]:
         """Undo all moves by moving items back to ord-plan/.
 
         Returns:

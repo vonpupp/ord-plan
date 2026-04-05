@@ -1,9 +1,7 @@
 """Org-mode date node model for ord-plan."""
 
-from dataclasses import dataclass
-from dataclasses import field
+from dataclasses import dataclass, field
 from datetime import datetime
-from typing import List
 
 from .org_event import OrgEvent
 
@@ -13,8 +11,8 @@ class OrgDateNode:
     """Represents a date node in the org-mode hierarchy."""
 
     date: datetime
-    existing_events: List[OrgEvent] = field(default_factory=list)
-    new_events: List[OrgEvent] = field(default_factory=list)
+    existing_events: list[OrgEvent] = field(default_factory=list)
+    new_events: list[OrgEvent] = field(default_factory=list)
 
     @property
     def year(self) -> str:
@@ -32,6 +30,6 @@ class OrgDateNode:
         return self.date.strftime("%Y-%m-%d %a")
 
     @property
-    def all_events(self) -> List[OrgEvent]:
+    def all_events(self) -> list[OrgEvent]:
         """Get all events (existing + new)."""
         return self.existing_events + self.new_events

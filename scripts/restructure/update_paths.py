@@ -9,9 +9,6 @@ import subprocess
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict
-from typing import List
-from typing import Tuple
 
 
 @dataclass
@@ -20,7 +17,7 @@ class PathMapping:
 
     old_pattern: str
     new_pattern: str
-    file_types: List[str]
+    file_types: list[str]
     description: str
     scope: str
 
@@ -99,7 +96,7 @@ class PathMapper:
             ),
         ]
 
-    def find_files_to_update(self, file_types: List[str]) -> List[Path]:
+    def find_files_to_update(self, file_types: list[str]) -> list[Path]:
         """Find all files of specified types to update.
 
         Args:
@@ -151,8 +148,8 @@ class PathMapper:
         return filtered_files
 
     def update_file(
-        self, file_path: Path, mappings: List[PathMapping]
-    ) -> Tuple[bool, str]:
+        self, file_path: Path, mappings: list[PathMapping]
+    ) -> tuple[bool, str]:
         """Update a single file using provided mappings.
 
         Args:
@@ -195,7 +192,7 @@ class PathMapper:
             print(f"  ❌ {error_msg}")
             return False, error_msg
 
-    def update_by_scope(self, scope: str) -> Tuple[bool, str]:
+    def update_by_scope(self, scope: str) -> tuple[bool, str]:
         """Update all files for a specific scope.
 
         Args:
@@ -235,7 +232,7 @@ class PathMapper:
 
         return True, ""
 
-    def update_all(self) -> Tuple[bool, str]:
+    def update_all(self) -> tuple[bool, str]:
         """Update all files using all mappings."""
         print("🚀 Starting comprehensive path mapping updates...")
 
@@ -249,11 +246,11 @@ class PathMapper:
 
         return True, ""
 
-    def get_updated_files(self) -> List[Path]:
+    def get_updated_files(self) -> list[Path]:
         """Get list of successfully updated files."""
         return self.updated_files.copy()
 
-    def preview_changes(self) -> Dict[str, List[str]]:
+    def preview_changes(self) -> dict[str, list[str]]:
         """Preview what changes would be made without applying them.
 
         Returns:

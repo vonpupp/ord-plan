@@ -5,12 +5,14 @@ from pathlib import Path
 
 import pytest
 
-from ord_plan.utils.validators import validate_cron_expression
-from ord_plan.utils.validators import validate_date_format
-from ord_plan.utils.validators import validate_file_path
-from ord_plan.utils.validators import validate_file_readable
-from ord_plan.utils.validators import validate_file_writable
-from ord_plan.utils.validators import validate_org_file_content
+from ord_plan.utils.validators import (
+    validate_cron_expression,
+    validate_date_format,
+    validate_file_path,
+    validate_file_readable,
+    validate_file_writable,
+    validate_org_file_content,
+)
 
 
 class TestCronValidation:
@@ -24,6 +26,11 @@ class TestCronValidation:
             "*/15 * * * *",  # Every 15 minutes
             "0 0 1 * *",  # First of month
             "30 14 15 * 5",  # 3:30 PM on 15th and Friday
+            # W modifier (nearest weekday) tests
+            "0 9 15W * *",  # Nearest weekday to the 15th
+            "0 9 W15 * *",  # W prefix format also works
+            "0 0 1W * *",  # Nearest weekday to the 1st (month boundary)
+            "0 0 30W * *",  # Nearest weekday to the 30th (month end)
         ]
 
         for expr in valid_expressions:

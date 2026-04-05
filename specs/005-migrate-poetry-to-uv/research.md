@@ -42,6 +42,7 @@ uv run python -c "import tomli; print(tomli.load(open('pyproject.toml'))['projec
 ```
 
 **Decision**: Use UV with tomli for version detection. Requires:
+
 - `uv run` for execution
 - `tomli` package (already in dependencies)
 - Access to pyproject.toml file
@@ -57,15 +58,16 @@ Poetry's `poetry version patch` and `poetry version <version>` commands don't ha
 ```python
 import tomli, re
 
-data = tomli.load(open('pyproject.toml'))
-version = data['project']['version']
-parts = version.split('.')
+data = tomli.load(open("pyproject.toml"))
+version = data["project"]["version"]
+parts = version.split(".")
 parts[-1] = str(int(parts[-1]) + 1)
-new_version = '.'.join(parts)
-data['project']['version'] = f'{new_version}.dev.$(date +%s)'
+new_version = ".".join(parts)
+data["project"]["version"] = f"{new_version}.dev.$(date +%s)"
 
-with open('pyproject.toml', 'w') as f:
+with open("pyproject.toml", "w") as f:
     import tomli_w
+
     tomli_w.dump(data, f)
 ```
 
@@ -94,6 +96,7 @@ pipx install uv
 ### Tests Workflow
 
 **Current (Poetry)**:
+
 ```yaml
 - name: Install Poetry
   run: |
@@ -109,6 +112,7 @@ pipx install uv
 ```
 
 **Target (UV)**:
+
 ```yaml
 - name: Install UV
   run: |
@@ -128,6 +132,7 @@ pipx install uv
 ### Release Workflow
 
 **Current (Poetry)**:
+
 ```yaml
 - name: Install Poetry
   run: |
@@ -146,6 +151,7 @@ pipx install uv
 ```
 
 **Target (UV)**:
+
 ```yaml
 - name: Install UV
   run: |
@@ -181,6 +187,7 @@ pipx install uv
 ### Import Changes
 
 **Current (nox-poetry)**:
+
 ```python
 try:
     from nox_poetry import Session
@@ -196,6 +203,7 @@ except ImportError:
 ```
 
 **Target (Native Nox)**:
+
 ```python
 from nox import Session
 from nox import session
@@ -208,6 +216,7 @@ from nox import session
 ### Safety Session Changes
 
 **Current (nox-poetry)**:
+
 ```python
 @session(python=python_versions)
 def safety(session: Session) -> None:
@@ -227,6 +236,7 @@ def safety(session: Session) -> None:
 ```
 
 **Target (UV)**:
+
 ```python
 @session(python=python_versions)
 def safety(session: Session) -> None:
@@ -253,11 +263,13 @@ def safety(session: Session) -> None:
 ### Session Installation
 
 **Current (nox-poetry)**:
+
 ```python
 session.install(".", "pytest", "coverage")
 ```
 
 **Target (UV)**:
+
 ```python
 session.run("uv", "pip", "install", ".", "pytest", "coverage", external=True)
 # OR (both work, UV is faster):
@@ -273,6 +285,7 @@ session.install(".", "pytest", "coverage")
 ### Poetry Run to UV Run
 
 **Current**:
+
 ```python
 @task
 def pytest(c):
@@ -286,6 +299,7 @@ def pytest(c):
 ```
 
 **Target**:
+
 ```python
 @task
 def pytest(c):
@@ -383,6 +397,7 @@ uv pip install tomli_w
 ```
 
 Add to `pyproject.toml`:
+
 ```toml
 [project.optional-dependencies]
 dev = [
@@ -412,6 +427,7 @@ If any migration stage fails:
 ### UV vs Poetry Performance
 
 UV is generally faster than Poetry for:
+
 - Dependency resolution
 - Package installation
 - Virtual environment creation
@@ -438,6 +454,7 @@ However, the spec explicitly states: "Performance is not a critical requirement;
 ### Alternative 1: Keep Poetry alongside UV
 
 Rejected because:
+
 - Increases confusion about which tool to use
 - Adds maintenance burden for two package managers
 - Spec requires complete migration to UV
@@ -445,6 +462,7 @@ Rejected because:
 ### Alternative 2: Use pip instead of UV
 
 Rejected because:
+
 - UV is specified in the feature spec
 - UV provides better dependency resolution than pip
 - UV is faster and more modern
@@ -452,6 +470,7 @@ Rejected because:
 ### Alternative 3: Use Poetry-based version management
 
 Rejected because:
+
 - Requires keeping Poetry installed
 - Defeats the purpose of migration
 - Custom Python script gives more control
@@ -459,6 +478,7 @@ Rejected because:
 ### Alternative 4: Remove nox entirely
 
 Rejected because:
+
 - Scope creep; this is a future stage (Stage 7)
 - Current migration focuses only on replacing Poetry
 - Keeping nox maintains developer familiarity

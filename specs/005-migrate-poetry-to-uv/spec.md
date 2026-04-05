@@ -8,6 +8,7 @@
 ## Clarifications
 
 ### Session 2025-12-23
+
 - Q: What are the performance requirements for UV compared to Poetry (e.g., specific speedup targets, memory usage limits)? → A: Performance is not a critical requirement; UV is expected to be faster but we just need tests to pass
 - Q: What backward compatibility window is required for Poetry usage after migration completes? → A: Allow immediate UV usage; no explicit backward compatibility window required for Poetry after Stage 5 complete
 - Q: What should happen if a migration stage fails during execution? → A: Fail entire migration if any stage fails; start over from beginning
@@ -204,14 +205,16 @@ _Documentation Requirements:_
 ### Stage 1: GitHub Workflows and Actions
 
 **Files to modify**:
+
 - `.github/workflows/tests.yml`
 - `.github/workflows/release.yml`
 
 **Changes required**:
 
-#### `.github/workflows/tests.yml`:
+#### `.github/workflows/tests.yml`
 
 1. Remove Poetry installation step:
+
    ```yaml
    # REMOVE these lines:
    - name: Install Poetry
@@ -222,6 +225,7 @@ _Documentation Requirements:_
    ```
 
 2. Add UV installation step:
+
    ```yaml
    # ADD:
    - name: Install UV
@@ -231,6 +235,7 @@ _Documentation Requirements:_
    ```
 
 3. Update Nox installation (remove nox-poetry):
+
    ```yaml
    # CHANGE from:
    - name: Install Nox
@@ -247,6 +252,7 @@ _Documentation Requirements:_
    ```
 
 4. Update coverage job tooling installation:
+
    ```yaml
    # CHANGE from:
    - name: Install tooling
@@ -264,9 +270,10 @@ _Documentation Requirements:_
        pipx install --pip-args=--constraint=.github/workflows/constraints.txt nox
    ```
 
-#### `.github/workflows/release.yml`:
+#### `.github/workflows/release.yml`
 
 1. Replace Poetry installation with UV:
+
    ```yaml
    # CHANGE from:
    - name: Install Poetry
@@ -282,6 +289,7 @@ _Documentation Requirements:_
    ```
 
 2. Replace version detection commands:
+
     ```yaml
     # CHANGE from:
     version-command: |
@@ -293,6 +301,7 @@ _Documentation Requirements:_
     ```
 
 3. Replace version bump for developmental release:
+
    ```yaml
    # CHANGE from:
    - name: Bump version for developmental release
@@ -321,6 +330,7 @@ _Documentation Requirements:_
    ```
 
 4. Replace build command:
+
    ```yaml
    # CHANGE from:
    - name: Build package
@@ -334,6 +344,7 @@ _Documentation Requirements:_
    ```
 
 **Testing after Stage 1**:
+
 - Create test branch
 - Apply workflow changes
 - Push to trigger GitHub Actions
@@ -342,6 +353,7 @@ _Documentation Requirements:_
 - Confirm coverage upload and report generation work
 
 **Expected outcomes**:
+
 - All CI/CD tests pass without Poetry
 - Build artifacts generated successfully
 - Coverage reports created and uploaded
@@ -351,14 +363,16 @@ _Documentation Requirements:_
 ### Stage 2: noxfile.py (keep nox, replace poetry with uv)
 
 **Files to modify**:
+
 - `noxfile.py`
 - `pyproject.toml` (remove nox-poetry from dev dependencies)
 
 **Changes required**:
 
-#### `noxfile.py`:
+#### `noxfile.py`
 
 1. Remove nox-poetry imports and error handling:
+
    ```python
    # REMOVE:
    try:
@@ -379,6 +393,7 @@ _Documentation Requirements:_
    ```
 
 2. Update all session.install() calls to use uv pip install pattern:
+
    ```python
    # CHANGE pattern from:
    session.install("package", "another-package")
@@ -391,6 +406,7 @@ _Documentation Requirements:_
    ```
 
 3. Update safety session to use uv pip freeze:
+
    ```python
    # CHANGE from:
    @session(python=python_versions)
@@ -408,6 +424,7 @@ _Documentation Requirements:_
            success_codes=[0, 64],
            silent=True,
        )
+
 
    # TO:
    @session(python=python_versions)
@@ -430,6 +447,7 @@ _Documentation Requirements:_
    ```
 
 4. Update all sessions to install with uv:
+
    ```python
    # For all sessions that need package installation:
    session.install(".")  # This installs the current package
@@ -442,9 +460,10 @@ _Documentation Requirements:_
 
 5. Remove activate_virtualenv_in_precommit_hooks function if no longer needed (can be kept as it works with nox's virtualenv management)
 
-#### `pyproject.toml`:
+#### `pyproject.toml`
 
 1. Remove nox-poetry from dev dependencies:
+
    ```toml
    # CHANGE from:
    [dependency-groups]
@@ -463,6 +482,7 @@ _Documentation Requirements:_
    ```
 
 **Testing after Stage 2**:
+
 - Apply noxfile.py changes
 - Update pyproject.toml dependencies
 - Run `nox --list-sessions` to verify sessions are available
@@ -473,6 +493,7 @@ _Documentation Requirements:_
 - Run all sessions to ensure complete functionality
 
 **Expected outcomes**:
+
 - All nox sessions execute without nox-poetry
 - Tests, linting, type checking, and docs build all work
 - No Poetry dependencies in development environment
@@ -482,6 +503,7 @@ _Documentation Requirements:_
 ### Stage 3: Source Code (actual source code)
 
 **Files to check**:
+
 - All files in `src/ord_plan/` directory
 - Check for any subprocess calls to Poetry
 - Check for any Poetry-specific imports or logic
@@ -489,11 +511,13 @@ _Documentation Requirements:_
 **Changes required**:
 
 1. Search for Poetry references:
+
    ```bash
    grep -r "poetry" src/
    ```
 
 2. If any Poetry commands found in source code, replace with UV equivalents:
+
    ```python
    # CHANGE from:
    subprocess.run(["poetry", "run", "command"], ...)
@@ -503,18 +527,21 @@ _Documentation Requirements:_
    ```
 
 3. If any Poetry-specific imports:
+
    ```python
    # REMOVE if found:
    # from poetry.core... (unlikely to exist but check)
    ```
 
 **Testing after Stage 3**:
+
 - Search for remaining Poetry references in source code
 - Run full test suite: `invoke pytest` or `nox -s tests`
 - Verify all source code executes without Poetry dependency
 - Import main module and verify no Poetry errors
 
 **Expected outcomes**:
+
 - No Poetry commands or imports in source code
 - All tests pass without Poetry
 - Code executes correctly using UV for any subprocess calls
@@ -524,6 +551,7 @@ _Documentation Requirements:_
 ### Stage 4: tasks.py
 
 **Files to modify**:
+
 - `tasks.py`
 
 **Changes required**:
@@ -545,6 +573,7 @@ def pytest(c):
         "Running pytest tests",
     )
 
+
 # TO:
 @task
 def pytest(c):
@@ -563,72 +592,84 @@ def pytest(c):
 Continue for all tasks:
 
 1. **test_unit**:
+
    ```python
    # CHANGE: "poetry run pytest tests/unit/ -v"
    # TO: "uv run pytest tests/unit/ -v"
    ```
 
 2. **test_integration**:
+
    ```python
    # CHANGE: "poetry run pytest tests/integration/ -v"
    # TO: "uv run pytest tests/integration/ -v"
    ```
 
 3. **test_contract**:
+
    ```python
    # CHANGE: "poetry run pytest tests/contract/ -v"
    # TO: "uv run pytest tests/contract/ -v"
    ```
 
 4. **pre_commit**:
+
    ```python
    # CHANGE: "poetry run pre-commit run --all-files"
    # TO: "uv run pre-commit run --all-files"
    ```
 
 5. **pre_commit_install**:
+
    ```python
    # CHANGE: "poetry run pre-commit install"
    # TO: "uv run pre-commit install"
    ```
 
 6. **security**:
+
    ```python
    # CHANGE: "poetry run safety check"
    # TO: "uv run safety check"
    ```
 
 7. **mypy**:
+
    ```python
    # CHANGE: "poetry run mypy src/ --ignore-missing-imports"
    # TO: "uv run mypy src/ --ignore-missing-imports"
    ```
 
 8. **black**:
+
    ```python
    # CHANGE: "poetry run black --check src/ tests/"
    # TO: "uv run black --check src/ tests/"
    ```
 
 9. **isort**:
+
    ```python
    # CHANGE: "poetry run isort --check-only src/ tests/"
    # TO: "uv run isort --check-only src/ tests/"
    ```
 
 10. **flake8**:
+
     ```python
     # CHANGE: "poetry run flake8 src/ tests/"
     # TO: "uv run flake8 src/ tests/"
     ```
 
 11. **darglint**:
+
     ```python
     # CHANGE: 'poetry run darglint --ignore-raise "FileNotFoundError,PermissionError,OSError,BadParameter" src/'
     # TO: 'uv run darglint --ignore-raise "FileNotFoundError,PermissionError,OSError,BadParameter" src/'
     ```
 
 **Testing after Stage 4**:
+
 - Apply all changes to tasks.py
 - Run `invoke pytest` - should work
 - Run `invoke test-unit` - should work
@@ -639,6 +680,7 @@ Continue for all tasks:
 - Run `invoke help` - verify help output is still correct
 
 **Expected outcomes**:
+
 - All invoke tasks execute with UV commands
 - All tests pass
 - All linting checks pass
@@ -649,6 +691,7 @@ Continue for all tasks:
 ### Stage 5: Documentation, README, anywhere else
 
 **Files to modify**:
+
 - `README.md`
 - `CONTRIBUTING.md`
 - `AGENTS.md`
@@ -657,9 +700,10 @@ Continue for all tasks:
 
 **Changes required**:
 
-#### `README.md`:
+#### `README.md`
 
 1. Update Installation section - prioritize UV:
+
    ```markdown
    # CHANGE from:
    ### Method 1: uv (Recommended)
@@ -683,7 +727,8 @@ Continue for all tasks:
    $ poetry global add ord-plan
    ```
 
-   # TO:
+   # TO
+
    ### Method 1: uv (Recommended)
 
    [uv](https://docs.astral.sh/uv/) is modern, fast Python package installer:
@@ -696,11 +741,13 @@ Continue for all tasks:
    ### Method 2: pip
 
    Traditional installation using pip:
+
    ```
 
    Remove Poetry installation section entirely or move to deprecated methods section.
 
 2. Update Development Installation section:
+
    ```markdown
    # CHANGE from:
    #### Using uv
@@ -726,7 +773,8 @@ Continue for all tasks:
    $ poetry shell  # Activate the virtual environment
    ```
 
-   # TO:
+   # TO
+
    #### Using uv
 
    ```console
@@ -739,9 +787,11 @@ Continue for all tasks:
    ```
 
    Remove Poetry section.
+
    ```
 
 3. Update Pre-commit Hooks section:
+
    ```markdown
    # CHANGE from:
    Or run directly with poetry:
@@ -750,7 +800,8 @@ Continue for all tasks:
    poetry run pre-commit run --all-files
    ```
 
-   # TO:
+   # TO
+
    Or run directly with uv:
 
    ```bash
@@ -758,9 +809,11 @@ Continue for all tasks:
    ```
 
    Pre-commit hooks are configured in `.pre-commit-config.yaml` and use uv to ensure all tools run in the correct virtual environment.
+
    ```
 
 4. Remove Poetry link from footer:
+
    ```markdown
    # CHANGE from:
    [poetry]: https://python-poetry.org/
@@ -771,6 +824,7 @@ Continue for all tasks:
    ```
 
 5. Update development environment setup:
+
    ```markdown
    # CHANGE from:
    Using Poetry:
@@ -779,17 +833,20 @@ Continue for all tasks:
    poetry install
    ```
 
-   # TO:
+   # TO
+
    Using uv:
 
    ```bash
    uv pip install -e ".[dev]"
    ```
+
    ```
 
-#### `CONTRIBUTING.md`:
+#### `CONTRIBUTING.md`
 
 1. Update How to set up your development environment section:
+
    ```markdown
    # CHANGE from:
    You need Python 3.7+ and the following tools:
@@ -808,15 +865,14 @@ Continue for all tasks:
    or the command-line interface:
 
    ```console
-   $ poetry run python
-   $ poetry run ord-plan
+   poetry run python
+   poetry run ord-plan
    ```
 
-   [poetry]: https://python-poetry.org/
    [nox]: https://nox.thea.codes/
-   [nox-poetry]: https://nox-poetry.readthedocs.io/
 
-   # TO:
+   # TO
+
    You need Python 3.7+ and the following tools:
 
    - [uv]
@@ -825,26 +881,27 @@ Continue for all tasks:
    Install the package with development requirements:
 
    ```console
-   $ uv pip install -e ".[dev]"
+   uv pip install -e ".[dev]"
    ```
 
    You can now run an interactive Python session,
    or the command-line interface:
 
    ```console
-   $ uv run python
-   $ uv run ord-plan
+   uv run python
+   uv run ord-plan
    ```
 
    [uv]: https://docs.astral.sh/uv/
-   [nox]: https://nox.thea.codes/
+
    ```
 
 2. Remove duplicate Nox sessions list section (appears twice)
 
-#### `AGENTS.md`:
+#### `AGENTS.md`
 
 1. Update Active Technologies section:
+
    ```markdown
    # CHANGE from:
    ## Active Technologies
@@ -862,6 +919,7 @@ Continue for all tasks:
    ```
 
 2. Update Pre-commit Hooks section:
+
    ```markdown
    # CHANGE from:
    Or run directly with poetry:
@@ -872,7 +930,8 @@ Continue for all tasks:
 
    Pre-commit hooks are configured in `.pre-commit-config.yaml` and use poetry to ensure all tools run in the correct virtual environment.
 
-   # TO:
+   # TO
+
    Or run directly with uv:
 
    ```bash
@@ -880,9 +939,11 @@ Continue for all tasks:
    ```
 
    Pre-commit hooks are configured in `.pre-commit-config.yaml` and use uv to ensure all tools run in the correct virtual environment.
+
    ```
 
 3. Update Recent Changes section:
+
    ```markdown
    # CHANGE from:
    - 004-add-format-flag: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, Poetry for dependency management
@@ -897,7 +958,7 @@ Continue for all tasks:
    - 005-migrate-poetry-to-uv: Migrated from Poetry to UV for dependency management
    ```
 
-#### `.pre-commit-config.yaml`:
+#### `.pre-commit-config.yaml`
 
 Replace all `poetry run` with `uv run`:
 
@@ -916,6 +977,7 @@ Replace all `poetry run` with `uv run`:
 ```
 
 Repeat for all hooks:
+
 - black
 - check-added-large-files
 - check-toml
@@ -927,7 +989,7 @@ Repeat for all hooks:
 - pyupgrade
 - trailing-whitespace
 
-#### `Dockerfile`:
+#### `Dockerfile`
 
 Update to use UV instead of Poetry:
 
@@ -971,6 +1033,7 @@ RUN nox --version
 ```
 
 **Testing after Stage 5**:
+
 - Update all documentation files
 - Run `grep -r "poetry" .` to verify only git history or comments remain
 - Build documentation: `invoke docs`
@@ -979,6 +1042,7 @@ RUN nox --version
 - Read through all documentation to ensure consistency
 
 **Expected outcomes**:
+
 - No Poetry references in documentation
 - UV is documented as primary tool
 - All documentation is accurate and up-to-date
@@ -990,12 +1054,14 @@ RUN nox --version
 ### Future Stage 6: Cleanup (remove all poetry references)
 
 **Files to modify**:
+
 - `pyproject.toml` (remove Poetry-specific sections if present)
 - Remove any Poetry configuration files (pyproject.toml's [tool.poetry] section)
 
 **Changes required**:
 
 1. Check pyproject.toml for Poetry-specific sections:
+
    ```toml
    # REMOVE if present:
    [tool.poetry]
@@ -1015,6 +1081,7 @@ RUN nox --version
    ```
 
 2. Ensure pyproject.toml uses [project] section (already the case):
+
    ```toml
    [project]
    name = "ord-plan"
@@ -1023,11 +1090,13 @@ RUN nox --version
    ```
 
 3. Search for any remaining Poetry references:
+
     ```bash
     grep -r "poetry" . --exclude-dir=.git --exclude-dir=__pycache__
     ```
 
 4. Provide cleanup commands for Poetry virtual environments:
+
     ```bash
     # Find and remove Poetry virtual environments
     # Poetry venvs are typically in ~/.local/share/pypoetry/venvs/
@@ -1043,12 +1112,14 @@ RUN nox --version
     ```
 
 **Testing after Stage 6**:
+
 - Verify no Poetry files remain (no pyproject.toml poetry sections)
 - Verify no Poetry commands in any files
 - Run all tests to ensure nothing broken
 - Check for any Poetry-specific configuration files
 
 **Expected outcomes**:
+
 - No Poetry-specific configuration remains
 - All references to Poetry removed
 - Project fully migrated to UV
@@ -1058,6 +1129,7 @@ RUN nox --version
 ### Future Stage 7: Replace Nox with UV Scripts
 
 **Files to create/modify**:
+
 - Create new test scripts using UV
 - Optionally modify `tasks.py` to replace nox functionality
 - Optionally remove `noxfile.py`
@@ -1073,6 +1145,7 @@ RUN nox --version
    - Use `uv run pre-commit` directly
 
 3. Enhance tasks.py to cover all nox sessions:
+
    ```python
    @task
    def pytest(c, coverage=False):
@@ -1083,6 +1156,7 @@ RUN nox --version
            cmd += " -v --cov=ord_plan --cov-report=term-missing"
        return run_command(c, cmd, "Running pytest tests")
 
+
    @task
    def docs_build(c):
        """Build documentation."""
@@ -1091,6 +1165,7 @@ RUN nox --version
    ```
 
 **Testing after Stage 7**:
+
 - Run all tests without nox
 - Verify all test types work (unit, integration, contract)
 - Verify linting works
@@ -1098,6 +1173,7 @@ RUN nox --version
 - Optionally: Remove noxfile.py and verify nothing broken
 
 **Expected outcomes**:
+
 - All testing works without nox
 - Simpler dependency management (only UV needed)
 - Faster test execution (UV is faster than nox+poetry)

@@ -8,7 +8,6 @@ import os
 import subprocess
 import sys
 from pathlib import Path
-from typing import List
 from typing import Optional
 
 
@@ -53,7 +52,7 @@ class RepositoryValidator:
         ord_plan_path = self.repo_root / "ord-plan"
         return ord_plan_path.exists() and ord_plan_path.is_dir()
 
-    def get_git_status(self) -> List[str]:
+    def get_git_status(self) -> list[str]:
         """Get detailed git status information."""
         try:
             result = subprocess.run(
@@ -67,7 +66,7 @@ class RepositoryValidator:
         except (subprocess.CalledProcessError, FileNotFoundError):
             return []
 
-    def validate_repository_state(self) -> tuple[bool, List[str]]:
+    def validate_repository_state(self) -> tuple[bool, list[str]]:
         """Validate repository is ready for restructuring.
 
         Returns:
@@ -94,7 +93,7 @@ class RepositoryValidator:
 
         return len(errors) == 0, errors
 
-    def run_basic_tests(self) -> tuple[bool, List[str]]:
+    def run_basic_tests(self) -> tuple[bool, list[str]]:
         """Run basic tests to ensure current state is functional.
 
         Returns:
@@ -133,7 +132,7 @@ class RepositoryValidator:
 
 
 def main():
-    """Main validation function."""
+    """Run the main validation function."""
     validator = RepositoryValidator()
 
     print("🔍 Validating repository state for restructuring...")

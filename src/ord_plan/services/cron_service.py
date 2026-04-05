@@ -1,8 +1,6 @@
 """Cron service for processing cron expressions."""
 
-from datetime import datetime
-from datetime import timedelta
-from typing import List
+from datetime import datetime, timedelta
 
 from croniter import croniter
 
@@ -17,7 +15,7 @@ class CronService:
     @staticmethod
     def generate_events_for_rule(
         rule: EventRule, date_range: DateRange, default_todo_state: str = "TODO"
-    ) -> List[OrgEvent]:
+    ) -> list[OrgEvent]:
         """Generate events for a single rule within a date range.
 
         Args:
@@ -48,7 +46,8 @@ class CronService:
             # Only include events that fall within the date range
             if current_date >= date_range.start_date:
                 # Store the datetime in the event title for now (temporary solution)
-                # In a proper implementation, we'd extend OrgEvent to have a datetime field
+                # In a proper implementation, we'd extend OrgEvent to have
+                # a datetime field
                 event_title = f"{rule.title}@@{current_date.isoformat()}"
                 event = OrgEvent(
                     title=event_title,
@@ -73,8 +72,8 @@ class CronService:
 
     @staticmethod
     def generate_all_events(
-        rules: List[EventRule], date_range: DateRange, default_todo_state: str = "TODO"
-    ) -> List[OrgEvent]:
+        rules: list[EventRule], date_range: DateRange, default_todo_state: str = "TODO"
+    ) -> list[OrgEvent]:
         """Generate events for all rules within a date range.
 
         Args:

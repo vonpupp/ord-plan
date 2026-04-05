@@ -3,7 +3,6 @@
 import time
 from collections import defaultdict
 from datetime import datetime
-from typing import List
 from typing import Optional
 
 from ..models.date_range import DateRange
@@ -18,8 +17,8 @@ class EventService:
 
     @staticmethod
     def organize_events_by_date(
-        events: List[OrgEvent], date_range: DateRange
-    ) -> List[OrgDateNode]:
+        events: list[OrgEvent], date_range: DateRange
+    ) -> list[OrgDateNode]:
         """Organize events by date into OrgDateNode objects.
 
         Args:
@@ -64,8 +63,8 @@ class EventService:
 
     @staticmethod
     def merge_with_existing_nodes(
-        new_nodes: List[OrgDateNode], existing_nodes: List[OrgDateNode]
-    ) -> List[OrgDateNode]:
+        new_nodes: list[OrgDateNode], existing_nodes: list[OrgDateNode]
+    ) -> list[OrgDateNode]:
         """Merge new date nodes with existing ones.
 
         Args:
@@ -110,11 +109,11 @@ class EventService:
 
     @staticmethod
     def generate_complete_event_set(
-        rules: List[EventRule],
+        rules: list[EventRule],
         date_range: DateRange,
-        existing_nodes: Optional[List[OrgDateNode]] = None,
+        existing_nodes: Optional[list[OrgDateNode]] = None,
         default_todo_state: str = "TODO",
-    ) -> List[OrgDateNode]:
+    ) -> list[OrgDateNode]:
         """Generate complete set of events organized by date.
 
         Args:
@@ -175,7 +174,7 @@ class EventService:
         return merged_nodes
 
     @staticmethod
-    def estimate_event_count(rules: List[EventRule], date_range: DateRange) -> int:
+    def estimate_event_count(rules: list[EventRule], date_range: DateRange) -> int:
         """Estimate the number of events that will be generated.
 
         Args:

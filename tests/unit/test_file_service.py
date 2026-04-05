@@ -46,7 +46,7 @@ class TestFileService:
                 assert f.read() == content
 
     def test_write_org_content_to_stdout(
-        self, capsys: pytest.CaptureFixture[str]
+        self, _capsys: pytest.CaptureFixture[str]
     ) -> None:
         """Test writing content to stdout."""
         content = "* Test Content"

@@ -1,7 +1,6 @@
 """Validation utilities for ord-plan."""
 
 import os
-from typing import List
 
 from croniter import croniter
 
@@ -10,10 +9,10 @@ try:
     from dateutil.parser import parse as _dateutil_parse
 except ImportError:
     _dateutil_parse = None  # type: ignore[assignment]
-    HAS_DATEUTIL = False
+    HAS_DATEUTIL = False  # noqa: F821
 
 
-def validate_file_readable(file_path: str) -> List[str]:
+def validate_file_readable(file_path: str) -> list[str]:
     """Validate that a file exists and is readable."""
     errors = []
 
@@ -27,7 +26,7 @@ def validate_file_readable(file_path: str) -> List[str]:
     return errors
 
 
-def validate_file_writable(file_path: str) -> List[str]:
+def validate_file_writable(file_path: str) -> list[str]:
     """Validate that a file can be written to."""
     errors = []
 
@@ -53,7 +52,7 @@ def validate_file_writable(file_path: str) -> List[str]:
 
 def validate_cron_expression(
     cron_expr: str, rule_title: str = "unnamed rule"
-) -> List[str]:
+) -> list[str]:
     """Validate cron expression with clear error messages.
 
     Args:
@@ -162,7 +161,7 @@ def validate_cron_expression(
     return errors
 
 
-def validate_file_path(file_path: str) -> List[str]:
+def validate_file_path(file_path: str) -> list[str]:
     """Validate file path format and basic constraints.
 
     Args:
@@ -194,7 +193,7 @@ def validate_file_path(file_path: str) -> List[str]:
 
 def validate_org_file_content(
     file_content: str, file_path: str = "unknown"
-) -> List[str]:
+) -> list[str]:
     """Validate that file content is reasonable org-mode format (best effort).
 
     Args:
@@ -204,7 +203,7 @@ def validate_org_file_content(
     Returns:
         List of warning messages (not errors since this is best effort)
     """
-    warnings: List[str] = []
+    warnings: list[str] = []
 
     if not file_content:
         # Empty file is fine, no warnings
@@ -237,7 +236,7 @@ def validate_org_file_content(
     return warnings
 
 
-def validate_date_format(date_str: str, field_name: str = "date") -> List[str]:
+def validate_date_format(date_str: str, field_name: str = "date") -> list[str]:
     """Validate date string format for CLI input.
 
     Args:
@@ -273,8 +272,8 @@ def validate_date_format(date_str: str, field_name: str = "date") -> List[str]:
         try:
             _dateutil_parse(date_str)
             return errors  # Valid date
-        except Exception:
-            pass  # Fall through to basic validation
+        except ValueError:  # Date parsing failed, fall through
+            pass
 
     # Basic relative date handling without dateutil
     lower_date = date_str.lower()

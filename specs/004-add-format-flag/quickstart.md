@@ -7,6 +7,7 @@
 ## Overview
 
 The `--format` flag allows you to separate formatting configuration from event rules, enabling:
+
 - Reusable format configurations across multiple rules files
 - Cleaner separation of concerns
 - Easier maintenance of formatting options
@@ -21,6 +22,7 @@ ord-plan generate --rules my_events.yaml --from 2026-01-01 --to 2026-12-31
 ```
 
 **File structure** (`my_events.yaml`):
+
 ```yaml
 REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
 REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
@@ -44,7 +46,9 @@ ord-plan generate \
 ```
 
 **File structure**:
+
 - `weekly_format.yaml` (formatting only):
+
   ```yaml
   REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
   REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
@@ -53,6 +57,7 @@ ord-plan generate \
   ```
 
 - `my_events.yaml` (events only):
+
   ```yaml
   events:
     - title: "Weekly Meeting"
@@ -64,6 +69,7 @@ ord-plan generate \
 ### Example 1: Weekly Format with Fiscal Events
 
 **Format file** (`weekly_format.yaml`):
+
 ```yaml
 REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
 REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
@@ -72,6 +78,7 @@ REVERSE_DATETREE_USE_WEEK_TREE: true
 ```
 
 **Rules file** (`fiscal_events.yaml`):
+
 ```yaml
 events:
   - title: "Tax report submission"
@@ -83,6 +90,7 @@ events:
 ```
 
 **Command**:
+
 ```bash
 ord-plan generate \
   --format weekly_format.yaml \
@@ -97,6 +105,7 @@ ord-plan generate \
 Reuse the same `weekly_format.yaml` with different events:
 
 **Rules file** (`team_events.yaml`):
+
 ```yaml
 events:
   - title: "Team Standup"
@@ -108,6 +117,7 @@ events:
 ```
 
 **Command**:
+
 ```bash
 ord-plan generate \
   --format weekly_format.yaml \
@@ -120,11 +130,13 @@ ord-plan generate \
 ### Example 3: Override Rules File Format
 
 **Format file** (`custom_format.yaml`):
+
 ```yaml
 REVERSE_DATETREE_DATE_FORMAT: "%d/%m/%Y"
 ```
 
 **Rules file** (`events.yaml`) - has its own formatting:
+
 ```yaml
 REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d"
 REVERSE_DATETREE_USE_WEEK_TREE: true
@@ -135,6 +147,7 @@ events:
 ```
 
 **Command**:
+
 ```bash
 ord-plan generate \
   --format custom_format.yaml \
@@ -148,6 +161,7 @@ ord-plan generate \
 ### Example 4: Backward Compatibility (No Format File)
 
 **Rules file** (`events.yaml`) - combined format:
+
 ```yaml
 REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
 REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
@@ -160,6 +174,7 @@ events:
 ```
 
 **Command** (no format file):
+
 ```bash
 ord-plan generate \
   --rules events.yaml \
@@ -185,11 +200,13 @@ REVERSE_DATETREE_USE_WEEK_TREE: true         # Enable week-based hierarchy
 You can specify only the options you want to override:
 
 **Example** - Custom date format only:
+
 ```yaml
 REVERSE_DATETREE_DATE_FORMAT: "%d/%m/%Y"
 ```
 
 **Example** - Weekly tree only:
+
 ```yaml
 REVERSE_DATETREE_USE_WEEK_TREE: true
 ```
@@ -197,6 +214,7 @@ REVERSE_DATETREE_USE_WEEK_TREE: true
 ### Empty Format File
 
 Create an empty YAML file to use all defaults:
+
 ```yaml
 # All formatting options will use defaults
 ```
@@ -206,6 +224,7 @@ Create an empty YAML file to use all defaults:
 ### Reuse Format Across Projects
 
 1. Create a `common_format.yaml`:
+
    ```yaml
    REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
    REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
@@ -214,6 +233,7 @@ Create an empty YAML file to use all defaults:
    ```
 
 2. Use with different rules files:
+
    ```bash
    ord-plan generate --format common_format.yaml --rules project1_events.yaml --from 2026-01-01 --to 2026-12-31 --file project1.org
    ord-plan generate --format common_format.yaml --rules project2_events.yaml --from 2026-01-01 --to 2026-12-31 --file project2.org
@@ -222,12 +242,14 @@ Create an empty YAML file to use all defaults:
 ### Migration from Combined to Separated
 
 **Step 1**: Extract formatting from combined file
+
 ```bash
 # Combined file: my_events.yaml
 # Extract the REVERSE_DATETREE_* headers
 ```
 
 **Step 2**: Create format file (`my_format.yaml`)
+
 ```yaml
 REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
 REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
@@ -236,6 +258,7 @@ REVERSE_DATETREE_USE_WEEK_TREE: true
 ```
 
 **Step 3**: Update rules file to events only (`my_events.yaml`)
+
 ```yaml
 events:
   - title: "Meeting"
@@ -243,6 +266,7 @@ events:
 ```
 
 **Step 4**: Update command
+
 ```bash
 # Old command:
 ord-plan generate --rules my_events.yaml --from 2026-01-01 --to 2026-12-31
@@ -294,6 +318,7 @@ Error: Format file must not contain 'events' section
 2. **Version format files**: `format_v1.yaml`, `format_v2.yaml` when making changes
 
 3. **Document format files**: Add comments explaining purpose:
+
    ```yaml
    # Weekly format for fiscal planning
    REVERSE_DATETREE_USE_WEEK_TREE: true
@@ -303,6 +328,7 @@ Error: Format file must not contain 'events' section
 4. **Keep format files simple**: Only formatting options, no business logic
 
 5. **Test with dry-run first**:
+
    ```bash
    ord-plan generate --format format.yaml --rules events.yaml --from 2026-01-01 --to 2026-12-31 --dry-run
    ```

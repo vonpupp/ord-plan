@@ -60,14 +60,14 @@ events:
 cat ~/org/tasks.org
 
 - 2025
-  ** 2025-W50 \*** 2025-12-21 Sun \***\* TODO Coding :skill:code:project:
+  **2025-W50 \*** 2025-12-21 Sun \***\* TODO Coding :skill:code:project:
   \*\*** TODO Music composition :learn:music:
   \*\*\*\* TODO DSI :family:
 
-* [ ] Planning time
-* [ ] What went fine
-* [ ] What went wrong
-* [ ] What can be improved
+- [ ] Planning time
+- [ ] What went fine
+- [ ] What went wrong
+- [ ] What can be improved
       **\* 2025-12-20 Sat
       \*\*** TODO Music learning :learn:music: \***_ TODO Music composition :learn:music:
       _** 2025-12-19 Fri \***\* TODO Gym :health:gym:
@@ -85,10 +85,10 @@ cat ~/org/tasks.org
       **\* 2025-12-14 Sun
       \*\*** TODO Coding :skill:code:project: \***\* TODO Music composition :learn:music:
       \*\*** TODO DSI :family:
-* [ ] Planning time
-* [ ] What went fine
-* [ ] What went wrong
-* [ ] What can be improved
+- [ ] Planning time
+- [ ] What went fine
+- [ ] What went wrong
+- [ ] What can be improved
       ... File continues with previous entries that should not be modified
 
 Notice that on thursday there was already a dentist appointment. The system will just aggregate the tasks of that day, preserving the existing task.

@@ -1,10 +1,7 @@
 """Date range model for ord-plan."""
 
-from dataclasses import dataclass
-from dataclasses import field
-from datetime import datetime
-from datetime import timedelta
-from typing import List
+from dataclasses import dataclass, field
+from datetime import datetime, timedelta
 
 
 @dataclass
@@ -13,7 +10,7 @@ class DateRange:
 
     start_date: datetime
     end_date: datetime
-    warnings: List[str] = field(default_factory=list)
+    warnings: list[str] = field(default_factory=list)
 
     def __post_init__(self) -> None:
         """Validate date range after initialization."""

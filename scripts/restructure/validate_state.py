@@ -10,10 +10,7 @@ import sys
 from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
+from typing import Any, Optional
 
 
 class RepositoryState(Enum):
@@ -32,9 +29,10 @@ class ValidationResult:
 
     success: bool
     message: str
-    details: Dict[str, Any] = None
+    details: dict[str, Any] | None = None
 
     def __post_init__(self):
+        """Initialize details dict if None."""
         if self.details is None:
             self.details = {}
 
@@ -335,7 +333,7 @@ class RepositoryStateValidator:
 
     def validate_complete_state(
         self, target_state: RepositoryState
-    ) -> List[ValidationResult]:
+    ) -> list[ValidationResult]:
         """Perform comprehensive validation for a target state.
 
         Args:
@@ -393,7 +391,7 @@ class RepositoryStateValidator:
 
         return results
 
-    def generate_validation_report(self, results: List[ValidationResult]) -> str:
+    def generate_validation_report(self, results: list[ValidationResult]) -> str:
         """Generate a human-readable validation report.
 
         Args:

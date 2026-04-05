@@ -81,7 +81,7 @@ def lint(c):
     print("🎨 Running linting checks...")
 
     # Run individual linting tasks
-    checks = [black, isort, flake8, mypy, darglint]
+    checks = [ruff_check, ruff_format, mypy, pyrefly, deadcode]
     for check in checks:
         if not check(c):
             print(f"❌ {check.__name__} check failed!")
@@ -98,7 +98,7 @@ def style(c):
     print("🎨 Running style checks...")
 
     # Run individual style checks
-    checks = [black, isort, flake8, mypy, darglint]
+    checks = [ruff_check, ruff_format, mypy, pyrefly, deadcode]
     for check in checks:
         if not check(c):
             print(f"❌ {check.__name__} check failed!")
@@ -203,43 +203,33 @@ def mypy(c):
 
 
 @task
-def black(c):
-    """Run Black formatting check."""
+def ruff_check(c):
+    """Run Ruff linting."""
+    setup_python_path()
+    return run_command(c, "uv run ruff check src/ tests/", "Running Ruff linting")
+
+
+@task
+def ruff_format(c):
+    """Run Ruff formatting check."""
     setup_python_path()
     return run_command(
-        c, "uv run black --check src/ tests/", "Running Black formatting check"
+        c, "uv run ruff format --check src/ tests/", "Running Ruff formatting check"
     )
 
 
 @task
-def isort(c):
-    """Run import sorting check."""
+def pyrefly(c):
+    """Run pyrefly type checking."""
     setup_python_path()
-    return run_command(
-        c, "uv run isort --check-only src/ tests/", "Running import sorting check"
-    )
+    return run_command(c, "uv run pyrefly check src/", "Running pyrefly type checking")
 
 
 @task
-def flake8(c):
-    """Run Flake8 linting."""
+def deadcode(c):
+    """Run deadcode check."""
     setup_python_path()
-    return run_command(
-        c,
-        "uv run flake8 src/ tests/",
-        "Running Flake8 linting",
-    )
-
-
-@task
-def darglint(c):
-    """Run docstring linting."""
-    setup_python_path()
-    return run_command(
-        c,
-        'uv run darglint --ignore-raise "FileNotFoundError,PermissionError,OSError,BadParameter" src/',
-        "Running docstring linting",
-    )
+    return run_command(c, "uv run deadcode src/", "Running deadcode check")
 
 
 @task
@@ -263,7 +253,7 @@ def docs_serve(c):
 
 
 @task
-def clean(c):
+def clean(_):
     """Clean build artifacts and cache."""
     setup_python_path()
     print("🧹 Cleaning...")
@@ -271,7 +261,7 @@ def clean(c):
     commands = [
         "find . -type d -name '__pycache__' -exec rm -rf {} +",
         "find . -type f -name '*.pyc' -delete",
-        "rm -rf .coverage htmlcov/ .pytest_cache/ .mypy_cache/",
+        "rm -rf .coverage htmlcov/ .pytest_cache/ .mypy_cache/ .ruff_cache/",
         "rm -rf docs/_build/",
     ]
 
@@ -289,7 +279,7 @@ def install_deps(c):
 
     commands = [
         "pip install fabric==3.2.2 invoke==2.2.0",
-        "pip install pytest pytest-cov black isort flake8 mypy darglint safety",
+        "pip install pytest pytest-cov ruff mypy pyrefly deadcode safety",
         "pip install sphinx sphinx-rtd-theme myst-parser",
     ]
 
@@ -318,7 +308,7 @@ def workflow_logs(c, run_id=None):
             warn=True,
         )
         if result.return_code != 0:
-            print(f"❌ Failed to fetch workflow run ID")
+            print("❌ Failed to fetch workflow run ID")
             if result.stderr:
                 print(f"STDERR:\n{result.stderr}")
             return False
@@ -331,7 +321,7 @@ def workflow_logs(c, run_id=None):
     cmd = f"gh run view {run_id} --log"
     result = c.run(cmd, hide=False, warn=True)
     if result.return_code != 0:
-        print(f"❌ Failed to retrieve workflow logs")
+        print("❌ Failed to retrieve workflow logs")
         if result.stderr:
             print(f"STDERR:\n{result.stderr}")
         return False
@@ -339,7 +329,7 @@ def workflow_logs(c, run_id=None):
 
 
 @task
-def help(c):
+def help(_):
     """Show usage examples and task categories."""
     setup_python_path()
     print("🚀 Invoke Tasks Usage Guide\n")
@@ -347,11 +337,11 @@ def help(c):
     print("📋 TASK CATEGORIES:\n")
 
     print("🔧 INDIVIDUAL CHECKS:")
-    print("  invoke black          # Just Black formatting")
-    print("  invoke isort          # Just import sorting")
-    print("  invoke flake8         # Just Flake8 linting")
+    print("  invoke ruff-check     # Just Ruff linting")
+    print("  invoke ruff-format    # Just Ruff formatting")
     print("  invoke mypy           # Just type checking")
-    print("  invoke darglint       # Just docstring linting")
+    print("  invoke pyrefly        # Just pyrefly type checking")
+    print("  invoke deadcode       # Just deadcode check")
     print("  invoke security       # Just security checks")
     print("  invoke pre-commit     # Run all pre-commit hooks")
     print("  invoke install-hooks  # Install pre-commit and git hooks")
@@ -367,9 +357,13 @@ def help(c):
 
     print("📦 COMPOSITE CHECKS:")
     print("  invoke lint           # All linting checks")
-    print("                        # (black, isort, flake8, mypy, darglint)")
+    print(
+        "                        # (ruff-check, ruff-format, mypy, pyrefly, deadcode)"
+    )
     print("  invoke style          # All style checks")
-    print("                        # (black, isort, flake8, mypy, darglint)")
+    print(
+        "                        # (ruff-check, ruff-format, mypy, pyrefly, deadcode)"
+    )
     print("  invoke pre-commit     # All pre-commit hooks (alternative to lint/style)")
     print("  invoke install-hooks  # Install project git hooks")
     print("  invoke all            # All checks (tests, linting, security)")
@@ -389,7 +383,7 @@ def help(c):
     print("💡 QUICK EXAMPLES:")
     print("  invoke help           # Show this help")
     print("  invoke --list         # List all available tasks")
-    print("  invoke black && invoke flake8  # Run specific checks in sequence")
+    print("  invoke ruff-check && invoke mypy  # Run specific checks in sequence")
     print("  invoke lint            # Run all linting checks")
     print("  invoke pre-commit      # Run pre-commit hooks (alternative)")
     print("  invoke install-hooks   # Install git hooks")
@@ -404,12 +398,13 @@ def all(c, verbose=False, use_pre_commit=False):
 
     Options:
         verbose (bool): Show detailed output for each section (default: False)
-        use_pre_commit (bool): Use pre-commit hooks instead of individual linting tasks (default: False)
+        use_pre_commit (bool): Use pre-commit hooks instead of individual
+            linting tasks (default: False)
     """
     setup_python_path()
 
-    def section(title, check_func, quiet_desc):
-        """Helper to run a section with appropriate verbosity."""
+    def section(title, check_func, _quiet_desc):
+        """Run a section with appropriate verbosity."""
         print(f"\n{title}")
         print("-" * 50)
 

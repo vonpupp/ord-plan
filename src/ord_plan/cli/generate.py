@@ -1,10 +1,6 @@
 """Generate command for ord-plan."""
 
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Tuple
+from typing import Any, Optional
 
 import click
 
@@ -14,14 +10,17 @@ from ..parsers.yaml_parser import YamlParser
 from ..services.date_service import DateService
 from ..services.event_service import EventService
 from ..services.file_service import FileService
-from ..utils.validators import validate_cron_expression
-from ..utils.validators import validate_date_format
-from ..utils.validators import validate_file_path
-from ..utils.validators import validate_file_readable
-from ..utils.validators import validate_file_writable
+from ..utils.validators import (
+    validate_cron_expression,
+    validate_date_format,
+    validate_file_path,
+    validate_file_readable,
+    validate_file_writable,
+)
 
 
-@click.command(epilog="""
+@click.command(
+    epilog="""
   # Basic usage with default date range (current week)
   ord-plan generate --rules my-events.yaml --file tasks.org
 
@@ -33,7 +32,8 @@ from ..utils.validators import validate_file_writable
   ord-plan generate --rules events.yaml --from today --to "+30 days"
 
   # Use multiple rules files
-  ord-plan generate --rules holidays.yaml --rules weekly.yaml --from today --to "+7 days"
+  ord-plan generate --rules holidays.yaml --rules weekly.yaml --from today \
+      --to "+7 days"
 
   # Override date warnings (use with caution)
   ord-plan generate --rules events.yaml --from 2024-01-01 --to 2024-12-31 --force
@@ -47,7 +47,8 @@ Date Formats:
   - Offset: +N days (e.g., +7 days for one week from now)
 
  For detailed help with examples, visit: https://github.com/vonpupp/ord-plan
-""")
+"""
+)
 @click.option(
     "--rules",
     required=True,
@@ -121,7 +122,7 @@ week/month/year, +N days
     Useful for testing and previewing output before committing changes.""",
 )
 def generate(
-    rules: Tuple[str, ...],
+    rules: tuple[str, ...],
     format: Optional[str],
     file: Optional[str],
     from_date: Optional[str],
@@ -137,7 +138,6 @@ def generate(
     The output preserves existing content and adds new events in a structured
     date hierarchy: Year > Week > Date > Events.
     """
-
     # Enhanced file path validation for all rules files
     for rules_file in rules:
         path_errors = validate_file_path(rules_file)
@@ -220,7 +220,7 @@ def generate(
     # Enhanced YAML parsing with schema validation for multiple files
     from ..models.event_rule import EventRule
 
-    all_event_rules: List[EventRule] = []
+    all_event_rules: list[EventRule] = []
     all_configs = []
 
     try:
@@ -277,7 +277,7 @@ def generate(
     # Parse enhanced configuration with format file merge
     try:
         # Merge all rules configs (format config takes precedence)
-        merged_rules_config: Dict[str, Any] = {}
+        merged_rules_config: dict[str, Any] = {}
         for cfg in all_configs:
             if cfg:
                 merged_rules_config.update(cfg)
