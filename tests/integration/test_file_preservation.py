@@ -28,9 +28,9 @@ class TestFilePreservation:
                     "--file",
                     target_file,
                     "--from",
-                    "2026-01-01",
+                    "2026-12-01",
                     "--to",
-                    "2026-01-07",
+                    "2026-12-07",
                 ],
             )
 
@@ -64,9 +64,9 @@ class TestFilePreservation:
                     "--file",
                     target_file,
                     "--from",
-                    "2026-01-01",
+                    "2026-12-01",
                     "--to",
-                    "2026-01-07",
+                    "2026-12-07",
                 ],
             )
 
@@ -92,7 +92,7 @@ class TestFilePreservation:
         runner = CliRunner()
         result = runner.invoke(
             generate,
-            ["--rules", str(rules_file), "--from", "2026-01-01", "--to", "2026-01-07"],
+            ["--rules", str(rules_file), "--from", "2026-12-01", "--to", "2026-12-07"],
         )
 
         assert result.exit_code == 0
@@ -115,9 +115,9 @@ class TestFilePreservation:
                     "--file",
                     nested_file,
                     "--from",
-                    "2026-01-01",
+                    "2026-12-01",
                     "--to",
-                    "2026-01-07",
+                    "2026-12-07",
                 ],
             )
 
@@ -150,9 +150,9 @@ class TestFilePreservation:
                     "--file",
                     target_file,
                     "--from",
-                    "2026-01-01",
+                    "2026-12-01",
                     "--to",
-                    "2026-01-07",
+                    "2026-12-07",
                 ],
             )
 
@@ -187,9 +187,9 @@ class TestFilePreservation:
                     "--file",
                     invalid_file,
                     "--from",
-                    "2026-01-01",
+                    "2026-12-01",
                     "--to",
-                    "2026-01-07",
+                    "2026-12-07",
                 ],
             )
 
@@ -213,9 +213,9 @@ class TestFilePreservation:
                     "--file",
                     target_file,
                     "--from",
-                    "2026-01-01",
+                    "2026-12-01",
                     "--to",
-                    "2026-06-30",
+                    "2026-12-31",
                 ],
             )
 
@@ -227,7 +227,7 @@ class TestFilePreservation:
                 content = f.read()
 
             # Should include the event with body
-            assert "FISCAL City hall documents submission / 06-01" in content
+            assert "FISCAL City hall documents submission / 12-01" in content
 
             # Should preserve multiline formatting
             assert "Email: contact@cityhall.example.gov" in content
@@ -251,7 +251,7 @@ class TestFilePreservation:
             rules_file = get_fixture_path("test_cron_boundary.yaml")
             target_file = os.path.join(temp_dir, "boundary_output.org")
 
-            # 2026-01-05 is a Monday
+            # 2026-12-07 is a Monday
             runner = CliRunner()
             result = runner.invoke(
                 generate,
@@ -261,9 +261,9 @@ class TestFilePreservation:
                     "--file",
                     target_file,
                     "--from",
-                    "2026-01-05",
+                    "2026-12-07",
                     "--to",
-                    "2026-01-11",
+                    "2026-12-13",
                 ],
             )
 
@@ -276,4 +276,4 @@ class TestFilePreservation:
 
             # Should include the Monday midnight task on the start date
             assert "Monday Midnight Task" in content
-            assert "2026-01-05 Mon" in content
+            assert "2026-12-07 Mon" in content

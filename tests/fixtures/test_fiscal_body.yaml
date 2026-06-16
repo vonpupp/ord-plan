@@ -17,8 +17,8 @@ events:
   - title: "FISCAL TAX Vehicle (print docs) / 10-01"
     cron: "0 0 1 10 *"
     tags: ["fiscal"]
-  - title: "FISCAL City hall documents submission / 06-01"
-    cron: "0 0 1 6 *"
+  - title: "FISCAL City hall documents submission / 12-01"
+    cron: "0 0 1 12 *"
     tags: ["fiscal"]
     body: |
       Email: contact@cityhall.example.gov

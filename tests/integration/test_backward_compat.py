@@ -47,9 +47,9 @@ class TestBackwardCompatibility:
                     "--rules",
                     str(rules_file),
                     "--from",
-                    "2026-01-01",
+                    "2026-12-01",
                     "--to",
-                    "2026-01-31",
+                    "2026-12-31",
                 ],
             )
 
@@ -83,9 +83,9 @@ class TestBackwardCompatibility:
                     "--rules",
                     str(rules_file),
                     "--from",
-                    "2026-01-01",
+                    "2026-12-01",
                     "--to",
-                    "2026-01-31",
+                    "2026-12-31",
                 ],
             )
 
@@ -127,9 +127,9 @@ class TestBackwardCompatibility:
                     "--rules",
                     str(rules_file),
                     "--from",
-                    "2026-01-01",
+                    "2026-12-01",
                     "--to",
-                    "2026-01-31",
+                    "2026-12-31",
                 ],
             )
 
