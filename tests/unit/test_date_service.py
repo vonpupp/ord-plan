@@ -1,7 +1,6 @@
 """Tests for DateService."""
 
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from ord_plan.services.date_service import DateService
 

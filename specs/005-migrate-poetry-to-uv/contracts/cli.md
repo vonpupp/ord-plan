@@ -123,6 +123,7 @@ grep -r "poetry" src/ --exclude-dir=__pycache__  # Should find nothing
 ## Sign-Off
 
 Migration is complete when:
+
 - [ ] All 5 stages are implemented
 - [ ] All tests pass (`invoke pytest`)
 - [ ] All linting passes (`invoke lint`)

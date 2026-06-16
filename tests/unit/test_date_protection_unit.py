@@ -1,7 +1,6 @@
 """Tests for date protection functionality."""
 
-from datetime import datetime
-from datetime import timedelta
+from datetime import datetime, timedelta
 from pathlib import Path
 
 from click.testing import CliRunner
@@ -106,8 +105,10 @@ class TestDateProtection:
         assert any("future" in warning for warning in date_range.warnings)
 
     def test_one_year_future_no_warning(self) -> None:
-        """Test that dates exactly 1 year in future don't
-        trigger distant future warning."""
+        """Test that dates exactly 1 year in future don't.
+
+        trigger distant future warning.
+        """
         now = datetime.now()
 
         # Exactly 1 year in future
@@ -171,7 +172,7 @@ class TestDateProtection:
         assert not date_range.has_distant_future_dates()
 
     def test_date_range_summary_confirmation(
-        self, runner: CliRunner, tmp_path: Path
+        self, _runner: CliRunner, _tmp_path: Path
     ) -> None:
         """Test date range summary for user confirmation."""
         from unittest.mock import patch
@@ -192,7 +193,7 @@ class TestDateProtection:
             call_args = mock_confirm.call_args
             assert len(call_args[0]) > 0  # Some message was passed to confirm
 
-    def test_user_confirmation_prompt(self, runner: CliRunner) -> None:
+    def test_user_confirmation_prompt(self, _runner: CliRunner) -> None:
         """Test enhanced user confirmation prompt."""
         from unittest.mock import patch
 

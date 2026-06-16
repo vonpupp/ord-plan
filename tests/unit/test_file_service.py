@@ -16,7 +16,7 @@ class TestFileService:
 
     def test_write_org_content_to_file(self) -> None:
         """Test writing content to a file."""
-        content = "* 2025\n** 2025-W01\n*** 2025-01-01 Tue\n**** TODO Test Event"
+        content = "* 2025\n** 2024-W01\n*** 2025-01-01 Tue\n**** TODO Test Event"
 
         with tempfile.NamedTemporaryFile(mode="w", delete=False) as f:
             temp_path = f.name
@@ -46,7 +46,7 @@ class TestFileService:
                 assert f.read() == content
 
     def test_write_org_content_to_stdout(
-        self, capsys: pytest.CaptureFixture[str]
+        self, _capsys: pytest.CaptureFixture[str]
     ) -> None:
         """Test writing content to stdout."""
         content = "* Test Content"
@@ -84,7 +84,7 @@ class TestFileService:
 
             # Create existing file with content
             existing_content = """* 2025
-** 2025-W01
+** 2024-W01
 *** 2025-01-01 Wed
 **** TODO Existing Event
 """
@@ -193,7 +193,7 @@ class TestFileService:
     def test_get_file_content_stats_existing_file(self) -> None:
         """Test getting stats for existing file."""
         content = """* 2025
-** 2025-W01
+** 2024-W01
 *** 2025-01-01 Wed
 **** TODO Event 1
 **** TODO Event 2

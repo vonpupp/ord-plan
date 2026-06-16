@@ -3,12 +3,9 @@
 Auto-generated from all feature plans. Last updated: 2025-12-18
 
 ## Active Technologies
-- Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, Poetry for dependency management (004-add-format-flag)
-- Files (YAML configuration and org-mode output) (004-add-format-flag)
-- Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, UV for dependency management (migrating from Poetry) (005-migrate-poetry-to-uv)
-- Files (template generation output - org-mode and JSON) (005-migrate-poetry-to-uv)
 
-- Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), Poetry for dependency management (001-generate-org)
+- Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1),
+   PyYAML, UV for dependency management
 
 ## Project Structure
 
@@ -25,11 +22,14 @@ docs/
 invoke [SINGLE AUTHORIZED TESTING COMMAND]
 ruff check .
 
-### Common Invoke Commands:
+### Common Invoke Commands
 
 - `invoke pytest` - Run all tests with coverage
-- `invoke lint` - Run all linting checks (black, isort, flake8, mypy, darglint)
-- `invoke pre-commit-install` - Install pre-commit hooks
+- `invoke lint` - Run all linting checks (ruff-check, ruff-format,
+   mypy, pyrefly, deadcode)
+- `invoke install-hooks` - Install pre-commit and git hooks
+- `invoke install-hooks --use-symlinks` - Install hooks as symlinks
+   instead of copying
 - `invoke pre-commit` - Run all pre-commit hooks on all files
 - `invoke help` - Show detailed usage examples
 - `invoke --list` - List all available tasks
@@ -38,14 +38,15 @@ ruff check .
 
 Python 3.7+ (as specified in pyproject.toml): Follow standard conventions
 
-### flake8 Standards
+### Ruff Standards
 
-All code MUST pass flake8 linting with the following objective standards:
+All code MUST pass ruff linting and formatting with the following standards:
 
-**Line Length (B950)**: Maximum 88 characters per line
+**Line Length**: Maximum 88 characters per line
 
 - All lines must be 88 characters or less
-- Use line continuations, string concatenation, or parameter unpacking for longer lines
+- Use line continuations, string concatenation, or parameter
+   unpacking for longer lines
 
 **Docstring Style (D codes)**: Follow PEP 257 docstring conventions
 
@@ -60,7 +61,7 @@ All code MUST pass flake8 linting with the following objective standards:
 - Third-party imports second
 - Local imports third
 - One import per line, grouped by type
-- Use isort for automatic formatting
+- Use ruff for automatic formatting
 
 **Exception Handling (B014)**: No redundant exception types
 
@@ -93,36 +94,46 @@ All code MUST pass flake8 linting with the following objective standards:
 
 ## Testing Patterns
 
-All test data MUST be centralized in `tests/fixtures/` directory. Use the fixture helper functions in `tests/fixtures.py`:
+All test data MUST be centralized in `tests/fixtures/` directory. Use
+the fixture helper functions in `tests/fixtures.py`:
 
 - `get_fixture_path(filename)` - Get absolute path to fixture file
 - `read_fixture(filename)` - Read fixture contents as string
 - `write_to_fixture(filename, content)` - Write temporary fixtures
 - `list_fixtures()` - List all available fixture files
 
-Fixture naming convention: `test_{purpose}_{scenario}.{ext}` (e.g., `test_rules_basic.yaml`, `existing_content.org`).
+Fixture naming convention: `test_{purpose}_{scenario}.{ext}` (e.g.,
+`test_rules_basic.yaml`, `existing_content.org`).
 
 No inline test data or scattered test files allowed in the codebase.
 
 ### File Management Rules
 
-**NO TEST FILES IN PROJECT ROOT**: Test and debug files MUST be created only in `tests/fixtures/` directory or `tmp/` directories. Never create test files in the project root directory. Any test files outside designated locations must be immediately removed.
+**NO TEST FILES IN PROJECT ROOT**: Test and debug files MUST be created
+only in `tests/fixtures/` directory or `tmp/` directories. Never create
+test files in the project root directory. Any test files outside
+designated locations must be immediately removed.
 
-- **Fixtures Location**: All test data belongs in `tests/fixtures/` using proper naming conventions
-- **Temporary Files**: Quick tests may use `/tmp/` or project's temporary directories
-- **Clean Up Required**: Any test/debug files created during development must be removed before commits
-- **Exception**: Files in `tests/fixtures/` are version-controlled and intended for testing
+- **Fixtures Location**: All test data belongs in `tests/fixtures/`
+  using proper naming conventions
+- **Temporary Files**: Quick tests may use `/tmp/` or project's
+  temporary directories
+- **Clean Up Required**: Any test/debug files created during
+  development must be removed before commits
+- **Exception**: Files in `tests/fixtures/` are version-controlled and
+  intended for testing
 
 ## Pre-commit Hooks
 
-Pre-commit hooks provide automated code quality checks before commits. They ensure consistent code style and catch common issues early.
+Pre-commit hooks provide automated code quality checks before commits.
+They ensure consistent code style and catch common issues early.
 
 ### Installation
 
-Install pre-commit hooks using invoke:
+Install pre-commit hooks and git hooks using invoke:
 
 ```bash
-invoke pre-commit-install
+invoke install-hooks  # Install pre-commit framework and project git hooks
 ```
 
 ### Manual Usage
@@ -143,33 +154,42 @@ uv run pre-commit run --all-files
 
 You can also run individual checks manually:
 
-- `invoke black` - Black formatting check
-- `invoke isort` - Import sorting check
-- `invoke flake8` - Flake8 linting
+- `invoke ruff-check` - Ruff linting check
+- `invoke ruff-format` - Ruff formatting check
 - `invoke mypy` - Type checking
-- `invoke darglint` - Docstring linting (manual stage only)
+- `invoke pyrefly` - Pyrefly type checking
+- `invoke deadcode` - Deadcode check
 
 ### Hook Configuration
 
-Pre-commit hooks are configured in `.pre-commit-config.yaml` and use uv to ensure all tools run in the correct virtual environment. The hooks include:
+Pre-commit hooks are configured in `.pre-commit-config.yaml` and use uv
+to ensure all tools run in the correct virtual environment. The hooks
+include:
 
-- **Formatting**: Black, isort
-- **Linting**: Flake8, darglint, mypy
-- **File checks**: End-of-file-fixer, trailing-whitespace, check-added-large-files
-- **Config validation**: check-toml, check-yaml
-- **Code modernization**: pyupgrade
+- **Formatting**: Ruff
+- **Linting**: Ruff, mypy, pyrefly, deadcode
+- **File checks**: End-of-file-fixer, trailing-whitespace,
+  check-added-large-files, check-ast
+- **Config validation**: check-toml, check-yaml, check-json
+- **Documentation**: markdownlint, blacken-docs
+- **Security**: bandit
+- **Commit messages**: gitlint
+- **Shell scripts**: shellcheck
 
 ### Pre-commit vs Invoke
 
-- **Pre-commit hooks**: Run automatically before commits, focus on file-level changes
-- **Invoke tasks**: Run manually, provide comprehensive project-wide checks and testing
-- **Both methods** use the same underlying tools and configuration for consistency
+- **Pre-commit hooks**: Run automatically before commits, focus on
+  file-level changes
+- **Invoke tasks**: Run manually, provide comprehensive project-wide
+  checks and testing
+- **Both methods** use the same underlying tools and configuration for
+  consistency
 
 ## Recent Changes
-- 005-migrate-poetry-to-uv: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, UV for dependency management (migrating from Poetry)
-- 004-add-format-flag: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), PyYAML, Poetry for dependency management
 
-- 001-generate-org: Added Python 3.7+ (as specified in pyproject.toml) + Click (>=8.0.1), Poetry for dependency management
+- 2026-01-04: Replaced black/isort/flake8/darglint with ruff, added
+  pyrefly and deadcode, removed commitizen, updated CI workflow and
+  pre-commit hooks
 
 <!-- MANUAL ADDITIONS START -->
 <!-- MANUAL ADDITIONS END -->

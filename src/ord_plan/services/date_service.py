@@ -1,9 +1,6 @@
 """Date service for handling date ranges and validation."""
 
-from datetime import datetime
-from datetime import timedelta
-from typing import List
-from typing import Tuple
+from datetime import datetime, timedelta
 from typing import Union
 
 import click
@@ -44,7 +41,7 @@ class DateService:
         return DateRange(start_date=from_date, end_date=to_date)
 
     @staticmethod
-    def _get_default_week_range() -> Tuple[datetime, datetime]:
+    def _get_default_week_range() -> tuple[datetime, datetime]:
         """Get default date range (current Monday to Sunday)."""
         now = datetime.now()
 
@@ -135,7 +132,7 @@ class DateService:
         # Handle "+N days" format
         if date_str.startswith("+") and "days" in date_str_lower:
             try:
-                days_str = date_str_lower.split()[1]
+                days_str = date_str_lower.split()[0][1:]
                 days = int(days_str)
                 return datetime.now() + timedelta(days=days)
             except (ValueError, IndexError) as e:
@@ -279,7 +276,8 @@ class DateService:
         Returns:
             True if user confirms, False otherwise
         """
-        return click.confirm(message, default=default)
+        result: bool = click.confirm(message, default=default)
+        return result
 
     @staticmethod
     def confirm_date_range(date_range: DateRange) -> bool:
@@ -310,7 +308,7 @@ class DateService:
         )
 
     @staticmethod
-    def check_date_protection_violations(date_range: DateRange) -> List[str]:
+    def check_date_protection_violations(date_range: DateRange) -> list[str]:
         """Check for date protection violations without user interaction.
 
         Args:

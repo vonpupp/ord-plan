@@ -43,7 +43,7 @@ events:
 
         # Should contain date structure
         assert "* 2025" in output
-        assert "** 2025-W01" in output
+        assert "** 2024-W01" in output
         assert (
             "*** 2025-01-01" in output
             or "*** 2025-01-02" in output

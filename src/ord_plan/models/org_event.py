@@ -1,8 +1,6 @@
 """Org-mode event model for ord-plan."""
 
-from dataclasses import dataclass
-from dataclasses import field
-from typing import List
+from dataclasses import dataclass, field
 from typing import Optional
 
 
@@ -13,7 +11,7 @@ class OrgEvent:
     title: str
     level: int = 4  # Default headline level for events
     todo_state: Optional[str] = None
-    tags: List[str] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
     description: Optional[str] = None
     body: Optional[str] = None
 

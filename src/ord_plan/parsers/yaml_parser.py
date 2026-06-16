@@ -1,9 +1,6 @@
 """YAML parser for ord-plan rules files."""
 
 from typing import Any
-from typing import Dict
-from typing import List
-from typing import Tuple
 
 import yaml
 
@@ -14,7 +11,7 @@ class YamlParser:
     """Parser for YAML rules files."""
 
     @staticmethod
-    def parse_rules_file(file_path: str) -> Dict[str, Any]:
+    def parse_rules_file(file_path: str) -> dict[str, Any]:
         """Parse YAML rules file.
 
         Args:
@@ -24,12 +21,12 @@ class YamlParser:
             Dictionary containing the parsed configuration
         """
         with open(file_path) as f:
-            content: Dict[str, Any] = yaml.safe_load(f) or {}
+            content: dict[str, Any] = yaml.safe_load(f) or {}
 
         return content
 
     @staticmethod
-    def parse_format_file(file_path: str) -> Dict[str, Any]:
+    def parse_format_file(file_path: str) -> dict[str, Any]:
         """Parse YAML format file containing only formatting options.
 
         Args:
@@ -44,7 +41,7 @@ class YamlParser:
         """
         try:
             with open(file_path) as f:
-                content: Dict[str, Any] = yaml.safe_load(f) or {}
+                content: dict[str, Any] = yaml.safe_load(f) or {}
         except yaml.YAMLError as e:
             raise yaml.YAMLError(f"Invalid YAML in {file_path}: {e}") from e
         except Exception as e:
@@ -53,7 +50,7 @@ class YamlParser:
         return content
 
     @staticmethod
-    def validate_format_schema(format_config: Dict[str, Any]) -> List[str]:
+    def validate_format_schema(format_config: dict[str, Any]) -> list[str]:
         """Validate format file schema.
 
         Format files contain only formatting options, no events section.
@@ -95,7 +92,7 @@ class YamlParser:
         return errors
 
     @staticmethod
-    def parse_event_rules(config: Dict[str, Any]) -> List[EventRule]:
+    def parse_event_rules(config: dict[str, Any]) -> list[EventRule]:
         """Parse event rules from configuration.
 
         Args:
@@ -163,8 +160,8 @@ class YamlParser:
 
     @staticmethod
     def validate_yaml_schema(
-        config: Dict[str, Any], require_headers: bool = False
-    ) -> List[str]:
+        config: dict[str, Any], require_headers: bool = False
+    ) -> list[str]:
         """Validate YAML schema with detailed error messages.
 
         Args:
@@ -236,9 +233,7 @@ class YamlParser:
         return errors
 
     @staticmethod
-    def _validate_event_schema(
-        event_config: Any, index: int
-    ) -> List[str]:  # noqa: C901
+    def _validate_event_schema(event_config: Any, index: int) -> list[str]:  # noqa: C901
         """Validate a single event configuration.
 
         Args:
@@ -345,7 +340,7 @@ class YamlParser:
     @staticmethod
     def parse_and_validate(
         file_path: str, require_headers: bool = False
-    ) -> Tuple[Dict[str, Any], List[str]]:
+    ) -> tuple[dict[str, Any], list[str]]:
         """Parse YAML file and validate schema with comprehensive error reporting.
 
         Args:

@@ -13,16 +13,19 @@
 **Decision**: Format files will contain only formatting configuration keys (no `events` section). The same validation logic will be reused from `yaml_parser.py` but with relaxed requirements for format files.
 
 **Rationale**:
+
 - Reuses existing validation infrastructure
 - Format files are simpler subset of combined files
 - Keeps validation logic in one place
 - Prevents users from accidentally putting events in format files
 
 **Alternatives Considered**:
+
 - Separate validation logic for format files: Rejected because it duplicates validation code
 - Allow events in format files and ignore them: Rejected because it creates confusion about purpose
 
 **Implementation**:
+
 - Add a new method `parse_format_file()` in `YamlParser` that validates only formatting keys
 - Reuse existing date format validation from `Configuration.validate_date_formats()`
 - New validation rules:
@@ -40,22 +43,23 @@
 **Decision**: Add a `merge_format_config()` method to `Configuration` class that performs deep merge with format file taking precedence over rules file values.
 
 **Rationale**:
+
 - Centralizes merging logic in one place
 - Type-safe with existing Configuration dataclass
 - Easy to test independently
 - Clear precedence: format file > rules file > defaults
 
 **Alternatives Considered**:
+
 - Merge in generate.py command handler: Rejected because mixing business logic with CLI code
 - Use dictionary merging at parser level: Rejected because loses type safety and validation
 
 **Implementation**:
+
 ```python
 @classmethod
 def merge_format_config(
-    cls,
-    rules_config: Optional[Dict[str, Any]],
-    format_config: Optional[Dict[str, Any]]
+    cls, rules_config: Optional[Dict[str, Any]], format_config: Optional[Dict[str, Any]]
 ) -> "Configuration":
     """Merge formatting configs with format_file taking precedence."""
     merged = {}
@@ -85,12 +89,14 @@ def merge_format_config(
 | Neither format nor rules provides option | Use Configuration default values |
 
 **Rationale**:
+
 - Graceful degradation with clear user feedback
 - Warnings instead of errors for non-critical issues
 - Consistent with existing error handling patterns
 - Prevents silent failures while being lenient
 
 **Alternatives Considered**:
+
 - Strict validation (error on unknown keys): Rejected because limits future extensibility
 - Silent ignore of all unknown keys: Rejected because hides user mistakes
 
@@ -101,17 +107,20 @@ def merge_format_config(
 **Question**: What are the default values when formatting options are not provided?
 
 **Decision**: Use existing Configuration class defaults:
+
 - `reverse_datetree_year_format`: "%Y"
 - `reverse_datetree_week_format`: "%Y-W%V"`
 - `reverse_datetree_date_format`: "%Y-%m-%d %a"`
 - `reverse_datetree_use_week_tree`: true
 
 **Rationale**:
+
 - Maintains backward compatibility
 - Existing behavior is tested and documented
 - Defaults are sensible for org-mode workflows
 
 **Alternatives Considered**:
+
 - Require all formatting options: Rejected because breaks backward compatibility
 - Different defaults for format files vs rules files: Rejected because confusing for users
 
@@ -124,23 +133,26 @@ def merge_format_config(
 **Decision**: Add optional `--format` parameter to `generate()` command using Click's `Path` type, with same validation pattern as `--rules` flag.
 
 **Rationale**:
+
 - Consistent with existing flag patterns
 - Click's Path type provides automatic validation
 - Keeps changes minimal and focused
 
 **Implementation**:
-```python
+
+Add a new `--format` option using Click's `Path` type, which provides
+automatic validation that the file exists and is readable:
+
+```text
 @click.option(
     "--format",
     type=click.Path(exists=True, readable=True),
-    help="""Path to YAML format configuration file.
-
-    Contains only formatting options (REVERSE_DATETREE_WEEK_FORMAT, etc.).
-    Format file options take precedence over rules file options."""
+    help="Path to YAML format configuration file.",
 )
 ```
 
 **Alternatives Considered**:
+
 - New `--format-config` flag name: Rejected because longer, `--format` is clear
 - Make format flag required: Rejected because breaks backward compatibility
 
@@ -153,11 +165,13 @@ def merge_format_config(
 **Decision**: Validate format file immediately after rules file, before any processing. Combine errors from both files in single validation report.
 
 **Rationale**:
+
 - Fails fast on configuration errors
 - Provides complete error feedback in one pass
 - Consistent with existing validation flow
 
 **Implementation**:
+
 ```python
 # Parse rules file first
 rules_config, rules_errors = YamlParser.parse_and_validate(rules)
@@ -176,6 +190,7 @@ if all_errors:
 ```
 
 **Alternatives Considered**:
+
 - Validate files independently with separate error reports: Rejected because increases user friction
 - Delay format validation until merge time: Rejected because wastes time on invalid config
 
@@ -220,12 +235,14 @@ After:
 ## Backward Compatibility
 
 **Ensuring backward compatibility**:
+
 - `--format` flag is optional
 - Existing commands without `--format` work unchanged
 - Combined rules files continue to work
 - No changes to default behavior or output format
 
 **Test strategy**:
+
 - Keep all existing tests passing
 - Add new tests for format file scenarios
 - Add tests that verify combined files still work
@@ -238,6 +255,7 @@ None. All research decisions made.
 ## Next Steps
 
 Proceed to Phase 1: Design & Contracts
+
 - Create data-model.md with entity definitions
 - Create CLI contract documentation
 - Create quickstart.md with usage examples

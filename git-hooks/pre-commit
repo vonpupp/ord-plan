@@ -1,0 +1,26 @@
+#!/usr/bin/env bash
+# Pre-commit hook that runs pre-commit checks
+
+# Get project root directory - we need to resolve this from the script location
+HOOK_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Navigate up from .git/hooks to project root
+PROJECT_ROOT="$(cd "$HOOK_DIR/../.." && pwd)"
+
+# Run pre-commit checks
+cd "$PROJECT_ROOT"
+
+INSTALL_PYTHON="$PROJECT_ROOT/.venv/bin/python3"
+ARGS=(hook-impl --config=.pre-commit-config.yaml --hook-type=pre-commit)
+
+ARGS+=(--hook-dir "$HOOK_DIR" -- "$@")
+
+if [ -x "$INSTALL_PYTHON" ]; then
+    "$INSTALL_PYTHON" -mpre_commit "${ARGS[@]}"
+elif command -v pre-commit > /dev/null; then
+    pre-commit "${ARGS[@]}"
+else
+    echo '`pre-commit` not found.  Did you forget to activate your virtualenv?' 1>&2
+    exit 1
+fi
+
+exit $?

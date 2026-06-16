@@ -4,12 +4,6 @@ This script validates that all expected files and directories
 have been moved from ord-plan/ to repository root.
 """
 
-"""Validation script to verify file movements were successful.
-
-This script validates that all expected files and directories
-have been moved from ord-plan/ to repository root.
-"""
-
 import sys
 from pathlib import Path
 
@@ -18,8 +12,10 @@ current_dir = Path(__file__).parent
 if str(current_dir) not in sys.path:
     sys.path.insert(0, str(current_dir))
 
-from validate_state import RepositoryState
-from validate_state import RepositoryStateValidator
+from validate_state import (  # noqa: E402
+    RepositoryState,
+    RepositoryStateValidator,
+)
 
 
 def validate_file_moves():
@@ -156,7 +152,7 @@ def validate_basic_functionality():
 
 
 def main():
-    """Main validation function."""
+    """Run the main validation function."""
     print("🚀 Starting comprehensive file movement validation...")
 
     # Validate file moves
@@ -178,9 +174,7 @@ def main():
 
     overall_success = files_ok and state_ok and func_ok
     status_msg = (
-        "🎉 ALL VALIDATIONS PASSED"
-        if overall_success
-        else "⚠️  SOME VALIDATIONS FAILED"
+        "🎉 ALL VALIDATIONS PASSED" if overall_success else "⚠️  SOME VALIDATIONS FAILED"
     )
     print(f"\nOverall Status: {status_msg}")
 

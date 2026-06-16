@@ -224,7 +224,6 @@ class TestGenerateCommandContract:
         self, runner: CliRunner, tmp_path: Path
     ) -> None:
         """Test that format file must be readable."""
-
         # Create a format file
         format_content = {
             "REVERSE_DATETREE_WEEK_FORMAT": "%Y-W%V",

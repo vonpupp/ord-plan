@@ -1,8 +1,6 @@
 """Event rule model for ord-plan."""
 
-from dataclasses import dataclass
-from dataclasses import field
-from typing import List
+from dataclasses import dataclass, field
 from typing import Optional
 
 
@@ -12,7 +10,7 @@ class EventRule:
 
     title: str
     cron: str
-    tags: List[str] = field(default_factory=list)
+    tags: list[str] = field(default_factory=list)
     todo_state: Optional[str] = None
     description: Optional[str] = None
     body: Optional[str] = None

@@ -97,6 +97,7 @@ docs/                     # Sphinx documentation
 ```
 
 **Structure Decision**: Existing CLI tool structure with minor modifications. Changes concentrated in:
+
 - `cli/generate.py`: Add `--format` option parameter and parsing logic
 - `cli/config.py`: Add method to merge format file configuration with rules file configuration
 - `parsers/yaml_parser.py`: Add validation for format-only files and merge logic

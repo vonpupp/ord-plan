@@ -1,10 +1,6 @@
 """Org-mode parser and renderer for ord-plan."""
 
-from typing import Any
-from typing import Dict
-from typing import List
-from typing import Optional
-from typing import Tuple
+from typing import Any, Optional
 
 import orgparse
 
@@ -16,7 +12,7 @@ class OrgModeParser:
     """Parser and renderer for org-mode files."""
 
     @staticmethod
-    def read_existing_content(file_path: str) -> List[OrgDateNode]:
+    def read_existing_content(file_path: str) -> list[OrgDateNode]:
         """Read existing org-mode content and extract events.
 
         Args:
@@ -42,7 +38,7 @@ class OrgModeParser:
         return date_nodes
 
     @staticmethod
-    def render_org_content(date_nodes: List[OrgDateNode]) -> str:
+    def render_org_content(date_nodes: list[OrgDateNode]) -> str:
         """Render org-mode content from date nodes.
 
         Args:
@@ -57,7 +53,7 @@ class OrgModeParser:
         lines = []
 
         # Group by year and week
-        year_weeks: Dict[Tuple[str, str], List[OrgDateNode]] = {}
+        year_weeks: dict[tuple[str, str], list[OrgDateNode]] = {}
         for node in date_nodes:
             year_week_key = (node.year, node.week)
             if year_week_key not in year_weeks:

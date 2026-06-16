@@ -90,9 +90,9 @@ class TestFormatSchemaValidation:
         # Should have an error about events section
         errors_list = [err for err in errors if not err.startswith("Warning:")]
         assert len(errors_list) > 0
-        assert any(
-            "events" in err.lower() for err in errors_list
-        ), "Should have error about events section"
+        assert any("events" in err.lower() for err in errors_list), (
+            "Should have error about events section"
+        )
 
     def test_validate_format_schema_partial(self) -> None:
         """Test validating a format schema with partial options."""
@@ -118,9 +118,9 @@ class TestFormatSchemaValidation:
         # Should have a warning for unknown key
         warnings = [err for err in errors if err.startswith("Warning:")]
         assert len(warnings) > 0
-        assert any(
-            "UNKNOWN_KEY" in warn for warn in warnings
-        ), "Should have warning about unknown key"
+        assert any("UNKNOWN_KEY" in warn for warn in warnings), (
+            "Should have warning about unknown key"
+        )
 
         # Should not have any errors
         errors_list = [err for err in errors if not err.startswith("Warning:")]
@@ -134,9 +134,9 @@ class TestFormatSchemaValidation:
 
         # Should have an error
         assert len(errors) > 0
-        assert any(
-            "must be a dictionary" in err for err in errors
-        ), "Should have error about root structure"
+        assert any("must be a dictionary" in err for err in errors), (
+            "Should have error about root structure"
+        )
 
     def test_validate_format_schema_events_section(self) -> None:
         """Test validating a format schema with events section (already tested)."""
@@ -155,6 +155,6 @@ class TestFormatSchemaValidation:
         # Should have an error about events section
         errors_list = [err for err in errors if not err.startswith("Warning:")]
         assert len(errors_list) > 0
-        assert any(
-            "events" in err.lower() for err in errors_list
-        ), "Should have error about events section"
+        assert any("events" in err.lower() for err in errors_list), (
+            "Should have error about events section"
+        )

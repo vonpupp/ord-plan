@@ -138,8 +138,9 @@ events:
 # Generate for this week (default behavior)
 ord-plan generate --rules my-rules.yaml --file tasks.org
 
-# Generate for specific date range
-ord-plan generate --rules my-rules.yaml --from 2025-01-01 --to 2025-01-31 --file january.org
+ # Generate for specific date range
+ord-plan generate --rules my-rules.yaml --from 2025-01-01 \
+    --to 2025-01-31 --file january.org
 
 # Preview output before saving
 ord-plan generate --rules my-rules.yaml --from today --to "+7 days"
@@ -176,19 +177,20 @@ Generate org-mode events from cron-based rules.
 
 #### Options
 
-| Option         | Required | Description                                                       |
-| -------------- | -------- | ----------------------------------------------------------------- |
-| `--rules PATH` | Yes      | Path to YAML rules file containing event definitions              |
-| `--file PATH`  | No       | Path to target org-mode file (default: stdout)                    |
-| `--from DATE`  | No       | Start date for event generation (default: Monday of current week) |
-| `--to DATE`    | No       | End date for event generation (default: Sunday of current week)   |
-| `--force`      | No       | Bypass past/future date warnings (use with caution)               |
-| `--dry-run`    | No       | Show what would be generated without creating files               |
+| Option         | Required | Description                                   |
+| -------------- | -------- | -------------------------------------------- |
+| `--rules PATH` | Yes      | Path to YAML rules file with event defs       |
+| `--file PATH`  | No       | Path to org-mode file (default: stdout)       |
+| `--from DATE`  | No       | Start date for event generation              |
+| `--to DATE`    | No       | End date for event generation                |
+| `--force`      | No       | Bypass past/future date warnings            |
+| `--dry-run`    | No       | Preview without creating files               |
 
 #### Date Formats
 
 - **Absolute**: `YYYY-MM-DD` (e.g., `2025-01-15`)
-- **Relative**: `today`, `tomorrow`, `yesterday`, `next monday`, `next week`, `next month`, `next year`
+- **Relative**: `today`, `tomorrow`, `yesterday`, `next monday`,
+  `next week`, `next month`, `next year`
 - **Offset**: `+N days` (e.g., `+7 days` for one week from now)
 
 ### Examples
@@ -256,16 +258,60 @@ events:
 
 ## ⚙️ Cron Expression Examples
 
-| Schedule                | Cron Expression  | Description                        |
-| ----------------------- | ---------------- | ---------------------------------- |
-| Daily at 9 AM           | `0 9 * * *`      | Every day at 9:00 AM               |
-| Weekdays at 2 PM        | `0 14 * * 1-5`   | Monday-Friday at 2:00 PM           |
-| Monday/Wednesday/Friday | `0 0 * * 1,3,5`  | Mon, Wed, Fri at midnight          |
-| First of month          | `0 0 1 * *`      | 1st day of each month              |
-| Every 2 hours           | `0 */2 * * *`    | Every 2 hours on the hour          |
-| Work days 9-5           | `0 9-17 * * 1-5` | Hourly from 9 AM to 5 PM, weekdays |
+| Schedule                | Cron Expression  | Description                    |
+| ----------------------- | ---------------- | ----------------------------- |
+| Daily at 9 AM           | `0 9 * * *`      | Every day at 9:00 AM          |
+| Weekdays at 2 PM        | `0 14 * * 1-5`   | Mon-Fri at 2:00 PM            |
+| Monday/Wednesday/Friday | `0 0 * * 1,3,5`  | Mon, Wed, Fri at midnight     |
+| First of month          | `0 0 1 * *`      | 1st day of each month         |
+| Nearest weekday to 15th | `0 9 15W * *`    | Nearest weekday to the 15th   |
+| Last day of month       | `0 0 l * *`      | Last day of each month        |
+| Every 2 hours           | `0 */2 * * *`    | Every 2 hours on the hour     |
+| Work days 9-5           | `0 9-17 * * 1-5` | Hourly 9 AM-5 PM, weekdays    |
 
-> **Note**: Cron format is `minute hour day month weekday` where weekday is 0=Sunday, 6=Saturday.
+> **Note**: Cron format is `minute hour day month weekday`
+> where weekday is 0=Sunday, 6=Saturday.
+
+### Special Modifiers
+
+#### Nearest Weekday (W)
+
+The `W` modifier in the day-of-month field specifies the nearest weekday
+(Monday-Friday) to the given day. Both `nW` and `Wn` formats are accepted.
+
+**Rules:**
+
+- If the specified day falls on a weekday, use that day
+- If the specified day falls on Saturday, use the preceding Friday
+- If the specified day falls on Sunday, use the following Monday
+- The nearest weekday never crosses month boundaries
+
+**Examples:**
+
+- `0 9 15W * *` - Nearest weekday to the 15th at 9 AM
+- `0 9 W15 * *` - Same as above (W prefix format also works)
+- `0 9 1W * *` - Nearest weekday to the 1st (month boundary aware)
+- `0 9 30W * *` - Nearest weekday to the 30th (month end aware)
+
+**Example Behavior:**
+
+```yaml
+# June 15, 2024 is a Saturday
+# This expression will fire on Friday June 14, 2024
+- title: "Monthly Meeting"
+  cron: "0 9 15W * *"
+  tags: ["work", "meeting"]
+```
+
+#### Last Day of Month (L)
+
+The `l` (lowercase L) character in the day-of-month field means "the last day
+of the month". This automatically respects the number of days in each month,
+including February and leap years.
+
+**Examples:**
+
+- `0 0 l * *` - At midnight on the last day of each month
 
 ## 🏗️ Development
 
@@ -327,7 +373,8 @@ This project uses several tools to maintain code quality:
 
 ### Pre-commit Hooks
 
-Pre-commit hooks provide automated code quality checks before commits. They ensure consistent code style and catch common issues early.
+Pre-commit hooks provide automated code quality checks before commits.
+They ensure consistent code style and catch common issues early.
 
 #### Installation
 
@@ -365,23 +412,31 @@ invoke darglint       # Docstring linting (manual stage only)
 
 #### Hook Configuration
 
-Pre-commit hooks are configured in `.pre-commit-config.yaml` and use uv to ensure all tools run in the correct virtual environment. The hooks include:
+Pre-commit hooks are configured in `.pre-commit-config.yaml` and use uv
+to ensure all tools run in the correct virtual environment. The hooks
+include:
 
 - **Formatting**: Black, isort
 - **Linting**: Flake8, darglint, mypy
-- **File checks**: End-of-file-fixer, trailing-whitespace, check-added-large-files
+- **File checks**: End-of-file-fixer, trailing-whitespace,
+  check-added-large-files
 - **Config validation**: check-toml, check-yaml
 - **Code modernization**: pyupgrade
 
 #### Pre-commit vs Invoke
 
-- **Pre-commit hooks**: Run automatically before commits, focus on file-level changes
-- **Invoke tasks**: Run manually, provide comprehensive project-wide checks and testing
-- **Both methods** use the same underlying tools and configuration for consistency
+- **Pre-commit hooks**: Run automatically before commits, focus on
+  file-level changes
+- **Invoke tasks**: Run manually, provide comprehensive project-wide
+  checks and testing
+- **Both methods** use the same underlying tools and configuration
+  for consistency
 
 ### Development Tasks (Invoke)
 
-The project uses [Invoke](https://www.pyinvoke.org/) for task automation. Use `invoke --list` to see all available tasks, or `invoke help` for detailed usage examples.
+The project uses [Invoke](https://www.pyinvoke.org/) for task
+automation. Use `invoke --list` to see all available tasks, or
+`invoke help` for detailed usage examples.
 
 **Common development tasks:**
 
@@ -407,7 +462,8 @@ invoke test-unit
 invoke test-integration
 invoke test-contract
 
-# Run all checks (tests, linting, security, docs)
+# Run all checks (tests, linting, security,
+# docs)
 invoke all
 
 # Show detailed usage examples
@@ -416,7 +472,9 @@ invoke help
 
 ### Contributing
 
-Contributions are very welcome! Please see our [Contributing Guide](https://github.com/vonpupp/ord-plan/blob/main/CONTRIBUTING.md) for details on:
+Contributions are very welcome! Please see our
+[Contributing Guide](https://github.com/vonpupp/ord-plan/blob/main/CONTRIBUTING.md)
+for details on:
 
 - Code of Conduct
 - How to submit pull requests
@@ -425,16 +483,19 @@ Contributions are very welcome! Please see our [Contributing Guide](https://gith
 
 ## 📄 License
 
-Distributed under the terms of the [GPL 3.0 license][license],
-ORD Plan is free and open source software.
+Distributed under the terms of the [GPL 3.0
+license][license], ORD Plan is free and open source
+software.
 
 ## 🐛 Issues
 
-If you encounter any problems, please [file an issue][file an issue] along with a detailed description.
+If you encounter any problems, please [file an issue][file an issue]
+along with a detailed description.
 
 ## 🙏 Credits
 
-This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter] template.
+This project was generated from [@cjolowicz]'s
+[Hypermodern Python Cookiecutter] template.
 
 <!-- github-only -->
 
@@ -447,10 +508,5 @@ This project was generated from [@cjolowicz]'s [Hypermodern Python Cookiecutter]
 ## 🔗 Links
 
 [license]: https://github.com/vonpupp/blob/main/LICENSE
-[contributor guide]: https://github.com/vonpupp/blob/main/CONTRIBUTING.md
-[command-line reference]: https://ord-plan.readthedocs.io/en/latest/usage.html
-[cjolowicz]: https://github.com/cjolowicz
 [hypermodern python cookiecutter]: https://github.com/cjolowicz/cookiecutter-hypermodern-python
 [file an issue]: https://github.com/vonpupp/issues
-[pip]: https://pip.pypa.io/
-[uv]: https://docs.astral.sh/uv/

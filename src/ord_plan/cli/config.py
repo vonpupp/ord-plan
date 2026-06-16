@@ -2,9 +2,7 @@
 
 import os
 from dataclasses import dataclass
-from typing import Dict
-from typing import Optional
-from typing import Union
+from typing import Optional, Union
 
 
 @dataclass
@@ -26,7 +24,7 @@ class Configuration:
 
     @classmethod
     def from_dict(
-        cls, config_dict: Optional[Dict[str, Union[str, int, bool]]] = None
+        cls, config_dict: Optional[dict[str, Union[str, int, bool]]] = None
     ) -> "Configuration":
         """Create configuration from dictionary."""
         if config_dict is None:
@@ -59,7 +57,7 @@ class Configuration:
 
     @classmethod
     def from_env_and_dict(
-        cls, config_dict: Optional[Dict[str, Union[str, int, bool]]] = None
+        cls, config_dict: Optional[dict[str, Union[str, int, bool]]] = None
     ) -> "Configuration":
         """Create configuration from environment variables and dictionary."""
         if config_dict is None:
@@ -92,8 +90,8 @@ class Configuration:
     @classmethod
     def merge_format_config(
         cls,
-        rules_config: Optional[Dict[str, Union[str, int, bool]]] = None,
-        format_config: Optional[Dict[str, Union[str, int, bool]]] = None,
+        rules_config: Optional[dict[str, Union[str, int, bool]]] = None,
+        format_config: Optional[dict[str, Union[str, int, bool]]] = None,
     ) -> "Configuration":
         """Merge formatting configs with format_file taking precedence.
 
@@ -109,7 +107,7 @@ class Configuration:
         Returns:
             Merged Configuration object
         """
-        merged: Dict[str, Union[str, int, bool]] = {}
+        merged: dict[str, Union[str, int, bool]] = {}
 
         # Start with rules config if provided
         if rules_config:
@@ -149,7 +147,7 @@ class Configuration:
 
         return errors
 
-    def get_performance_limits(self) -> Dict[str, int]:
+    def get_performance_limits(self) -> dict[str, int]:
         """Get performance limit settings.
 
         Returns:

@@ -45,15 +45,15 @@ You need Python 3.7+ and the following tools:
 Install the package with development requirements:
 
 ```console
-$ uv pip install -e ".[dev]"
+uv pip install -e ".[dev]"
 ```
 
 You can now run an interactive Python session,
 or command-line interface:
 
 ```console
-$ uv run python
-$ uv run ord-plan
+uv run python
+uv run ord-plan
 ```
 
 [uv]: https://docs.astral.sh/uv/
@@ -86,33 +86,33 @@ $ invoke --list
 Run full test suite:
 
 ```console
-$ nox
+nox
 ```
 
 List available Nox sessions:
 
 ```console
-$ nox --list-sessions
+nox --list-sessions
 ```
 
 You can also run a specific Nox session.
 For example, invoke unit test suite like this:
 
 ```console
-$ nox --session=tests
+nox --session=tests
 ```
 
 List the available Nox sessions:
 
 ```console
-$ nox --list-sessions
+nox --list-sessions
 ```
 
 You can also run a specific Nox session.
 For example, invoke the unit test suite like this:
 
 ```console
-$ nox --session=tests
+nox --session=tests
 ```
 
 Unit tests are located in the _tests_ directory,

@@ -38,3 +38,11 @@ coverage.xml
 node_modules/
 
 mytests/
+
+# Git hooks (installed from git-hooks directory)
+.git/hooks/
+
+# Local Claude config and npm tools
+.claude/
+package.json
+package-lock.json

@@ -9,11 +9,7 @@ import re
 import sys
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict
-from typing import List
-from typing import NamedTuple
-from typing import Optional
-from typing import Tuple
+from typing import NamedTuple, Optional
 
 
 class ImportInfo(NamedTuple):
@@ -45,7 +41,7 @@ class ImportParser:
         """Initialize parser with target prefix to remove."""
         self.target_prefix = target_prefix
 
-    def parse_file_imports(self, file_path: Path) -> List[ImportInfo]:
+    def parse_file_imports(self, file_path: Path) -> list[ImportInfo]:
         """Parse all import statements from a Python file.
 
         Args:
@@ -76,25 +72,24 @@ class ImportParser:
                             )
                         )
 
-                elif isinstance(node, ast.ImportFrom):
-                    if node.module:
-                        imports.append(
-                            ImportInfo(
-                                module_name=node.module,
-                                alias=None,
-                                lineno=node.lineno,
-                                col_offset=node.col_offset,
-                                import_type="from",
-                                from_module=node.module,
-                            )
+                elif isinstance(node, ast.ImportFrom) and node.module:
+                    imports.append(
+                        ImportInfo(
+                            module_name=node.module,
+                            alias=None,
+                            lineno=node.lineno,
+                            col_offset=node.col_offset,
+                            import_type="from",
+                            from_module=node.module,
                         )
+                    )
 
         except (SyntaxError, UnicodeDecodeError) as e:
             print(f"⚠️  Could not parse {file_path}: {e}")
 
         return imports
 
-    def find_target_imports(self, imports: List[ImportInfo]) -> List[ImportInfo]:
+    def find_target_imports(self, imports: list[ImportInfo]) -> list[ImportInfo]:
         """Find imports that need updating (those with target prefix).
 
         Args:
@@ -112,12 +107,12 @@ class ImportParser:
                 if imp.module_name.startswith(f"{self.target_prefix}."):
                     target_imports.append(imp)
 
-            elif imp.import_type == "from":
-                # Check for 'from ord_plan.module import ...'
-                if imp.from_module and imp.from_module.startswith(
-                    f"{self.target_prefix}."
-                ):
-                    target_imports.append(imp)
+            elif (
+                imp.import_type == "from"
+                and imp.from_module
+                and imp.from_module.startswith(f"{self.target_prefix}.")
+            ):
+                target_imports.append(imp)
 
         return target_imports
 
@@ -159,7 +154,7 @@ class ImportUpdater:
         self.dry_run = dry_run
         self.updates = []
 
-    def find_python_files(self) -> List[Path]:
+    def find_python_files(self) -> list[Path]:
         """Find all Python files in the repository.
 
         Returns:
@@ -184,7 +179,7 @@ class ImportUpdater:
 
         return python_files
 
-    def analyze_file(self, file_path: Path) -> List[ImportUpdate]:
+    def analyze_file(self, file_path: Path) -> list[ImportUpdate]:
         """Analyze a Python file and determine what imports need updating.
 
         Args:
@@ -244,7 +239,7 @@ class ImportUpdater:
             pass
         return ""
 
-    def update_file(self, file_path: Path, updates: List[ImportUpdate]) -> bool:
+    def update_file(self, file_path: Path, updates: list[ImportUpdate]) -> bool:
         """Apply import updates to a file.
 
         Args:
@@ -273,7 +268,7 @@ class ImportUpdater:
             print(f"❌ Failed to update {file_path}: {e}")
             return False
 
-    def update_all_files(self) -> Tuple[int, List[str]]:
+    def update_all_files(self) -> tuple[int, list[str]]:
         """Update all Python files in the repository.
 
         Returns:
@@ -317,7 +312,7 @@ class ImportUpdater:
 
         return files_updated, errors
 
-    def get_update_summary(self) -> Dict[str, int]:
+    def get_update_summary(self) -> dict[str, int]:
         """Get summary of all updates performed."""
         summary = {
             "files_updated": len({update.file_path for update in self.updates}),
@@ -331,7 +326,7 @@ class ImportUpdater:
         }
         return summary
 
-    def verify_updates(self) -> Tuple[int, List[str]]:
+    def verify_updates(self) -> tuple[int, list[str]]:
         """Verify that all imports were correctly updated.
 
         Returns:

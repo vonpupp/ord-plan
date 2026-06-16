@@ -20,6 +20,7 @@
 | REVERSE_DATETREE_USE_WEEK_TREE | boolean | No | true | Whether to use week-based hierarchy |
 
 **Constraints**:
+
 - Must be valid YAML
 - Field names are case-sensitive
 - All values are optional (use defaults if missing)
@@ -27,6 +28,7 @@
 - Unknown keys generate warnings but don't cause errors
 
 **Example**:
+
 ```yaml
 REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
 REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
@@ -35,6 +37,7 @@ REVERSE_DATETREE_USE_WEEK_TREE: true
 ```
 
 **Empty format file**:
+
 ```yaml
 # All formatting options will use defaults
 ```
@@ -56,6 +59,7 @@ REVERSE_DATETREE_USE_WEEK_TREE: true
 | events | array | Yes | - | List of event definitions |
 
 **Constraints**:
+
 - Must be valid YAML
 - All four formatting fields are required in combined format
 - `events` section is required
@@ -63,6 +67,7 @@ REVERSE_DATETREE_USE_WEEK_TREE: true
 - Unknown keys generate warnings but don't cause errors
 
 **Example**:
+
 ```yaml
 REVERSE_DATETREE_WEEK_FORMAT: "%Y-W%V"
 REVERSE_DATETREE_DATE_FORMAT: "%Y-%m-%d %a"
@@ -88,11 +93,13 @@ events:
 | events | array | Yes | - | List of event definitions |
 
 **Constraints**:
+
 - Must be valid YAML
 - No formatting fields required (supplied by format file)
 - Each event must have `title` and `cron` fields
 
 **Example**:
+
 ```yaml
 events:
   - title: "Morning Exercise"
@@ -109,12 +116,14 @@ events:
 **Fields**: Same as Configuration dataclass in `src/ord_plan/cli/config.py`
 
 **Merge Logic**:
+
 1. Start with default Configuration values
 2. Apply rules file formatting options (if present)
 3. Apply format file formatting options (if present), overwriting rules file values
 4. Apply environment variable overrides (existing behavior)
 
 **Precedence** (highest to lowest):
+
 1. Environment variables (existing)
 2. Format file options (new)
 3. Rules file options (existing)
@@ -147,6 +156,7 @@ Format file + combined rules file → Format formatting used (precedence)
 | body | string | No | - | Multi-line body content |
 
 **Constraints**:
+
 - Title max 200 characters
 - Tags max 10 items, each max 50 characters, no spaces
 - Todo state max 20 characters

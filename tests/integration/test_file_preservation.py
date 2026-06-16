@@ -6,8 +6,7 @@ import tempfile
 from click.testing import CliRunner
 
 from ord_plan.cli.generate import generate
-from tests.fixtures import get_fixture_path
-from tests.fixtures import read_fixture
+from tests.fixtures import get_fixture_path, read_fixture
 
 
 class TestFilePreservation:
