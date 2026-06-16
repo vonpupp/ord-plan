@@ -66,7 +66,7 @@ class TestGenerateCommandContract:
         # Should work without --file (output to stdout)
         result = runner.invoke(
             generate,
-            ["--rules", str(yaml_file), "--from", "2025-12-22", "--to", "2025-12-22"],
+            ["--rules", str(yaml_file), "--from", "2026-12-21", "--to", "2026-12-21"],
         )
 
         assert result.exit_code == 0
@@ -160,9 +160,9 @@ class TestGenerateCommandContract:
                 "--rules",
                 str(yaml_file),
                 "--from",
-                "2025-12-22",
+                "2026-12-21",
                 "--to",
-                "2025-12-22",
+                "2026-12-21",
                 "--dry-run",
             ],
         )
@@ -189,7 +189,7 @@ class TestGenerateCommandContract:
         # Should work without --format flag
         result = runner.invoke(
             generate,
-            ["--rules", str(yaml_file), "--from", "2025-12-22", "--to", "2025-12-22"],
+            ["--rules", str(yaml_file), "--from", "2026-12-21", "--to", "2026-12-21"],
         )
 
         assert result.exit_code == 0
@@ -205,9 +205,9 @@ class TestGenerateCommandContract:
                 "--format",
                 "/nonexistent/format.yaml",
                 "--from",
-                "2025-12-22",
+                "2026-12-21",
                 "--to",
-                "2025-12-22",
+                "2026-12-21",
             ],
         )
 
@@ -267,9 +267,9 @@ class TestGenerateCommandContract:
                 "--format",
                 str(format_file),
                 "--from",
-                "2025-12-22",
+                "2026-12-21",
                 "--to",
-                "2025-12-22",
+                "2026-12-21",
             ],
         )
 
@@ -288,7 +288,7 @@ class TestGenerateCommandContract:
         # Test exit code 0 (success)
         result = runner.invoke(
             generate,
-            ["--rules", str(yaml_file), "--from", "2025-12-22"],
+            ["--rules", str(yaml_file), "--from", "2026-12-21"],
         )
 
         assert result.exit_code == 0
@@ -328,9 +328,9 @@ class TestGenerateCommandContract:
             [
                 "--dry-run",
                 "--from",
-                "2025-12-22",
+                "2026-12-21",
                 "--to",
-                "2025-12-22",
+                "2026-12-21",
                 "--rules",
                 str(yaml_file),
             ],
@@ -368,9 +368,9 @@ class TestGenerateCommandContract:
                 "--rules",
                 str(yaml_file),
                 "--from",
-                "2025-12-22",
+                "2026-12-21",
                 "--to",
-                "2025-12-22",
+                "2026-12-21",
             ],
         )
 

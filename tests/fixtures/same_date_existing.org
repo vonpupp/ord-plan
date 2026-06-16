@@ -1,5 +1,5 @@
 * 2026
-** 2026-W01
-*** 2026-01-02 Fri
+** 2026-W49
+*** 2026-12-02 Wed
 **** TODO Morning Meeting
 **** TODO Code Review

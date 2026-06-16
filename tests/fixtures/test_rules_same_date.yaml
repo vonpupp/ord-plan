@@ -1,4 +1,4 @@
 events:
   - title: "Afternoon Planning"
-    cron: "0 16 3 1 *"
+    cron: "0 16 2 12 *"
     tags: ["planning"]

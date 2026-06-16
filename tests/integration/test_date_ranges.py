@@ -31,9 +31,9 @@ events:
                 "--rules",
                 str(rules_file),
                 "--from",
-                "2025-01-01",
+                "2026-12-01",
                 "--to",
-                "2025-01-03",
+                "2026-12-03",
                 "--force",
             ],
         )
@@ -42,12 +42,12 @@ events:
         output = result.output
 
         # Should contain date structure
-        assert "* 2025" in output
-        assert "** 2024-W01" in output
+        assert "* 2026" in output
+        assert "** 2026-W48" in output
         assert (
-            "*** 2025-01-01" in output
-            or "*** 2025-01-02" in output
-            or "*** 2025-01-03" in output
+            "*** 2026-12-01" in output
+            or "*** 2026-12-02" in output
+            or "*** 2026-12-03" in output
         )
 
     def test_relative_dates(self, runner: CliRunner, tmp_path: Path) -> None:

@@ -1,9 +1,6 @@
 """Tests for date protection functionality."""
 
 from datetime import datetime, timedelta
-from pathlib import Path
-
-from click.testing import CliRunner
 
 from ord_plan.models.date_range import DateRange
 from ord_plan.services.date_service import DateService
@@ -171,9 +168,7 @@ class TestDateProtection:
         assert not date_range.has_past_dates()
         assert not date_range.has_distant_future_dates()
 
-    def test_date_range_summary_confirmation(
-        self, _runner: CliRunner, _tmp_path: Path
-    ) -> None:
+    def test_date_range_summary_confirmation(self) -> None:
         """Test date range summary for user confirmation."""
         from unittest.mock import patch
 
@@ -193,7 +188,7 @@ class TestDateProtection:
             call_args = mock_confirm.call_args
             assert len(call_args[0]) > 0  # Some message was passed to confirm
 
-    def test_user_confirmation_prompt(self, _runner: CliRunner) -> None:
+    def test_user_confirmation_prompt(self) -> None:
         """Test enhanced user confirmation prompt."""
         from unittest.mock import patch
 

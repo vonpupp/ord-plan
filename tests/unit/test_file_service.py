@@ -45,9 +45,7 @@ class TestFileService:
             with open(nested_path) as f:
                 assert f.read() == content
 
-    def test_write_org_content_to_stdout(
-        self, _capsys: pytest.CaptureFixture[str]
-    ) -> None:
+    def test_write_org_content_to_stdout(self) -> None:
         """Test writing content to stdout."""
         content = "* Test Content"
 
