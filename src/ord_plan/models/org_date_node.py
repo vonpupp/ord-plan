@@ -22,7 +22,16 @@ class OrgDateNode:
     @property
     def week(self) -> str:
         """Get formatted week string."""
-        return self.date.strftime("%Y-W%V")
+        iso_week = int(self.date.strftime("%V"))
+        year = self.date.year
+        week = iso_week - 1
+        if week == 0:
+            # Handle week 0 by going to last week of previous year
+            prev_year = year - 1
+            dec_31 = datetime(prev_year, 12, 31)
+            week = int(dec_31.strftime("%V"))
+            year = prev_year
+        return f"{year}-W{week:02d}"
 
     @property
     def day(self) -> str:
