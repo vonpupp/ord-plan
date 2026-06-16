@@ -144,7 +144,7 @@ class TestOrgContentValidation:
     def test_valid_org_content(self) -> None:
         """Test that valid org content has no warnings."""
         valid_content = """* 2025
-** 2025-W01
+** 2024-W01
 *** 2025-01-01 Mon
 **** TODO Test Task
 - [ ] Subtask 1
