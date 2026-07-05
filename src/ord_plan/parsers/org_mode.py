@@ -163,11 +163,19 @@ class OrgModeParser:
             body = "\n".join(str(line) for line in node.body)
             body = body.strip() or None
 
+        # Parse properties
+        properties = {}
+        if hasattr(node, "properties") and node.properties:
+            for key, value in node.properties.items():
+                if isinstance(key, str) and isinstance(value, str):
+                    properties[key.lower()] = value
+
         return OrgEvent(
             title=title.strip(),
             todo_state=todo_state,
             tags=tags,
             body=body,
+            properties=properties,
         )
 
     @staticmethod
@@ -187,10 +195,19 @@ class OrgModeParser:
             tag_str = ":" + ":".join(event.tags) + ":"
             parts.append(tag_str)
 
+        lines = []
         heading = "*" * event.level + " " + " ".join(parts)
+        lines.append(heading)
+
+        # Add PROPERTIES drawer if present
+        if event.properties:
+            lines.append(":PROPERTIES:")
+            for key, value in event.properties.items():
+                lines.append(f":{key.upper()}: {value}")
+            lines.append(":END:")
 
         # Add body if present
         if event.body:
-            heading += "\n" + event.body.rstrip()
+            lines.append(event.body.rstrip())
 
-        return heading
+        return "\n".join(lines)

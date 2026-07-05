@@ -14,6 +14,7 @@ class EventRule:
     todo_state: Optional[str] = None
     description: Optional[str] = None
     body: Optional[str] = None
+    properties: dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         """Validate the event rule after initialization."""

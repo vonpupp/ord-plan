@@ -158,3 +158,238 @@ class TestFormatSchemaValidation:
         assert any("events" in err.lower() for err in errors_list), (
             "Should have error about events section"
         )
+
+
+class TestPropertiesParsing:
+    """Test properties field parsing functionality."""
+
+    def test_parse_event_with_properties(self, tmp_path: Path) -> None:
+        """Test parsing an event with properties."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                    "properties": [
+                        {"category": "test"},
+                        {"priority": "high"},
+                    ],
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].properties == {"category": "test", "priority": "high"}
+
+    def test_parse_event_with_empty_properties(self, tmp_path: Path) -> None:
+        """Test parsing an event with empty properties."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                    "properties": [],
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].properties == {}
+
+    def test_parse_event_with_null_properties(self, tmp_path: Path) -> None:
+        """Test parsing an event with null properties."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                    "properties": None,
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].properties == {}
+
+    def test_parse_event_with_dict_properties(self, tmp_path: Path) -> None:
+        """Test parsing an event with dict properties (alternative format)."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                    "properties": {"category": "test", "priority": "high"},
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].properties == {"category": "test", "priority": "high"}
+
+
+class TestPropertiesValidation:
+    """Test properties field validation functionality."""
+
+    def test_validate_properties_valid(self) -> None:
+        """Test validating valid properties."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "properties": [
+                {"category": "test"},
+                {"priority": "high"},
+            ],
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should not have any errors
+        errors_list = [err for err in errors if not err.startswith("Warning:")]
+        assert len(errors_list) == 0
+
+    def test_validate_properties_invalid_type(self) -> None:
+        """Test validating properties with invalid type."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "properties": "invalid",
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about properties type
+        assert any("'properties' must be a list" in err for err in errors), (
+            "Should have error about properties type"
+        )
+
+    def test_validate_properties_invalid_item_type(self) -> None:
+        """Test validating properties with invalid item type."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "properties": ["invalid"],
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about property item type
+        assert any("property 0 must be a dictionary" in err for err in errors), (
+            "Should have error about property item type"
+        )
+
+    def test_validate_properties_multiple_keys(self) -> None:
+        """Test validating properties with multiple keys in single item."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "properties": [{"key1": "value1", "key2": "value2"}],
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about multiple keys
+        assert any("exactly one key-value pair" in err for err in errors), (
+            "Should have error about multiple keys"
+        )
+
+    def test_validate_properties_duplicate_keys(self) -> None:
+        """Test validating properties with duplicate keys."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "properties": [
+                {"category": "test1"},
+                {"category": "test2"},
+            ],
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about duplicate keys
+        assert any("duplicate property key" in err for err in errors), (
+            "Should have error about duplicate keys"
+        )
+
+    def test_validate_properties_too_many(self) -> None:
+        """Test validating too many properties."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "properties": [{f"prop{i}": "value"} for i in range(21)],
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about too many properties
+        assert any("too many properties" in err for err in errors), (
+            "Should have error about too many properties"
+        )
+
+    def test_validate_property_key_too_long(self) -> None:
+        """Test validating property key that is too long."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "properties": [{"a" * 51: "value"}],
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about key length
+        assert any("key too long" in err for err in errors), (
+            "Should have error about key length"
+        )
+
+    def test_validate_property_value_too_long(self) -> None:
+        """Test validating property value that is too long."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "properties": [{"key": "v" * 501}],
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about value length
+        assert any("value too long" in err for err in errors), (
+            "Should have error about value length"
+        )
+
+    def test_validate_property_key_invalid_chars(self) -> None:
+        """Test validating property key with invalid characters."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "properties": [{"key-with-dash": "value"}],
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about invalid characters
+        assert any("must contain only alphanumeric" in err for err in errors), (
+            "Should have error about invalid characters"
+        )

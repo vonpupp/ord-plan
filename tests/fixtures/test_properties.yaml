@@ -1,0 +1,29 @@
+events:
+  - title: "HEALTH parasite cleanse"
+    cron: "0 0 1 1,6 *"
+    tags: ["health"]
+    properties:
+      - backlink: "[[id:da2b6c68-073b-45be-af3b-53796df16a04][goal:health]]"
+      - class: c9c4772c-0328-4883-aee6-cee8b1a1ccfe
+      - acceptance: "check_habit('1/180d')"
+
+  - title: "MIND Read"
+    cron: "0 8 * * 0,3,5"
+    tags: ["learn"]
+    properties:
+      - backlink: "[[id:54fba72f-6be6-4921-b760-445ac10a3315][goal:mind]]"
+      - class: 54fba72f-bab6-4921-b760-445ac10a3315
+      - acceptance: "check_habit('3/7d')"
+
+  - title: "Event with body and properties"
+    cron: "0 9 * * *"
+    properties:
+      - category: test
+      - priority: high
+    body: |
+      This event has both properties
+      and body text.
+
+  - title: "Event without properties"
+    cron: "0 10 * * *"
+    tags: ["simple"]

@@ -55,6 +55,7 @@ class CronService:
                     tags=rule.tags,
                     description=rule.description,
                     body=rule.body,
+                    properties=rule.properties,
                 )
                 events.append(event)
 

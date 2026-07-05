@@ -14,6 +14,7 @@ class OrgEvent:
     tags: list[str] = field(default_factory=list)
     description: Optional[str] = None
     body: Optional[str] = None
+    properties: dict[str, str] = field(default_factory=dict)
 
     def __post_init__(self) -> None:
         """Validate the org event after initialization."""

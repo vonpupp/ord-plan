@@ -143,6 +143,26 @@ class YamlParser:
             if body is not None and not isinstance(body, str):
                 raise ValueError(f"Event at index {i} 'body' must be a string")
 
+            properties = event_config.get("properties", {})
+            if properties is None:
+                properties = {}
+            elif isinstance(properties, list):
+                if not all(isinstance(item, dict) for item in properties):
+                    raise ValueError(
+                        f"Event at index {i} 'properties' must be "
+                        f"a list of key-value pairs"
+                    )
+                properties_dict = {}
+                for prop in properties:
+                    if prop:
+                        for key, value in prop.items():
+                            properties_dict[key] = value
+                properties = properties_dict
+            elif not isinstance(properties, dict):
+                raise ValueError(
+                    f"Event at index {i} 'properties' must be a list or dict"
+                )
+
             try:
                 event_rule = EventRule(
                     title=title,
@@ -151,6 +171,7 @@ class YamlParser:
                     todo_state=todo_state,
                     description=description,
                     body=body,
+                    properties=properties,
                 )
                 event_rules.append(event_rule)
             except ValueError as e:
@@ -327,8 +348,68 @@ class YamlParser:
             elif len(body) > 5000:
                 errors.append(f"{event_prefix}: 'body' too long (max 5000 characters)")
 
+        # Properties validation
+        properties = event_config.get("properties")
+        if properties is not None:
+            if not isinstance(properties, list):
+                errors.append(f"{event_prefix}: 'properties' must be a list")
+            else:
+                if len(properties) > 20:
+                    errors.append(f"{event_prefix}: too many properties (max 20)")
+                seen_keys = set()
+                for j, prop in enumerate(properties):
+                    if not isinstance(prop, dict):
+                        errors.append(
+                            f"{event_prefix}: property {j} must be a dictionary"
+                        )
+                        continue
+                    if len(prop) != 1:
+                        errors.append(
+                            f"{event_prefix}: property {j} must have "
+                            f"exactly one key-value pair"
+                        )
+                        continue
+                    for key, value in prop.items():
+                        if not isinstance(key, str):
+                            errors.append(
+                                f"{event_prefix}: property {j} key must be a string"
+                            )
+                        elif len(key) > 50:
+                            errors.append(
+                                f"{event_prefix}: property {j} key too long "
+                                f"(max 50 characters)"
+                            )
+                        elif not key.replace("_", "").isalnum():
+                            errors.append(
+                                f"{event_prefix}: property {j} key {key!r} "
+                                f"must contain only alphanumeric characters "
+                                f"and underscores"
+                            )
+                        if key in seen_keys:
+                            errors.append(
+                                f"{event_prefix}: duplicate property key {key!r}"
+                            )
+                        seen_keys.add(key)
+                        if not isinstance(value, str):
+                            errors.append(
+                                f"{event_prefix}: property {j} value must be a string"
+                            )
+                        elif len(value) > 500:
+                            errors.append(
+                                f"{event_prefix}: property {j} value too long "
+                                f"(max 500 characters)"
+                            )
+
         # Check for unknown fields (warning only)
-        known_fields = {"title", "cron", "tags", "todo_state", "description", "body"}
+        known_fields = {
+            "title",
+            "cron",
+            "tags",
+            "todo_state",
+            "description",
+            "body",
+            "properties",
+        }
         unknown_fields = set(event_config.keys()) - known_fields
         for field in sorted(unknown_fields):
             errors.append(
