@@ -163,6 +163,25 @@ class YamlParser:
                     f"Event at index {i} 'properties' must be a list or dict"
                 )
 
+            # Date filtering fields
+            from_date = event_config.get("from")  # YAML: "from"
+            if from_date is not None and not isinstance(from_date, str):
+                raise ValueError(f"Event at index {i} 'from' must be a string")
+
+            to_date = event_config.get("to")
+            if to_date is not None and not isinstance(to_date, str):
+                raise ValueError(f"Event at index {i} 'to' must be a string")
+
+            # Count limiting
+            count = event_config.get("count")
+            if count is not None and not isinstance(count, int):
+                raise ValueError(f"Event at index {i} 'count' must be an integer")
+
+            # Enabled flag
+            enabled = event_config.get("enabled", True)
+            if not isinstance(enabled, bool):
+                raise ValueError(f"Event at index {i} 'enabled' must be a boolean")
+
             try:
                 event_rule = EventRule(
                     title=title,
@@ -172,6 +191,10 @@ class YamlParser:
                     description=description,
                     body=body,
                     properties=properties,
+                    from_=from_date,  # Map YAML "from" to Python "from_"
+                    to=to_date,
+                    count=count,
+                    enabled=enabled,
                 )
                 event_rules.append(event_rule)
             except ValueError as e:
@@ -400,6 +423,86 @@ class YamlParser:
                                 f"(max 500 characters)"
                             )
 
+        # "from" date validation
+        from_date = event_config.get("from")
+        if from_date is not None:
+            if not isinstance(from_date, str):
+                errors.append(f"{event_prefix}: 'from' must be a string")
+            else:
+                # Validate ISO date format (YYYY-MM-DD)
+                import re
+                from datetime import datetime
+
+                if not re.match(r"^\d{4}-\d{2}-\d{2}$", from_date):
+                    errors.append(
+                        f"{event_prefix}: 'from' must be in YYYY-MM-DD format"
+                    )
+                else:
+                    try:
+                        datetime.strptime(from_date, "%Y-%m-%d")
+                    except ValueError:
+                        errors.append(
+                            f"{event_prefix}: 'from' {from_date!r} is not a valid date"
+                        )
+
+        # "to" date validation
+        to_date = event_config.get("to")
+        if to_date is not None:
+            if not isinstance(to_date, str):
+                errors.append(f"{event_prefix}: 'to' must be a string")
+            else:
+                # Validate ISO date format (YYYY-MM-DD)
+                import re
+                from datetime import datetime
+
+                if not re.match(r"^\d{4}-\d{2}-\d{2}$", to_date):
+                    errors.append(
+                        f"{event_prefix}: 'to' must be in YYYY-MM-DD format"
+                    )
+                else:
+                    try:
+                        datetime.strptime(to_date, "%Y-%m-%d")
+                    except ValueError:
+                        errors.append(
+                            f"{event_prefix}: 'to' {to_date!r} is not a valid date"
+                        )
+
+        # Validate from <= to if both present
+        if from_date and to_date:
+            try:
+                from datetime import datetime
+
+                from_dt = datetime.strptime(from_date, "%Y-%m-%d")
+                to_dt = datetime.strptime(to_date, "%Y-%m-%d")
+                if from_dt > to_dt:
+                    errors.append(
+                        f"{event_prefix}: 'from' date must be <= 'to' date"
+                    )
+            except ValueError:
+                # Already caught by individual validation above
+                pass
+
+        # Count validation
+        count = event_config.get("count")
+        if count is not None:
+            if not isinstance(count, int):
+                errors.append(f"{event_prefix}: 'count' must be an integer")
+            elif count < 0:
+                errors.append(f"{event_prefix}: 'count' must be >= 0")
+            elif count == 0:
+                errors.append(
+                    f"{event_prefix}: Warning - count is 0, no events will be generated"
+                )
+            elif count > 1000:
+                errors.append(
+                    f"{event_prefix}: 'count' is very large ({count}), consider reducing"
+                )
+
+        # Enabled validation
+        enabled = event_config.get("enabled")
+        if enabled is not None and not isinstance(enabled, bool):
+            errors.append(f"{event_prefix}: 'enabled' must be a boolean")
+
         # Check for unknown fields (warning only)
         known_fields = {
             "title",
@@ -409,6 +512,10 @@ class YamlParser:
             "description",
             "body",
             "properties",
+            "from",
+            "to",
+            "count",
+            "enabled",
         }
         unknown_fields = set(event_config.keys()) - known_fields
         for field in sorted(unknown_fields):

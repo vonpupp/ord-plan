@@ -393,3 +393,365 @@ class TestPropertiesValidation:
         assert any("must contain only alphanumeric" in err for err in errors), (
             "Should have error about invalid characters"
         )
+
+
+class TestDateRangeParsing:
+    """Test from/to date range field parsing functionality."""
+
+    def test_parse_event_with_from_and_to(self, tmp_path: Path) -> None:
+        """Test parsing an event with from and to dates."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                    "from": "2026-01-01",
+                    "to": "2026-12-31",
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].from_ == "2026-01-01"
+        assert event_rules[0].to == "2026-12-31"
+
+    def test_parse_event_with_from_only(self, tmp_path: Path) -> None:
+        """Test parsing an event with only from date."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                    "from": "2026-01-01",
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].from_ == "2026-01-01"
+        assert event_rules[0].to is None
+
+    def test_parse_event_with_to_only(self, tmp_path: Path) -> None:
+        """Test parsing an event with only to date."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                    "to": "2026-12-31",
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].from_ is None
+        assert event_rules[0].to == "2026-12-31"
+
+
+class TestCountParsing:
+    """Test count field parsing functionality."""
+
+    def test_parse_event_with_count(self, tmp_path: Path) -> None:
+        """Test parsing an event with count."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                    "count": 5,
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].count == 5
+
+    def test_parse_event_with_count_zero(self, tmp_path: Path) -> None:
+        """Test parsing an event with count zero."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                    "count": 0,
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].count == 0
+
+
+class TestEnabledParsing:
+    """Test enabled field parsing functionality."""
+
+    def test_parse_event_with_enabled_true(self, tmp_path: Path) -> None:
+        """Test parsing an event with enabled true."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                    "enabled": True,
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].enabled is True
+
+    def test_parse_event_with_enabled_false(self, tmp_path: Path) -> None:
+        """Test parsing an event with enabled false."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                    "enabled": False,
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].enabled is False
+
+    def test_parse_event_without_enabled(self, tmp_path: Path) -> None:
+        """Test parsing an event without enabled field (default to true)."""
+        events_content = {
+            "events": [
+                {
+                    "title": "Test Event",
+                    "cron": "0 9 * * 1",
+                }
+            ]
+        }
+
+        events_file = tmp_path / "events.yaml"
+        events_file.write_text(yaml.dump(events_content))
+
+        config = YamlParser.parse_rules_file(str(events_file))
+        event_rules = YamlParser.parse_event_rules(config)
+
+        assert len(event_rules) == 1
+        assert event_rules[0].enabled is True  # Default value
+
+
+class TestDateRangeValidation:
+    """Test from/to date validation functionality."""
+
+    def test_validate_from_valid_format(self) -> None:
+        """Test validating a valid from date."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "from": "2026-01-01",
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should not have any errors about from date
+        from_errors = [err for err in errors if "from" in err.lower()]
+        assert len(from_errors) == 0
+
+    def test_validate_from_invalid_format(self) -> None:
+        """Test validating an invalid from date format."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "from": "01-01-2026",  # Wrong format
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about date format
+        assert any("YYYY-MM-DD" in err for err in errors), (
+            "Should have error about date format"
+        )
+
+    def test_validate_from_invalid_date(self) -> None:
+        """Test validating an invalid from date."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "from": "2026-13-01",  # Invalid month
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about invalid date
+        assert any("not a valid date" in err for err in errors), (
+            "Should have error about invalid date"
+        )
+
+    def test_validate_to_valid_format(self) -> None:
+        """Test validating a valid to date."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "to": "2026-12-31",
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should not have any errors about to date
+        to_errors = [err for err in errors if "to" in err.lower() and "Warning" not in err]
+        assert len(to_errors) == 0
+
+    def test_validate_from_after_to(self) -> None:
+        """Test validating that from date must be <= to date."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "from": "2026-12-31",
+            "to": "2026-01-01",
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about from > to
+        assert any("'from' date must be <= 'to' date" in err for err in errors), (
+            "Should have error about from > to"
+        )
+
+
+class TestCountValidation:
+    """Test count field validation functionality."""
+
+    def test_validate_count_valid(self) -> None:
+        """Test validating a valid count."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "count": 10,
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should not have any errors about count
+        count_errors = [
+            err for err in errors if "count" in err.lower() and "Warning" not in err
+        ]
+        assert len(count_errors) == 0
+
+    def test_validate_count_negative(self) -> None:
+        """Test validating a negative count."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "count": -5,
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about negative count
+        assert any("'count' must be >=" in err for err in errors), (
+            "Should have error about negative count"
+        )
+
+    def test_validate_count_zero_warning(self) -> None:
+        """Test validating count zero produces a warning."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "count": 0,
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have a warning about count being 0
+        assert any("count is 0, no events" in err for err in errors), (
+            "Should have warning about count being 0"
+        )
+
+    def test_validate_count_too_large(self) -> None:
+        """Test validating a very large count."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "count": 1001,
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have a warning about large count
+        assert any("'count' is very large" in err for err in errors), (
+            "Should have warning about large count"
+        )
+
+
+class TestEnabledValidation:
+    """Test enabled field validation functionality."""
+
+    def test_validate_enabled_valid(self) -> None:
+        """Test validating valid enabled values."""
+        for enabled_value in [True, False]:
+            event_config = {
+                "title": "Test Event",
+                "cron": "0 9 * * 1",
+                "enabled": enabled_value,
+            }
+
+            errors = YamlParser._validate_event_schema(event_config, 0)
+
+            # Should not have any errors about enabled
+            enabled_errors = [
+                err for err in errors if "enabled" in err.lower() and "Warning" not in err
+            ]
+            assert len(enabled_errors) == 0
+
+    def test_validate_enabled_invalid_type(self) -> None:
+        """Test validating an invalid enabled type."""
+        event_config = {
+            "title": "Test Event",
+            "cron": "0 9 * * 1",
+            "enabled": "yes",  # Should be boolean
+        }
+
+        errors = YamlParser._validate_event_schema(event_config, 0)
+
+        # Should have an error about enabled type
+        assert any("'enabled' must be a boolean" in err for err in errors), (
+            "Should have error about enabled type"
+        )

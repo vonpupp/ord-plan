@@ -15,6 +15,10 @@ class EventRule:
     description: Optional[str] = None
     body: Optional[str] = None
     properties: dict[str, str] = field(default_factory=dict)
+    from_: Optional[str] = None  # YAML: "from" - Start date filter (ISO format)
+    to: Optional[str] = None  # End date filter (ISO format)
+    count: Optional[int] = None  # Maximum number of events to generate
+    enabled: bool = True  # Enable/disable rule (default: True)
 
     def __post_init__(self) -> None:
         """Validate the event rule after initialization."""
