@@ -2,6 +2,7 @@
 
 import click
 
+from .analyze import analyze
 from .generate import generate
 
 
@@ -13,3 +14,5 @@ def cli_group() -> None:
 
 # Add generate command
 cli_group.add_command(generate, name="generate")
+# Add analyze command
+cli_group.add_command(analyze, name="analyze")
