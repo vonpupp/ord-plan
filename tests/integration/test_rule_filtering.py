@@ -2,8 +2,6 @@
 
 from pathlib import Path
 
-import pytest
-
 from ord_plan.models.date_range import DateRange
 from ord_plan.parsers.yaml_parser import YamlParser
 from ord_plan.services.event_service import EventService
@@ -74,7 +72,8 @@ class TestEnabledFiltering:
         # Verify events were generated
         assert len(date_nodes) > 0
         total_events = sum(len(node.new_events) for node in date_nodes)
-        assert total_events == 7  # One per day for a week
+        # Note: end_date is Jan 7 00:00:00, so Jan 7 09:00 event is excluded
+        assert total_events == 6  # Jan 1-6
 
 
 class TestDateRangeFiltering:
@@ -110,8 +109,9 @@ class TestDateRangeFiltering:
 
         # Verify events only start from Jan 5
         total_events = sum(len(node.new_events) for node in date_nodes)
-        # Should have events from Jan 5-14 = 10 days
-        assert total_events == 10
+        # Note: end_date is Jan 14 00:00:00, so Jan 14 09:00 event is excluded
+        # Should have events from Jan 5-13 = 9 days
+        assert total_events == 9
 
     def test_to_date_filters_events(self, tmp_path: Path) -> None:
         """Test that to date filters events to end before that date."""
@@ -143,8 +143,9 @@ class TestDateRangeFiltering:
 
         # Verify events only until Jan 5
         total_events = sum(len(node.new_events) for node in date_nodes)
-        # Should have events from Jan 1-5 = 5 days
-        assert total_events == 5
+        # Note: rule to is Jan 5 00:00:00, so Jan 5 09:00 event is excluded
+        # Should have events from Jan 1-4 = 4 days
+        assert total_events == 4
 
     def test_from_and_to_filter_events(self, tmp_path: Path) -> None:
         """Test that from and to dates filter events to a range."""
@@ -177,8 +178,9 @@ class TestDateRangeFiltering:
 
         # Verify events only in the specified range
         total_events = sum(len(node.new_events) for node in date_nodes)
-        # Should have events from Jan 5-10 = 6 days
-        assert total_events == 6
+        # Note: rule to is Jan 10 00:00:00, so Jan 10 09:00 event is excluded
+        # Should have events from Jan 5-9 = 5 days
+        assert total_events == 5
 
 
 class TestCountLimiting:

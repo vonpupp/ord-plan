@@ -80,8 +80,8 @@ events:
         assert result.exit_code == 0
         output = result.output
 
-        # Should contain events
-        assert "TODO Test Task" in output
+        # Should contain events with HH:MM prefix
+        assert "09:00 Test Task" in output
 
     def test_next_weekday(self, runner: CliRunner, tmp_path: Path) -> None:
         """Test 'next monday' parsing."""
@@ -114,5 +114,5 @@ events:
         assert result.exit_code == 0
         output = result.output
 
-        # Should contain Monday structure
-        assert "TODO Monday Meeting" in output
+        # Should contain Monday structure with HH:MM prefix
+        assert "14:00 Monday Meeting" in output
