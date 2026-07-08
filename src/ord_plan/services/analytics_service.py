@@ -1,11 +1,8 @@
 """Analytics service for extracting data from org-mode files."""
 
 from datetime import datetime
-from typing import Any
 
 import pandas as pd
-
-from ..models.org_date_node import OrgDateNode
 
 
 class AnalyticsService:
@@ -31,7 +28,7 @@ class AnalyticsService:
         Returns:
             pandas DataFrame with extracted task data
         """
-        from .org_mode import OrgModeParser
+        from ..parsers.org_mode import OrgModeParser
 
         # Parse org-mode file
         date_nodes = OrgModeParser.read_existing_content(org_file)
@@ -73,20 +70,22 @@ class AnalyticsService:
                 # Extract other properties
                 backlink = event.properties.get("backlink", "")
 
-                task_data.append({
-                    "date": task_date,
-                    "title": event.title,
-                    "todo_state": event.todo_state or "TODO",
-                    "class": class_uuid,
-                    "tags_full": tags_full,
-                    "tags_components": tags_components,
-                    "tag_level_1": tag_levels.get(0),
-                    "tag_level_2": tag_levels.get(1),
-                    "tag_level_3": tag_levels.get(2),
-                    "acceptance": acceptance,
-                    "backlink": backlink,
-                    "body": event.body or "",
-                })
+                task_data.append(
+                    {
+                        "date": task_date,
+                        "title": event.title,
+                        "todo_state": event.todo_state or "TODO",
+                        "class": class_uuid,
+                        "tags_full": tags_full,
+                        "tags_components": tags_components,
+                        "tag_level_1": tag_levels.get(0),
+                        "tag_level_2": tag_levels.get(1),
+                        "tag_level_3": tag_levels.get(2),
+                        "acceptance": acceptance,
+                        "backlink": backlink,
+                        "body": event.body or "",
+                    }
+                )
 
         # Create DataFrame
         df = pd.DataFrame(task_data)
@@ -94,9 +93,7 @@ class AnalyticsService:
         # Apply tag filtering if specified
         if tag_filter and not df.empty:
             # Filter if any tag component matches
-            df = df[df["tags_components"].apply(
-                lambda tags: tag_filter in tags
-            )]
+            df = df[df["tags_components"].apply(lambda tags: tag_filter in tags)]
 
         return df
 

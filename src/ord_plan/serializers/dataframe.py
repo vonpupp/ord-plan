@@ -1,7 +1,6 @@
 """Dataframe serialization utilities for ord-plan analytics."""
 
 import json
-from datetime import datetime
 from pathlib import Path
 from typing import Any
 
@@ -51,7 +50,7 @@ class DataFrameSerializer:
     ) -> None:
         """Serialize DataFrame to JSON format."""
         data = {
-            "data": df.to_dict(orient="records", date_format="iso"),
+            "data": df.to_dict(orient="records"),
             "metadata": metadata or {},
         }
         with open(output_path, "w") as f:
@@ -104,7 +103,7 @@ class DataFrameSerializer:
     @staticmethod
     def _load_json(input_path: Path) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Load DataFrame from JSON format."""
-        with open(input_path, "r") as f:
+        with open(input_path) as f:
             data = json.load(f)
 
         if isinstance(data, dict) and "data" in data:
