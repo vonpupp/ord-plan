@@ -1,13 +1,14 @@
 """Analyze command for ord-plan."""
 
+import sys
 from datetime import datetime
 from typing import Optional
 
 import click
 
-from ..services.analytics_service import AnalyticsService
 from ..serializers.dataframe import DataFrameSerializer
-from ..utils.validators import validate_date_format, validate_file_path
+from ..services.analytics_service import AnalyticsService
+from ..utils.validators import validate_date_format
 
 
 @click.command(
@@ -171,18 +172,16 @@ def analyze(
     else:
         # Output to stdout (for pickle/json)
         if format == "pickle":
-            import pickle
-            import sys
+            import pickle  # nosec B403
 
             data = {"df": df, "metadata": metadata}
-            pickle.dump(data, sys.stdout.buffer)
+            pickle.dump(data, sys.stdout.buffer)  # nosec B301
             # Note: No message for pickle stdout
         elif format == "json":
             import json
-            import sys
 
             data = {
-                "data": df.to_dict(orient="records", date_format="iso"),
+                "data": df.to_dict(orient="records"),
                 "metadata": metadata,
             }
             json.dump(data, sys.stdout, indent=2, default=str)

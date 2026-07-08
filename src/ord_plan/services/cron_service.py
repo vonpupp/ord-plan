@@ -29,7 +29,7 @@ class CronService:
         Raises:
             ValueError: If cron expression is invalid
         """
-        events = []
+        events: list[OrgEvent] = []
 
         # Parse rule-specific date ranges
         rule_from = CronService._parse_iso_date(rule.from_)
@@ -55,7 +55,8 @@ class CronService:
 
         # Validate cron expression
         try:
-            # Start one microsecond before effective_start to include events at effective_start
+            # Start one microsecond before effective_start to include events at
+            # effective_start
             cron_start_time = effective_start - timedelta(microseconds=1)
             cron = croniter(rule.cron, cron_start_time)
         except ValueError as e:
@@ -67,10 +68,17 @@ class CronService:
         while current_date <= effective_end and len(events) < max_count:
             # Only include events that fall within the effective range
             if current_date >= effective_start:
-                # Store the datetime in the event title for now (temporary solution)
-                # In a proper implementation, we'd extend OrgEvent to have
-                # a datetime field
-                event_title = f"{rule.title}@@{current_date.isoformat()}"
+                # Add HH:MM prefix to title, except when both hour and minute are 0
+                hour = current_date.hour
+                minute = current_date.minute
+
+                if hour == 0 and minute == 0:
+                    event_title = f"{rule.title}@@{current_date.isoformat()}"
+                else:
+                    time_prefix = f"{hour:02d}:{minute:02d}"
+                    event_title = (
+                        f"{time_prefix} {rule.title}@@{current_date.isoformat()}"
+                    )
                 event = OrgEvent(
                     title=event_title,
                     todo_state=rule.todo_state or default_todo_state,

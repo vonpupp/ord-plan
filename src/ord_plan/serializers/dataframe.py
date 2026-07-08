@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-import pandas as pd
+import pandas as pd  # type: ignore[import-untyped]
 
 
 class DataFrameSerializer:
@@ -41,8 +41,11 @@ class DataFrameSerializer:
         df: pd.DataFrame, output_path: Path, metadata: dict[str, Any] | None
     ) -> None:
         """Serialize DataFrame to pickle format."""
+        import pickle  # nosec B403
+
         data = {"df": df, "metadata": metadata or {}}
-        df.to_pickle(output_path)
+        with open(output_path, "wb") as f:
+            pickle.dump(data, f)  # nosec B301
 
     @staticmethod
     def _serialize_json(
@@ -58,7 +61,9 @@ class DataFrameSerializer:
 
     @staticmethod
     def _serialize_csv(
-        df: pd.DataFrame, output_path: Path, metadata: dict[str, Any] | None
+        df: pd.DataFrame,
+        output_path: Path,
+        metadata: dict[str, Any] | None,  # noqa: ARG004
     ) -> None:
         """Serialize DataFrame to CSV format."""
         df.to_csv(output_path, index=False)
@@ -88,10 +93,10 @@ class DataFrameSerializer:
     @staticmethod
     def _load_pickle(input_path: Path) -> tuple[pd.DataFrame, dict[str, Any]]:
         """Load DataFrame from pickle format."""
-        import pickle
+        import pickle  # nosec B403
 
         with open(input_path, "rb") as f:
-            data = pickle.load(f)
+            data = pickle.load(f)  # nosec B301
 
         if isinstance(data, dict) and "df" in data:
             return data["df"], data.get("metadata", {})
