@@ -1,6 +1,7 @@
 """Cron service for processing cron expressions."""
 
 from datetime import datetime, timedelta
+from typing import Optional
 
 from croniter import croniter
 
@@ -138,7 +139,7 @@ class CronService:
         return all_events
 
     @staticmethod
-    def _parse_iso_date(date_str: str | None) -> datetime | None:
+    def _parse_iso_date(date_str: Optional[str]) -> Optional[datetime]:
         """Parse ISO date string (YYYY-MM-DD) to datetime.
 
         Args:

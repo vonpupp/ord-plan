@@ -2,7 +2,7 @@
 
 import json
 from pathlib import Path
-from typing import Any
+from typing import Any, Optional
 
 import pandas as pd  # type: ignore[import-untyped]
 
@@ -15,7 +15,7 @@ class DataFrameSerializer:
         df: pd.DataFrame,
         output_path: str,
         format: str = "pickle",
-        metadata: dict[str, Any] | None = None,
+        metadata: Optional[dict[str, Any]] = None,
     ) -> None:
         """Serialize DataFrame to file.
 
@@ -38,7 +38,7 @@ class DataFrameSerializer:
 
     @staticmethod
     def _serialize_pickle(
-        df: pd.DataFrame, output_path: Path, metadata: dict[str, Any] | None
+        df: pd.DataFrame, output_path: Path, metadata: Optional[dict[str, Any]]
     ) -> None:
         """Serialize DataFrame to pickle format."""
         import pickle  # nosec B403
@@ -49,7 +49,7 @@ class DataFrameSerializer:
 
     @staticmethod
     def _serialize_json(
-        df: pd.DataFrame, output_path: Path, metadata: dict[str, Any] | None
+        df: pd.DataFrame, output_path: Path, metadata: Optional[dict[str, Any]]
     ) -> None:
         """Serialize DataFrame to JSON format."""
         data = {
@@ -63,7 +63,7 @@ class DataFrameSerializer:
     def _serialize_csv(
         df: pd.DataFrame,
         output_path: Path,
-        metadata: dict[str, Any] | None,  # noqa: ARG004
+        metadata: Optional[dict[str, Any]],  # noqa: ARG004
     ) -> None:
         """Serialize DataFrame to CSV format."""
         df.to_csv(output_path, index=False)

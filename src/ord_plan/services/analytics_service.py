@@ -2,7 +2,7 @@
 
 import sys
 from datetime import datetime
-from typing import TYPE_CHECKING
+from typing import TYPE_CHECKING, Optional
 
 import pandas as pd  # type: ignore[import-untyped]
 
@@ -16,10 +16,10 @@ class AnalyticsService:
     @staticmethod
     def extract_task_data(
         org_files: list[str],
-        start_date: datetime | None = None,
-        end_date: datetime | None = None,
-        class_filter: str | None = None,
-        tag_filter: str | None = None,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+        class_filter: Optional[str] = None,
+        tag_filter: Optional[str] = None,
     ) -> pd.DataFrame:
         """Extract task data from org-mode files for analysis.
 
@@ -77,9 +77,9 @@ class AnalyticsService:
     def _extract_from_nodes(
         date_nodes: list["OrgDateNode"],
         source_file: str,
-        start_date: datetime | None = None,
-        end_date: datetime | None = None,
-        class_filter: str | None = None,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+        class_filter: Optional[str] = None,
     ) -> pd.DataFrame:
         """Extract task data from a list of date nodes.
 
