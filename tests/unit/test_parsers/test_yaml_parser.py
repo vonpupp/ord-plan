@@ -636,7 +636,9 @@ class TestDateRangeValidation:
         errors = YamlParser._validate_event_schema(event_config, 0)
 
         # Should not have any errors about to date
-        to_errors = [err for err in errors if "to" in err.lower() and "Warning" not in err]
+        to_errors = [
+            err for err in errors if "to" in err.lower() and "Warning" not in err
+        ]
         assert len(to_errors) == 0
 
     def test_validate_from_after_to(self) -> None:
@@ -737,7 +739,9 @@ class TestEnabledValidation:
 
             # Should not have any errors about enabled
             enabled_errors = [
-                err for err in errors if "enabled" in err.lower() and "Warning" not in err
+                err
+                for err in errors
+                if "enabled" in err.lower() and "Warning" not in err
             ]
             assert len(enabled_errors) == 0
 
