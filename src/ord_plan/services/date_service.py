@@ -41,6 +41,21 @@ class DateService:
         return DateRange(start_date=from_date, end_date=to_date)
 
     @staticmethod
+    def parse_date(date_str: str) -> datetime:
+        """Parse a single date string (public API).
+
+        Args:
+            date_str: Date string (YYYY-MM-DD or relative like "today", "next monday")
+
+        Returns:
+            datetime object
+
+        Raises:
+            BadParameter: If date string cannot be parsed
+        """
+        return DateService._parse_single_date(date_str)
+
+    @staticmethod
     def _get_default_week_range() -> tuple[datetime, datetime]:
         """Get default date range (current Monday to Sunday)."""
         now = datetime.now()

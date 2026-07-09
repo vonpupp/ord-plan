@@ -16,6 +16,23 @@ class EventService:
     """Service for organizing events by date and managing date nodes."""
 
     @staticmethod
+    def _get_event_sort_key(event: OrgEvent) -> tuple[int, int]:
+        """Return (has_time_prefix, time_value) for sorting.
+
+        Returns:
+            (0, time_minutes) for events with HH:MM prefix (sorted first by time)
+            (1, 0) for events without time prefix (sorted last)
+        """
+        import re
+
+        title = event.title
+        match = re.match(r"^(\d{2}):(\d{2})\s", title)
+        if match:
+            hour, minute = int(match.group(1)), int(match.group(2))
+            return (0, hour * 60 + minute)
+        return (1, 0)
+
+    @staticmethod
     def organize_events_by_date(
         events: list[OrgEvent], date_range: DateRange
     ) -> list[OrgDateNode]:
@@ -39,7 +56,7 @@ class EventService:
                 event_datetime_str = title_parts[1]
                 event_datetime = datetime.fromisoformat(event_datetime_str)
 
-                # Clean up the title
+                # Clean up the title - preserve HH:MM prefix if present
                 event.title = actual_title
 
                 # Group by actual event date
@@ -53,6 +70,10 @@ class EventService:
         # Create OrgDateNode objects
         date_nodes = []
         for date, day_events in sorted(events_by_date.items()):
+            # Sort events by time prefix: timed events first (chronologically),
+            # then untimed
+            day_events.sort(key=EventService._get_event_sort_key)
+
             date_node = OrgDateNode(
                 date=datetime.combine(date, datetime.min.time()),
                 new_events=day_events,

@@ -27,12 +27,12 @@ class TestPropertiesRendering:
         config = YamlParser.parse_rules_file(str(events_file))
         event_rules = YamlParser.parse_event_rules(config)
 
-        # Create a date range for a single day
+        # Create a date range for a single day (include full day)
         from datetime import datetime
 
         date_range = DateRange(
             start_date=datetime(2026, 1, 1),
-            end_date=datetime(2026, 1, 1),
+            end_date=datetime(2026, 1, 1, 23, 59, 59),
         )
 
         # Generate events
@@ -70,12 +70,12 @@ class TestPropertiesRendering:
         config = YamlParser.parse_rules_file(str(events_file))
         event_rules = YamlParser.parse_event_rules(config)
 
-        # Create a date range for a single day
+        # Create a date range for a single day (include full day)
         from datetime import datetime
 
         date_range = DateRange(
             start_date=datetime(2026, 1, 1),
-            end_date=datetime(2026, 1, 1),
+            end_date=datetime(2026, 1, 1, 23, 59, 59),
         )
 
         # Generate events
@@ -97,7 +97,7 @@ class TestPropertiesRendering:
         body_idx = None
 
         for i, line in enumerate(lines):
-            if line.startswith("**** TODO Test Event"):
+            if line.startswith("**** TODO 09:00 Test Event"):
                 heading_idx = i
             if ":PROPERTIES:" in line:
                 properties_idx = i
@@ -133,12 +133,12 @@ class TestPropertiesRendering:
         config = YamlParser.parse_rules_file(str(events_file))
         event_rules = YamlParser.parse_event_rules(config)
 
-        # Create a date range for a single day
+        # Create a date range for a single day (include full day)
         from datetime import datetime
 
         date_range = DateRange(
             start_date=datetime(2026, 1, 1),
-            end_date=datetime(2026, 1, 1),
+            end_date=datetime(2026, 1, 1, 23, 59, 59),
         )
 
         # Generate events
@@ -172,12 +172,12 @@ class TestPropertiesRendering:
         config = YamlParser.parse_rules_file(str(events_file))
         event_rules = YamlParser.parse_event_rules(config)
 
-        # Create a date range for a single day
+        # Create a date range for a single day (include full day)
         from datetime import datetime
 
         date_range = DateRange(
             start_date=datetime(2026, 1, 1),
-            end_date=datetime(2026, 1, 1),
+            end_date=datetime(2026, 1, 1, 23, 59, 59),
         )
 
         # Generate events

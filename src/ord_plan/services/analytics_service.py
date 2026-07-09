@@ -1,8 +1,13 @@
 """Analytics service for extracting data from org-mode files."""
 
+import sys
 from datetime import datetime
+from typing import TYPE_CHECKING, Optional
 
-import pandas as pd
+import pandas as pd  # type: ignore[import-untyped]
+
+if TYPE_CHECKING:
+    from ..models.org_date_node import OrgDateNode
 
 
 class AnalyticsService:
@@ -10,16 +15,16 @@ class AnalyticsService:
 
     @staticmethod
     def extract_task_data(
-        org_file: str,
-        start_date: datetime | None = None,
-        end_date: datetime | None = None,
-        class_filter: str | None = None,
-        tag_filter: str | None = None,
+        org_files: list[str],
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+        class_filter: Optional[str] = None,
+        tag_filter: Optional[str] = None,
     ) -> pd.DataFrame:
-        """Extract task data from org-mode file for analysis.
+        """Extract task data from org-mode files for analysis.
 
         Args:
-            org_file: Path to org-mode file
+            org_files: List of paths to org-mode files
             start_date: Optional start date for filtering
             end_date: Optional end date for filtering
             class_filter: Optional class UUID to filter tasks
@@ -30,9 +35,76 @@ class AnalyticsService:
         """
         from ..parsers.org_mode import OrgModeParser
 
-        # Parse org-mode file
-        date_nodes = OrgModeParser.read_existing_content(org_file)
+        # Process all files and collect DataFrames
+        all_dataframes = []
 
+        for org_file in org_files:
+            try:
+                # Parse org-mode file
+                date_nodes = OrgModeParser.read_existing_content(org_file)
+
+                # Extract data from this file's nodes
+                file_df = AnalyticsService._extract_from_nodes(
+                    date_nodes, org_file, start_date, end_date, class_filter
+                )
+
+                # Add to collection if not empty
+                if not file_df.empty:
+                    all_dataframes.append(file_df)
+            except Exception as e:
+                # Log error but continue with other files
+                print(f"Warning: Failed to process {org_file}: {e}", file=sys.stderr)
+                continue
+
+        # Concatenate all DataFrames
+        if all_dataframes:
+            result_df = pd.concat(all_dataframes, ignore_index=True)
+        else:
+            result_df = pd.DataFrame()
+
+        # Apply tag filtering if specified (applied to merged results)
+        if tag_filter and not result_df.empty:
+            # Filter if any tag component matches
+            result_df = result_df[
+                result_df["tags_components"].apply(
+                    lambda tags: any(tag_filter in tag for tag in tags)
+                )
+            ]
+
+        return result_df
+
+    @staticmethod
+    def _extract_from_nodes(
+        date_nodes: list["OrgDateNode"],
+        source_file: str,
+        start_date: Optional[datetime] = None,
+        end_date: Optional[datetime] = None,
+        class_filter: Optional[str] = None,
+    ) -> pd.DataFrame:
+        """Extract task data from a list of date nodes.
+
+        Args:
+            date_nodes: List of OrgDateNode objects
+            source_file: Source file path for tracking
+            start_date: Optional start date for filtering
+            end_date: Optional end date for filtering
+            class_filter: Optional class UUID to filter tasks
+
+        Returns:
+            pandas DataFrame with extracted task data
+        """
+        """Extract task data from a list of date nodes.
+
+        Args:
+            date_nodes: List of OrgDateNode objects
+            source_file: Source file path for tracking
+            start_date: Optional start date for filtering
+            end_date: Optional end date for filtering
+            class_filter: Optional class UUID to filter tasks
+
+        Returns:
+            pandas DataFrame with extracted task data
+        """
         # Extract data from all events
         task_data = []
 
@@ -84,18 +156,12 @@ class AnalyticsService:
                         "acceptance": acceptance,
                         "backlink": backlink,
                         "body": event.body or "",
+                        "source_file": source_file,
                     }
                 )
 
         # Create DataFrame
-        df = pd.DataFrame(task_data)
-
-        # Apply tag filtering if specified
-        if tag_filter and not df.empty:
-            # Filter if any tag component matches
-            df = df[df["tags_components"].apply(lambda tags: tag_filter in tags)]
-
-        return df
+        return pd.DataFrame(task_data)
 
     @staticmethod
     def _parse_tag_levels(tags: list[str]) -> dict[int, str]:

@@ -456,9 +456,7 @@ class YamlParser:
                 from datetime import datetime
 
                 if not re.match(r"^\d{4}-\d{2}-\d{2}$", to_date):
-                    errors.append(
-                        f"{event_prefix}: 'to' must be in YYYY-MM-DD format"
-                    )
+                    errors.append(f"{event_prefix}: 'to' must be in YYYY-MM-DD format")
                 else:
                     try:
                         datetime.strptime(to_date, "%Y-%m-%d")
@@ -475,9 +473,7 @@ class YamlParser:
                 from_dt = datetime.strptime(from_date, "%Y-%m-%d")
                 to_dt = datetime.strptime(to_date, "%Y-%m-%d")
                 if from_dt > to_dt:
-                    errors.append(
-                        f"{event_prefix}: 'from' date must be <= 'to' date"
-                    )
+                    errors.append(f"{event_prefix}: 'from' date must be <= 'to' date")
             except ValueError:
                 # Already caught by individual validation above
                 pass
@@ -495,7 +491,8 @@ class YamlParser:
                 )
             elif count > 1000:
                 errors.append(
-                    f"{event_prefix}: 'count' is very large ({count}), consider reducing"
+                    f"{event_prefix}: 'count' is very large ({count}), "
+                    "consider reducing"
                 )
 
         # Enabled validation
