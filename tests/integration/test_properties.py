@@ -97,7 +97,7 @@ class TestPropertiesRendering:
         body_idx = None
 
         for i, line in enumerate(lines):
-            if line.startswith("**** TODO Test Event"):
+            if line.startswith("**** TODO 09:00 Test Event"):
                 heading_idx = i
             if ":PROPERTIES:" in line:
                 properties_idx = i

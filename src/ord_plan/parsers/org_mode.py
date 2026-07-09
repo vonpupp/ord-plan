@@ -127,8 +127,10 @@ class OrgModeParser:
             date_node = OrgDateNode(date)
 
             # Parse events under this date node
+            # Only parse children that are deeper than the date node level
+            date_node_level = node.level
             for child in node:
-                if child.heading:
+                if child.heading and child.level > date_node_level:
                     event = OrgModeParser._parse_event_from_node(child)
                     if event:
                         date_node.existing_events.append(event)
